@@ -1,0 +1,20 @@
+.interactive-section {
+  height: 400px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #222; /* Dark background */
+  border: 2px solid #444;
+}
+
+.content-box {
+  width: 90%;
+  height: 90%;
+  background-color: #555;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 1.5rem;
+}

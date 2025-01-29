@@ -1,13 +1,9 @@
 "use client";
 
-import { relative } from "path";
 import React, { useState, useEffect } from "react";
-// import '../styles/SplitSection.css'
+import "../styles/SplitSection.css";
 
-{/* Card Deck Component 
-    currentCardIndex: track the active card
-    isHovered: track hover status
-  */} 
+{/* Card Deck Component */}
 const CardDeck: React.FC = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -41,81 +37,30 @@ const CardDeck: React.FC = () => {
 
   return (
     <div
-      style={{
-        backgroundColor: "#f0f0f0",
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-        textAlign: "center",
-        padding: "20px",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        position: "relative",
-        overflow: "hidden",
-      }}
-      onMouseEnter={() => setIsHovered(true)} // Pause auto-slide on hover
-      onMouseLeave={() => setIsHovered(false)} // Resume auto-slide on mouse leaving
+      className="card-deck"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Card Deck */}
-      <div style={{ position: "relative", height: "150px" }}>
+      <div className="card-container">
         {cards.map((card, index) => (
           <div
             key={card.id}
+            className="card"
             style={{
-              position: "absolute",
-              top: 0,
               left: `${(index - currentCardIndex) * 100}%`,
-              width: "100%",
-              height: "100%",
-              transition: "transform 0.5s ease",
               transform: `translateX(${(index - currentCardIndex) * 100}%)`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#fff",
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <p style={{ fontSize: "16px", margin: 0, color: "black"}}>{card.fact}</p>
+            <p className="card-text">{card.fact}</p>
           </div>
         ))}
+      </div>
+
+      {/* Navigation Arrows */}
+      <button onClick={handlePrevious} className="card-button left">⬅️</button>
+      <button onClick={handleNext} className="card-button right">➡️</button>
     </div>
-
-    {/* Nagivation Arrows */}
-    <button
-      onClick={handlePrevious}
-      style={{
-        position: "absolute",
-        top: "50%",
-        left: "10px",
-        transform: "translateY(-50%)",
-        background: "transparent",
-        border: "none",
-        fontSize: "20px",
-        cursor: "pointer",
-        zIndex: 10,
-      }}
-    >
-      ⬅️ {/* Left arrow image */}
-    </button>
-
-    <button
-      onClick={handleNext}
-      style={{
-        position: "absolute",
-        top: "50%",
-        right: "10px",
-        transform: "translateY(-50%)",
-        background: "transparent",
-        border: "none",
-        fontSize: "20px",
-        cursor: "pointer",
-        zIndex: 10,
-      }}
-    >
-      ➡️ {/* Right arrow image */}
-    </button>
-  </div>  
   );
 };
 
@@ -126,44 +71,18 @@ const SplitSection: React.FC = () => {
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
-
-    // Cleanup event listener on component unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Calculate the padding and section width 
-  const padding = 10;
-  const sectionWidth = width - padding * 2;
-
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        width: `${sectionWidth}px`,
-        padding: `0 ${padding}px`,
-        margin: "20px auto",
-        gap: "20 px",
-      }}
-    >
+    <div className="split-section">
       {/* Left Section */}
-      <div style={{ flex: 1 }}>
+      <div className="left-section">
         <CardDeck />
       </div>
 
       {/* Right Section */}
-      <div 
-        style={{
-          flex: 1,
-          backgroundColor: "rgb(120, 120, 120)",
-          border: "1px solid #ccc",
-          borderRadius: "8px",
-          textAlign: "center",
-          padding: "20px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        }}
-      >
+      <div className="right-section">
         <h2>Right Section</h2>
         <p>Content for the right section</p>
       </div>
