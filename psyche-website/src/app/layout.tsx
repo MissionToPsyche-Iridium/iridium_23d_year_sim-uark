@@ -36,7 +36,7 @@ export const metadata = {
           <header
             style={{
               textAlign: "center",
-              padding: "20px",
+              padding: "10px",
               fontSize: "calc(10px + 2vmin)",
             }}
           >

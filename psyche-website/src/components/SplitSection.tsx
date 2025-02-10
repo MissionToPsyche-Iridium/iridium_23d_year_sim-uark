@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/SplitSection.css";
 
-{/* Card Deck Component */}
+// Card Deck Component
 const CardDeck: React.FC = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -65,13 +65,19 @@ const CardDeck: React.FC = () => {
 };
 
 const SplitSection: React.FC = () => {
-  const [width, setWidth] = useState<number>(window.innerWidth);
+  const [width, setWidth] = useState<number>(0);
 
-  // Update width on window resize
+  // Update width on window resize (client-side only)
   useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    // Check if window is defined (important for SSR)
+    if (typeof window !== "undefined") {
+      setWidth(window.innerWidth);
+
+      const handleResize = () => setWidth(window.innerWidth);
+      window.addEventListener("resize", handleResize);
+
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   return (
@@ -85,6 +91,7 @@ const SplitSection: React.FC = () => {
       <div className="right-section">
         <h2>Right Section</h2>
         <p>Content for the right section</p>
+        <p>Window width: {width}</p>
       </div>
     </div>
   );
