@@ -70,9 +70,7 @@ const SplitSection: React.FC = () => {
   const [birthdate, setBirthdate] = useState<string>("");
   const [age, setAge] = useState<{ years: number; days: number } | null>(null);
 
-  // Update width on window resize (client-side only)
   useEffect(() => {
-    // Check if window is defined (important for SSR)
     if (typeof window !== "undefined") {
       setWidth(window.innerWidth);
 
