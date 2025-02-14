@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import ProgressBar from "./ProgressBar";
 import "../styles/SplitSection.css";
 
 // Card Deck Component
@@ -96,7 +97,11 @@ const SplitSection: React.FC = () => {
       const remainingEarthDays = ageInDays % psycheYear;
       const psycheDays = Math.floor(remainingEarthDays / psycheDay);
 
-      setAge({ years: psycheYears, days: psycheDays });
+    //  setAge({ years: psycheYears, days: psycheDays });
+      setAge(null);
+      setTimeout(() => {
+        setAge({years: psycheYears, days:psycheDays });
+      }, 100);
     }
   };
 
@@ -109,19 +114,23 @@ const SplitSection: React.FC = () => {
 
       {/* Right Section */}
       <div className="right-section">
-        <h2>Right Section</h2>
+      {/*  <h2>Right Section</h2>
         <p>Content for the right section</p>
-        <p>Window width: {width}</p>
-
+        <p>Window width: {width}</p> */}
+        
         {/* Birthday Input */}
         <div className="birthday-input">
           <label htmlFor="birthdate">Enter your birthdate:</label>
+          <br />
+          <br />
           <input
             type="date"
             id="birthdate"
             value={birthdate}
             onChange={(e) => setBirthdate(e.target.value)}
           />
+          <br />
+          <br />
           <button onClick={calculateAge}>Calculate Age</button>
         </div>
 
@@ -129,6 +138,7 @@ const SplitSection: React.FC = () => {
         {age !== null && (
           <div className="age-result">
             <h3>You are {age.years} years and {age.days} days old on Psyche!</h3>
+            <ProgressBar age={age} />
           </div>
         )}
       </div>
