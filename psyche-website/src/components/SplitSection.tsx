@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/SplitSection.css";
 
-{/* Card Deck Component */}
+// Card Deck Component
 const CardDeck: React.FC = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -65,14 +65,40 @@ const CardDeck: React.FC = () => {
 };
 
 const SplitSection: React.FC = () => {
-  const [width, setWidth] = useState<number>(window.innerWidth);
+  const [width, setWidth] = useState<number>(0);
+  const [birthdate, setBirthdate] = useState<string>("");
+  const [age, setAge] = useState<{ years: number; days: number } | null>(null);
 
-  // Update width on window resize
+  // Update width on window resize (client-side only)
   useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    // Check if window is defined (important for SSR)
+    if (typeof window !== "undefined") {
+      setWidth(window.innerWidth);
+
+      const handleResize = () => setWidth(window.innerWidth);
+      window.addEventListener("resize", handleResize);
+
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
+
+  const psycheYear = 1825.95;
+  const psycheDay = 4.2/24;
+
+  const calculateAge = () => {
+    if (birthdate) {
+      const birthDate = new Date(birthdate);
+      const today = new Date();
+      const ageInDays = Math.floor((today.getTime() - birthDate.getTime()) / (1000 * 3600 * 24));
+
+      const psycheYears = Math.floor(ageInDays / psycheYear);
+
+      const remainingEarthDays = ageInDays % psycheYear;
+      const psycheDays = Math.floor(remainingEarthDays / psycheDay);
+
+      setAge({ years: psycheYears, days: psycheDays });
+    }
+  };
 
   return (
     <div className="split-section">
@@ -85,6 +111,26 @@ const SplitSection: React.FC = () => {
       <div className="right-section">
         <h2>Right Section</h2>
         <p>Content for the right section</p>
+        <p>Window width: {width}</p>
+
+        {/* Birthday Input */}
+        <div className="birthday-input">
+          <label htmlFor="birthdate">Enter your birthdate:</label>
+          <input
+            type="date"
+            id="birthdate"
+            value={birthdate}
+            onChange={(e) => setBirthdate(e.target.value)}
+          />
+          <button onClick={calculateAge}>Calculate Age</button>
+        </div>
+
+        {/* Age Result */}
+        {age !== null && (
+          <div className="age-result">
+            <h3>You are {age.years} years and {age.days} days old on Psyche!</h3>
+          </div>
+        )}
       </div>
     </div>
   );
