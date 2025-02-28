@@ -92,6 +92,11 @@ const SplitSection: React.FC = () => {
 
       const psycheYears = Math.floor(ageInDays / psycheYear);
 
+      const psycheSeconds = today.getSeconds();
+      const psycheMinutes = today.getMinutes();
+      const psycheHours = today.getHours() % 4;
+      console.log(psycheHours + " " + psycheMinutes + " " + psycheSeconds);
+
       const remainingEarthDays = ageInDays % psycheYear;
       const psycheDays = Math.floor(remainingEarthDays / psycheDay);
 
