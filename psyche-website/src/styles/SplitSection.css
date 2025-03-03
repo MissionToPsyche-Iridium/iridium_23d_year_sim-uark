@@ -79,3 +79,22 @@
   .card-button.right {
     right: 10px;
   }
+
+  .birthday-input {
+    text-align: center;
+  }
+  
+  .input-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  input[type="date"] {
+    margin-right: 10px;
+  }
+  
+  button {
+    padding: 5px 10px;
+    cursor: pointer;
+  }

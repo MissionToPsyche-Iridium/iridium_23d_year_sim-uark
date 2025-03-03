@@ -126,21 +126,24 @@ const SplitSection: React.FC = () => {
           <label htmlFor="birthdate">Enter your birthdate:</label>
           <br />
           <br />
-          <input
-            type="date"
-            id="birthdate"
-            value={birthdate}
-            onChange={(e) => setBirthdate(e.target.value)}
-          />
-          <br />
-          <br />
-          <button onClick={calculateAge}>Calculate Age</button>
+          <div className="input-container">
+            <input
+              type="date"
+              id="birthdate"
+              value={birthdate}
+              onChange={(e) => setBirthdate(e.target.value)}
+            />
+            <button onClick={calculateAge}>Calculate Age</button>
+          </div>
         </div>
+        
 
         {/* Age Result */}
         {age !== null && (
           <div className="age-result">
-            <h3>You are {age.years} years and {age.days} days old on Psyche!</h3>
+            <p>
+              You are {age.years} years and {age.days} days old!
+            </p>
             <ProgressBar age={age} />
           </div>
         )}
