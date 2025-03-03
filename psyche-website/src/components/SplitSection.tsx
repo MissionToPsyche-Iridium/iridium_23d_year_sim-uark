@@ -11,11 +11,11 @@ const CardDeck: React.FC = () => {
 
   // Facts for the card deck
   const cards = [
-    { id: 1, fact: "Fact 1" },
-    { id: 2, fact: "Fact 2" },
-    { id: 3, fact: "Fact 3" },
-    { id: 4, fact: "Fact 4" },
-    { id: 5, fact: "Fact 5" },
+    { id: 1, fact: "Scientists infer the presence of metallic cores, but these lie unreachably far below the planets' rocky mantles and crusts. Because we cannot see or measure Earth's core directly, Psyche offers a unique window into the violent history of collisions and accretion that created terrestrial planets." },
+    { id: 2, fact: "It’s estimated that it will take the spacecraft about 2.2 billion miles (3.6 billion kilometers) to travel to Psyche." },
+    { id: 3, fact: "Psyche is likely a mixture of rock and metal, with metal making up between 30% to 60% of its volume. It has been speculated that it is mainly composed of iron, nickel, and silicate." },
+    { id: 4, fact: "The asteroid Psyche orbits the Sun in the outer part of the main asteroid belt between Mars and Jupiter, and it is approximately three times farther from the Sun than Earth is!" },
+    { id: 5, fact: "Psyche has an irregular potato shape. If the asteroid were sliced in half horizontally at the equator – picture a squished oval – it would measure 173 miles (280 kilometers) across at its widest point and 144 miles (232 kilometers) long. It is estimated to have a surface area of about 64,000 square miles (165,800 square kilometers). " },
   ];
 
   // Auto slide cards every 10 seconds
