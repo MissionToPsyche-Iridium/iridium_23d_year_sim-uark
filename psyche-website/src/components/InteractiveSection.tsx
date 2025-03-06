@@ -1,67 +1,92 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import * as THREE from 'three';
+import * as THREE from "three";
 import "../styles/InteractiveSection.css";
 
 export default function InteractiveSection() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const cubeRef = useRef<THREE.Mesh | null>(null);
+  const isDragging = useRef(false);
+  const previousMousePosition = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Set up the scene
+    // Set up the scene, camera, and renderer
     const scene = new THREE.Scene();
-
-    // Set up the camera
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-
-    // Set up the renderer
     const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // Create a geometry and material for the cube
+    // Create a cube
     const geometry = new THREE.BoxGeometry();
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const cube = new THREE.Mesh(geometry, material);
-
-    // Add the cube to the scene
+    cubeRef.current = cube;
     scene.add(cube);
 
     // Position the camera
     camera.position.z = 5;
 
-    // Animate the scene
-    const animate = () => {
-      requestAnimationFrame(animate);
+    // Mouse event handlers to implement drag-to-rotate
+    const canvasEl = canvasRef.current;
 
-      // Rotate the cube on each frame
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
-
-      // Render the scene from the perspective of the camera
-      renderer.render(scene, camera);
+    const onMouseDown = (event: MouseEvent) => {
+      isDragging.current = true;
+      previousMousePosition.current = { x: event.clientX, y: event.clientY };
     };
 
+    const onMouseMove = (event: MouseEvent) => {
+      if (isDragging.current && cubeRef.current) {
+        const deltaMove = {
+          x: event.clientX - previousMousePosition.current.x,
+          y: event.clientY - previousMousePosition.current.y,
+        };
+
+        // Adjust rotation speed as needed
+        const rotationSpeed = 0.005;
+        cubeRef.current.rotation.y += deltaMove.x * rotationSpeed;
+        cubeRef.current.rotation.x += deltaMove.y * rotationSpeed;
+
+        previousMousePosition.current = { x: event.clientX, y: event.clientY };
+      }
+    };
+
+    const onMouseUpOrLeave = () => {
+      isDragging.current = false;
+    };
+
+    canvasEl.addEventListener("mousedown", onMouseDown);
+    canvasEl.addEventListener("mousemove", onMouseMove);
+    canvasEl.addEventListener("mouseup", onMouseUpOrLeave);
+    canvasEl.addEventListener("mouseleave", onMouseUpOrLeave);
+
+    // Animation loop
+    const animate = () => {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    };
     animate();
 
-    // Cleanup on component unmount
+    // Cleanup event listeners and renderer on unmount
     return () => {
+      canvasEl.removeEventListener("mousedown", onMouseDown);
+      canvasEl.removeEventListener("mousemove", onMouseMove);
+      canvasEl.removeEventListener("mouseup", onMouseUpOrLeave);
+      canvasEl.removeEventListener("mouseleave", onMouseUpOrLeave);
       renderer.dispose();
     };
   }, []);
 
   return (
     <section className="interactive-section">
-      <div className="content-box">
-        Interactive Content Goes Here
-      </div>
-      <canvas ref={canvasRef}></canvas> {/* Add Three.js Canvas */}
+      <canvas ref={canvasRef}></canvas>
     </section>
   );
 }
