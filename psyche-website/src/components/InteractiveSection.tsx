@@ -1,40 +1,100 @@
+/**
+ * This file contains the InteractiveSection component which renders a 3D model
+ * using Three.js. The component sets up a Three.js scene, camera, and renderer,
+ * loads a GLTF model, and allows the user to interact with the model by dragging to
+ * rotate it.
+ * 
+ * NOTE: Need to adjust the model's scale and position as needed to fit the model in
+ * the camera's view. Currently the Asteroid.glb model shows up and is interactable,
+ * however, it is not centered or scaled properly.
+ * 
+ * Need to adjust the Psyche.glb model file size to show up on the screen.
+ */
+
 "use client";
 
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import "../styles/InteractiveSection.css";
 
 export default function InteractiveSection() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const cubeRef = useRef<THREE.Mesh | null>(null);
+  const modelRef = useRef<THREE.Group | null>(null);
   const isDragging = useRef(false);
   const previousMousePosition = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Set up the scene, camera, and renderer
+    // Set up scene, camera, and renderer
     const scene = new THREE.Scene();
+    // scene.background = new THREE.Color(0xcccccc);
+    
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current });
+    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // Create a cube
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry, material);
-    cubeRef.current = cube;
-    scene.add(cube);
+    // Add ambient and directional lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
 
-    // Position the camera
+    // Position the camera at a default location
     camera.position.z = 5;
 
-    // Mouse event handlers to implement drag-to-rotate
+    // Load the .glb model
+    const loader = new GLTFLoader();
+    const modelUrl = "https://3dmodels.blob.core.windows.net/3d-models/Psyche.glb";
+    
+    loader.load(
+      modelUrl,
+      (gltf) => {
+        const model = gltf.scene;
+        modelRef.current = model;
+        scene.add(model);
+
+        // Compute bounding box to center and scale the model
+        const box = new THREE.Box3().setFromObject(model);
+        const size = new THREE.Vector3();
+        box.getSize(size);
+        const center = new THREE.Vector3();
+        box.getCenter(center);
+
+        // Center the model
+        model.position.x += (model.position.x - center.x);
+        model.position.y += (model.position.y - center.y);
+        model.position.z += (model.position.z - center.z);
+
+        // Optionally, adjust the model's scale if it's too big/small
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scaleFactor = 2 / maxDim; // adjust factor as needed
+        model.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+        // Adjust the camera to frame the model
+        const fov = camera.fov * (Math.PI / 180); // convert vertical fov to radians
+        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+        cameraZ *= 1.5; // add some padding
+        camera.position.z = cameraZ;
+
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+        console.log("Model loaded", gltf);
+      },
+      undefined,
+      (error) => {
+        console.error("An error happened while loading the .glb model", error);
+      }
+    );
+
+    // Mouse event handlers for drag-to-rotate
     const canvasEl = canvasRef.current;
 
     const onMouseDown = (event: MouseEvent) => {
@@ -43,7 +103,7 @@ export default function InteractiveSection() {
     };
 
     const onMouseMove = (event: MouseEvent) => {
-      if (isDragging.current && cubeRef.current) {
+      if (isDragging.current && modelRef.current) {
         const deltaMove = {
           x: event.clientX - previousMousePosition.current.x,
           y: event.clientY - previousMousePosition.current.y,
@@ -51,8 +111,8 @@ export default function InteractiveSection() {
 
         // Adjust rotation speed as needed
         const rotationSpeed = 0.005;
-        cubeRef.current.rotation.y += deltaMove.x * rotationSpeed;
-        cubeRef.current.rotation.x += deltaMove.y * rotationSpeed;
+        modelRef.current.rotation.y += deltaMove.x * rotationSpeed;
+        modelRef.current.rotation.x += deltaMove.y * rotationSpeed;
 
         previousMousePosition.current = { x: event.clientX, y: event.clientY };
       }
