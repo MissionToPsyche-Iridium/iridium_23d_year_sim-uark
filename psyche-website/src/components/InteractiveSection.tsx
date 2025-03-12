@@ -8,6 +8,9 @@
  * the camera's view. Currently the Asteroid.glb model shows up and is interactable,
  * however, it is not centered or scaled properly.
  * 
+ * To access the Asteroid.glb model set modelUrl to the following URL:
+ * "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb"
+ * 
  * Need to adjust the Psyche.glb model file size to show up on the screen.
  */
 
@@ -29,8 +32,6 @@ export default function InteractiveSection() {
 
     // Set up scene, camera, and renderer
     const scene = new THREE.Scene();
-    // scene.background = new THREE.Color(0xcccccc);
-    
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
@@ -52,7 +53,7 @@ export default function InteractiveSection() {
 
     // Load the .glb model
     const loader = new GLTFLoader();
-    const modelUrl = "https://3dmodels.blob.core.windows.net/3d-models/Psyche.glb";
+    const modelUrl = "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb";
     
     loader.load(
       modelUrl,
@@ -75,13 +76,13 @@ export default function InteractiveSection() {
 
         // Optionally, adjust the model's scale if it's too big/small
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scaleFactor = 2 / maxDim; // adjust factor as needed
+        const scaleFactor = 2 / maxDim;
         model.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
         // Adjust the camera to frame the model
-        const fov = camera.fov * (Math.PI / 180); // convert vertical fov to radians
+        const fov = camera.fov * (Math.PI / 180);
         let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-        cameraZ *= 1.5; // add some padding
+        cameraZ *= 1.5;
         camera.position.z = cameraZ;
 
         camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -109,7 +110,6 @@ export default function InteractiveSection() {
           y: event.clientY - previousMousePosition.current.y,
         };
 
-        // Adjust rotation speed as needed
         const rotationSpeed = 0.005;
         modelRef.current.rotation.y += deltaMove.x * rotationSpeed;
         modelRef.current.rotation.x += deltaMove.y * rotationSpeed;
