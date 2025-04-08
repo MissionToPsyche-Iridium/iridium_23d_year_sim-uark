@@ -59,41 +59,42 @@ export default function InteractiveSection() {
       modelUrl,
       (gltf) => {
         const model = gltf.scene;
-        modelRef.current = model;
-        scene.add(model);
-
-        // Compute bounding box to center and scale the model
+        
+        // Create a parent group
+        const group = new THREE.Group();
+        group.add(model);
+    
+        // Compute the bounding box of the model to determine its center
         const box = new THREE.Box3().setFromObject(model);
-        const size = new THREE.Vector3();
-        box.getSize(size);
         const center = new THREE.Vector3();
         box.getCenter(center);
-
-        // Center the model
-        model.position.x += (model.position.x - center.x);
-        model.position.y += (model.position.y - center.y);
-        model.position.z += (model.position.z - center.z);
-
-        // Optionally, adjust the model's scale if it's too big/small
+    
+        // Shift the model so that its center is at the group's origin
+        model.position.sub(center);
+    
+        // Optionally, scale the group
+        const size = new THREE.Vector3();
+        box.getSize(size);
         const maxDim = Math.max(size.x, size.y, size.z);
         const scaleFactor = 2 / maxDim;
-        model.scale.set(scaleFactor, scaleFactor, scaleFactor);
-
-        // Adjust the camera to frame the model
+        group.scale.set(scaleFactor, scaleFactor, scaleFactor);
+    
+        // Add the group (with the centered model) to the scene
+        scene.add(group);
+    
+        // Adjust the camera position to frame the model well
         const fov = camera.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-        cameraZ *= 1.5;
+        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 1.5;
         camera.position.z = cameraZ;
-
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-        console.log("Model loaded", gltf);
+    
+        console.log("Model loaded and centered", gltf);
       },
       undefined,
       (error) => {
         console.error("An error happened while loading the .glb model", error);
       }
-    );
+    );        
 
     // Mouse event handlers for drag-to-rotate
     const canvasEl = canvasRef.current;
