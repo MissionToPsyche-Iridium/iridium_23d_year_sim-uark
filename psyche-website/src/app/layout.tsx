@@ -27,6 +27,7 @@ export const metadata = {
         <body
           style={{
             margin: 0,
+            padding: 0,           
             backgroundColor: "black",
             color: "white",
             fontFamily: "'Caveat Brush', sans-serif",
@@ -37,10 +38,11 @@ export const metadata = {
             style={{
               textAlign: "center",
               padding: "10px",
+              margin: 0,
               fontSize: "calc(10px + 2vmin)",
             }}
           >
-            <h1>YEAR OF PSYCHE</h1>
+            <h1 style={{ margin: 0, padding: 0, lineHeight: "1.2" }}>YEAR OF PSYCHE</h1>
           </header>
   
           {/* Interactive Section */}

@@ -1,19 +1,41 @@
+/**
+ * This file contains the InteractiveSection component which renders a 3D model
+ * using Three.js. The component sets up a Three.js scene, camera, and renderer,
+ * loads a GLTF model, and allows the user to interact with the model by dragging to
+ * rotate it.
+ * 
+ * NOTE: Need to adjust the model's scale and position as needed to fit the model in
+ * the camera's view. Currently the Asteroid.glb model shows up and is interactable,
+ * however, it is not centered or scaled properly.
+ * 
+ * To access the Asteroid.glb model set modelUrl to the following URL:
+ * "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb"
+ * 
+ * Need to adjust the Psyche.glb model file size to show up on the screen.
+ * 
+ * Update the line: const upwardOffset = scaledSizeY * 1.5; with a different value
+ * to adjust the upward offset of the model. This will help in centering the model
+ * vertically.
+ */
+
 "use client";
 
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import "../styles/InteractiveSection.css";
 
 export default function InteractiveSection() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const cubeRef = useRef<THREE.Mesh | null>(null);
+  // We'll store the rotation group (which rotates about the model's center) in modelRef
+  const modelRef = useRef<THREE.Group | null>(null);
   const isDragging = useRef(false);
   const previousMousePosition = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Set up the scene, camera, and renderer
+    // Set up scene, camera, and renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       75,
@@ -21,20 +43,83 @@ export default function InteractiveSection() {
       0.1,
       1000
     );
-    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current });
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvasRef.current,
+      antialias: true,
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // Create a cube
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry, material);
-    cubeRef.current = cube;
-    scene.add(cube);
+    // Add ambient and directional lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
 
     // Position the camera
     camera.position.z = 5;
 
-    // Mouse event handlers to implement drag-to-rotate
+    // Load the .glb model
+    const loader = new GLTFLoader();
+    const modelUrl = "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb";
+
+    loader.load(
+      modelUrl,
+      (gltf) => {
+        const model = gltf.scene;
+
+        // Create an inner group that will be rotated (rotationGroup)
+        const rotationGroup = new THREE.Group();
+        rotationGroup.add(model);
+
+        // Compute the bounding box of the model
+        const box = new THREE.Box3().setFromObject(model);
+        const center = new THREE.Vector3();
+        box.getCenter(center);
+    
+        // Center the model inside the rotation group (so the pivot is at the model's center)
+        model.position.sub(center);
+    
+        // Optionally, adjust the rotationGroup's scale based on the model size
+        const size = new THREE.Vector3();
+        box.getSize(size);
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scaleFactor = 2 / maxDim;
+        rotationGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
+    
+        // Create an outer group (offsetGroup) for vertical positioning
+        const offsetGroup = new THREE.Group();
+        offsetGroup.add(rotationGroup);
+    
+        // Compute the model's effective (scaled) height
+        const scaledSizeY = size.y * scaleFactor;
+        // Apply an upward offset to the outer group.
+        // Increase the multiplier until you achieve your desired placement.
+        const extraYOffset = scaledSizeY * 1.2; // Adjust this value as needed
+        offsetGroup.position.y += extraYOffset;
+    
+        // Add offsetGroup to the scene.
+        scene.add(offsetGroup);
+    
+        // Store the rotationGroup in modelRef so that mouse rotation only affects it.
+        modelRef.current = rotationGroup;
+    
+        // Adjust the camera to frame the model nicely.
+        const fovRadians = camera.fov * (Math.PI / 180);
+        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fovRadians / 2)) * 1.5;
+        camera.position.z = cameraZ;
+        // Optionally, set the camera to look at a point that makes the model appear higher on screen
+        camera.lookAt(new THREE.Vector3(0, extraYOffset, 0));
+    
+        console.log("Model loaded, centered, and offset:", gltf);
+      },
+      undefined,
+      (error) => {
+        console.error("An error occurred while loading the .glb model", error);
+      }
+    );
+
+    // Mouse event handlers for drag-to-rotate functionality (rotating the rotationGroup)
     const canvasEl = canvasRef.current;
 
     const onMouseDown = (event: MouseEvent) => {
@@ -43,16 +128,16 @@ export default function InteractiveSection() {
     };
 
     const onMouseMove = (event: MouseEvent) => {
-      if (isDragging.current && cubeRef.current) {
+      if (isDragging.current && modelRef.current) {
         const deltaMove = {
           x: event.clientX - previousMousePosition.current.x,
           y: event.clientY - previousMousePosition.current.y,
         };
 
-        // Adjust rotation speed as needed
         const rotationSpeed = 0.005;
-        cubeRef.current.rotation.y += deltaMove.x * rotationSpeed;
-        cubeRef.current.rotation.x += deltaMove.y * rotationSpeed;
+        // Rotate only the rotationGroup (centered pivot)
+        modelRef.current.rotation.y += deltaMove.x * rotationSpeed;
+        modelRef.current.rotation.x += deltaMove.y * rotationSpeed;
 
         previousMousePosition.current = { x: event.clientX, y: event.clientY };
       }
@@ -66,15 +151,15 @@ export default function InteractiveSection() {
     canvasEl.addEventListener("mousemove", onMouseMove);
     canvasEl.addEventListener("mouseup", onMouseUpOrLeave);
     canvasEl.addEventListener("mouseleave", onMouseUpOrLeave);
-
+    
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
     };
     animate();
-
-    // Cleanup event listeners and renderer on unmount
+    
+    // Cleanup
     return () => {
       canvasEl.removeEventListener("mousedown", onMouseDown);
       canvasEl.removeEventListener("mousemove", onMouseMove);
