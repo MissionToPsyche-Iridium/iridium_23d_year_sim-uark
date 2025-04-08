@@ -12,6 +12,10 @@
  * "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb"
  * 
  * Need to adjust the Psyche.glb model file size to show up on the screen.
+ * 
+ * Update the line: const upwardOffset = scaledSizeY * 1.5; with a different value
+ * to adjust the upward offset of the model. This will help in centering the model
+ * vertically.
  */
 
 "use client";
@@ -23,7 +27,7 @@ import "../styles/InteractiveSection.css";
 
 export default function InteractiveSection() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  // modelRef now stores the group containing the model
+  // We'll store the rotation group (which rotates about the model's center) in modelRef
   const modelRef = useRef<THREE.Group | null>(null);
   const isDragging = useRef(false);
   const previousMousePosition = useRef({ x: 0, y: 0 });
@@ -64,37 +68,50 @@ export default function InteractiveSection() {
       (gltf) => {
         const model = gltf.scene;
 
-        // Create a parent group and add the model to it
-        const group = new THREE.Group();
-        group.add(model);
+        // Create an inner group that will be rotated (rotationGroup)
+        const rotationGroup = new THREE.Group();
+        rotationGroup.add(model);
 
-        // Compute the bounding box of the model to determine its center
+        // Compute the bounding box of the model
         const box = new THREE.Box3().setFromObject(model);
         const center = new THREE.Vector3();
         box.getCenter(center);
-
-        // Shift the model so that its center aligns with the group's origin
+    
+        // Center the model inside the rotation group (so the pivot is at the model's center)
         model.position.sub(center);
-
-        // Optionally, adjust the group's scale
+    
+        // Optionally, adjust the rotationGroup's scale based on the model size
         const size = new THREE.Vector3();
         box.getSize(size);
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scaleFactor = 2 / maxDim; // You can adjust this factor as needed
-        group.scale.set(scaleFactor, scaleFactor, scaleFactor);
-
-        // Add the group (with the centered model) to the scene
-        scene.add(group);
-        // Store the group in modelRef so we can rotate it on mouse drag
-        modelRef.current = group;
-
-        // Adjust the camera to frame the model nicely
-        const fov = camera.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 1.5;
+        const scaleFactor = 2 / maxDim;
+        rotationGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
+    
+        // Create an outer group (offsetGroup) for vertical positioning
+        const offsetGroup = new THREE.Group();
+        offsetGroup.add(rotationGroup);
+    
+        // Compute the model's effective (scaled) height
+        const scaledSizeY = size.y * scaleFactor;
+        // Apply an upward offset to the outer group.
+        // Increase the multiplier until you achieve your desired placement.
+        const extraYOffset = scaledSizeY * 1.2; // Adjust this value as needed
+        offsetGroup.position.y += extraYOffset;
+    
+        // Add offsetGroup to the scene.
+        scene.add(offsetGroup);
+    
+        // Store the rotationGroup in modelRef so that mouse rotation only affects it.
+        modelRef.current = rotationGroup;
+    
+        // Adjust the camera to frame the model nicely.
+        const fovRadians = camera.fov * (Math.PI / 180);
+        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fovRadians / 2)) * 1.5;
         camera.position.z = cameraZ;
-        camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-        console.log("Model loaded and centered:", gltf);
+        // Optionally, set the camera to look at a point that makes the model appear higher on screen
+        camera.lookAt(new THREE.Vector3(0, extraYOffset, 0));
+    
+        console.log("Model loaded, centered, and offset:", gltf);
       },
       undefined,
       (error) => {
@@ -102,7 +119,7 @@ export default function InteractiveSection() {
       }
     );
 
-    // Mouse event handlers for drag-to-rotate functionality
+    // Mouse event handlers for drag-to-rotate functionality (rotating the rotationGroup)
     const canvasEl = canvasRef.current;
 
     const onMouseDown = (event: MouseEvent) => {
@@ -117,8 +134,8 @@ export default function InteractiveSection() {
           y: event.clientY - previousMousePosition.current.y,
         };
 
-        // Adjust rotation speed as needed
         const rotationSpeed = 0.005;
+        // Rotate only the rotationGroup (centered pivot)
         modelRef.current.rotation.y += deltaMove.x * rotationSpeed;
         modelRef.current.rotation.x += deltaMove.y * rotationSpeed;
 
@@ -134,15 +151,15 @@ export default function InteractiveSection() {
     canvasEl.addEventListener("mousemove", onMouseMove);
     canvasEl.addEventListener("mouseup", onMouseUpOrLeave);
     canvasEl.addEventListener("mouseleave", onMouseUpOrLeave);
-
+    
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
     };
     animate();
-
-    // Cleanup on component unmount
+    
+    // Cleanup
     return () => {
       canvasEl.removeEventListener("mousedown", onMouseDown);
       canvasEl.removeEventListener("mousemove", onMouseMove);
