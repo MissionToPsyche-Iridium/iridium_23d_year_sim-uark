@@ -1,7 +1,6 @@
 export const metadata = {
   title: "Year of Psyche",
-  description:
-    "An interactive website to deliver information to users through text and clickable elements",
+  description: "An interactive website to deliver information to users through text and clickable elements",
 };
 
 import "../styles/layout.css";
@@ -28,12 +27,45 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="body">
         <header className="header">
           <h1>YEAR OF PSYCHE</h1>
+
+          {/* -- STAR FIELD LAYER -- */}
+          <div className="header-stars">
+            <svg
+              viewBox="0 0 1440 320"
+              preserveAspectRatio="none"
+              className="star-svg"
+            >
+              <g>
+                {/* Circle Stars */}
+                <circle cx="50" cy="50" r="2" />
+                <circle cx="150" cy="100" r="3" />
+                <circle cx="300" cy="180" r="1.5" />
+                <circle cx="500" cy="70" r="2" />
+                <circle cx="700" cy="210" r="2.5" />
+                <circle cx="900" cy="40" r="2" />
+                <circle cx="1150" cy="110" r="3" />
+                <circle cx="1300" cy="160" r="1.5" />
+
+                {/* Diamond Shaped Stars */}
+                <polygon
+                  className="diamond-star"
+                  points="200,120 210,130 200,140 190,130"
+                />
+                <polygon
+                  className="diamond-star"
+                  points="1000,80 1010,90 1000,100 990,90"
+                />
+              </g>
+            </svg>
+          </div>
+
+          {/* Waves Container */}
           <div className="header-waves">
             {/* Wave 1 */}
             <div className="wave wave1">
               <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
                 <path
-                  fill="#160827" 
+                  fill="#160827"
                   d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,80C960,96,1056,128,1152,133.3C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
                 />
               </svg>
@@ -59,7 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
 
-        {/* Your site content below */}
+        {/* Site Content */}
         <InteractiveSection />
         <SplitSection />
         <FeatureSection />
