@@ -73,43 +73,45 @@ const SplitSection: React.FC = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       setWidth(window.innerWidth);
-
       const handleResize = () => setWidth(window.innerWidth);
       window.addEventListener("resize", handleResize);
-
       return () => window.removeEventListener("resize", handleResize);
     }
   }, []);
 
   const psycheYear = 1825.95;
-  const psycheDay = 4.2/24;
+  const psycheDay = 4.2 / 24;
 
   const calculateAge = () => {
     if (birthdate) {
       const birthDate = new Date(birthdate);
       const today = new Date();
-      const ageInDays = Math.floor((today.getTime() - birthDate.getTime()) / (1000 * 3600 * 24));
-
+      const ageInDays = Math.floor(
+        (today.getTime() - birthDate.getTime()) / (1000 * 3600 * 24)
+      );
       const psycheYears = Math.floor(ageInDays / psycheYear);
-
-      const psycheSeconds = today.getSeconds();
-      const psycheMinutes = today.getMinutes();
-      const psycheHours = today.getHours() % 4;
-      console.log(psycheHours + " " + psycheMinutes + " " + psycheSeconds);
-
       const remainingEarthDays = ageInDays % psycheYear;
       const psycheDays = Math.floor(remainingEarthDays / psycheDay);
-
-    //  setAge({ years: psycheYears, days: psycheDays });
+      // Brief delay to simulate asynchronous update if needed
       setAge(null);
       setTimeout(() => {
-        setAge({years: psycheYears, days:psycheDays });
+        setAge({ years: psycheYears, days: psycheDays });
       }, 100);
     }
   };
 
   return (
     <div className="split-section">
+      {/* Wave Overlay: Positioned absolutely inside the split-section */}
+      <div className="wave-overlay">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+          <path
+            fill="#0c2159"
+            d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+          />
+        </svg>
+      </div>
+
       {/* Left Section */}
       <div className="left-section">
         <CardDeck />
@@ -117,11 +119,6 @@ const SplitSection: React.FC = () => {
 
       {/* Right Section */}
       <div className="right-section">
-      {/*  <h2>Right Section</h2>
-        <p>Content for the right section</p>
-        <p>Window width: {width}</p> */}
-        
-        {/* Birthday Input */}
         <div className="birthday-input">
           <label htmlFor="birthdate">Enter your birthdate:</label>
           <br />
@@ -136,9 +133,7 @@ const SplitSection: React.FC = () => {
             <button onClick={calculateAge}>Calculate Age</button>
           </div>
         </div>
-        
 
-        {/* Age Result */}
         {age !== null && (
           <div className="age-result">
             <p>

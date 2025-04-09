@@ -1,13 +1,13 @@
-export const metadata = {
-  title: "Year of Psyche",
-  description: "An interactive website to deliver information to users through text and clickable elements",
-};
-
 import "../styles/layout.css";
 import InteractiveSection from "../components/InteractiveSection";
 import SplitSection from "../components/SplitSection";
 import FeatureSection from "../components/FeatureSection";
 import { CircleStar, DiamondStar } from "../components/Star";
+
+export const metadata = {
+  title: "Year of Psyche",
+  description: "An interactive website to deliver information to users through text and clickable elements",
+};
 
 export default function RootLayout({ children, }: { children: React.ReactNode; }) {
   return (
