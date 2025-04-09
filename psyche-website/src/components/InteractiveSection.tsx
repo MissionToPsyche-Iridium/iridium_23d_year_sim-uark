@@ -95,7 +95,7 @@ export default function InteractiveSection() {
         const scaledSizeY = size.y * scaleFactor;
         // Apply an upward offset to the outer group.
         // Increase the multiplier until you achieve your desired placement.
-        const extraYOffset = scaledSizeY * 1.2; // Adjust this value as needed
+        const extraYOffset = scaledSizeY * 1.5; // Adjust this value as needed
         offsetGroup.position.y += extraYOffset;
     
         // Add offsetGroup to the scene.
@@ -172,6 +172,13 @@ export default function InteractiveSection() {
   return (
     <section className="interactive-section">
       <canvas ref={canvasRef}></canvas>
+      {/* SVG wave separator at the bottom */}
+      <svg className="wave-divider" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path
+          fill="#310945"
+          d="M0,224L48,186.7C96,149,192,75,288,80C384,85,480,171,576,202.7C672,235,768,213,864,186.7C960,160,1056,128,1152,117.3C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+        ></path>
+      </svg>
     </section>
   );
 }
