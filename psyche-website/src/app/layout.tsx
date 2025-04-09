@@ -7,54 +7,37 @@ import "../styles/layout.css";
 import InteractiveSection from "../components/InteractiveSection";
 import SplitSection from "../components/SplitSection";
 import FeatureSection from "../components/FeatureSection";
+import { CircleStar, DiamondStar } from "../components/Star";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children, }: { children: React.ReactNode; }) {
   return (
     <html lang="en">
       <head>
-        {/* Google Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Jost:wght@300&family=Oregano:ital@0;1&display=swap"
-          rel="stylesheet"
-        />
+        {/* You can add basic meta tags if needed */}
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body className="body">
         <header className="header">
           <h1>YEAR OF PSYCHE</h1>
 
-          {/* -- STAR FIELD LAYER -- */}
+          {/* Star Field Layer */}
           <div className="header-stars">
-            <svg
-              viewBox="0 0 1440 320"
-              preserveAspectRatio="none"
-              className="star-svg"
-            >
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
               <g>
-                {/* Circle Stars */}
-                <circle cx="50" cy="50" r="2" />
-                <circle cx="150" cy="100" r="3" />
-                <circle cx="300" cy="180" r="1.5" />
-                <circle cx="500" cy="70" r="2" />
-                <circle cx="700" cy="210" r="2.5" />
-                <circle cx="900" cy="40" r="2" />
-                <circle cx="1150" cy="110" r="3" />
-                <circle cx="1300" cy="160" r="1.5" />
+                {/* Circle Stars Using the Helper Component */}
+                <CircleStar centerX={50} centerY={50} radius={2} className="star-svg" />
+                <CircleStar centerX={150} centerY={100} radius={3} className="star-svg" />
+                <CircleStar centerX={300} centerY={180} radius={1.5} className="star-svg" />
+                <CircleStar centerX={500} centerY={70} radius={2} className="star-svg" />
+                <CircleStar centerX={700} centerY={210} radius={2.5} className="star-svg" />
+                <CircleStar centerX={900} centerY={40} radius={2} className="star-svg" />
+                <CircleStar centerX={1150} centerY={110} radius={3} className="star-svg" />
+                <CircleStar centerX={1300} centerY={160} radius={1.5} className="star-svg" />
 
-                {/* Diamond Shaped Stars */}
-                <polygon
-                  className="diamond-star"
-                  points="200,120 210,130 200,140 190,130"
-                />
-                <polygon
-                  className="diamond-star"
-                  points="1000,80 1010,90 1000,100 990,90"
-                />
+                {/* Diamond Shaped Stars Using the Helper Component */}
+                <DiamondStar centerX={200} centerY={130} width={10} height={20} className="diamond-star" />
+                <DiamondStar centerX={1350} centerY={235} width={10} height={20} className="diamond-star" />
               </g>
             </svg>
           </div>
@@ -91,7 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
 
-        {/* Site Content */}
+        {/* Main Content */}
         <InteractiveSection />
         <SplitSection />
         <FeatureSection />
