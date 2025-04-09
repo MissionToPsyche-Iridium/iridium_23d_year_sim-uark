@@ -10,15 +10,15 @@ body, html {
     font-family: 'Caveat Brush', sans-serif;
   }
   
-  /* Header Styling */
+  /* Header styling */
   .header {
     position: relative;
-    height: 220px; /* Adjust to your design requirements */
+    height: 160px;  /* The main title area */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow: visible; /* waves can extend below */
     z-index: 10;
   }
   
@@ -34,18 +34,38 @@ body, html {
   /* Container for layered waves */
   .header-waves {
     position: absolute;
-    top: 0;  /* Place waves at the top of header so they fill from top */
+    top: 0;
     left: 0;
     width: 100%;
-    height: 220px; /* Set height to match header or adjust accordingly */
+    height: 300px; /* since your waves are 320 high each */
     z-index: 1;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column; 
+    pointer-events: none;
     transform: scale(-1, -1);
   }
   
-  /* Wave layers: each uses a separate SVG */
+  /* Each wave is absolutely positioned. We'll offset each wave by 20px from the one above it. */
   .wave {
+    position: absolute;
     width: 100%;
+    display: block;
+    bottom: 0; /* by default, wave starts at the bottom of container */
+  }
+  
+  .wave1 {
+    bottom: 90px;
+  }
+  /* Wave 2 is 20px above the bottom */
+  .wave2 {
+    bottom: 45px;
+  }
+  /* Wave 3 sits flush at container bottom */
+  .wave3 {
+    bottom: 0;
+  }
+  
+  /* Make sure each wave's SVG fills horizontally. */
+  .wave svg {
+    width: 100%;
+    height: auto;
+    display: block;
   }  
