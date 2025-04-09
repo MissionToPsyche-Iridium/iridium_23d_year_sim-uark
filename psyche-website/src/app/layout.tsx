@@ -3,7 +3,7 @@ export const metadata = {
   description: "An interactive website to deliver information to users through text and clickable elements",
 };
 
-import "../styles/Layout.css";
+import "../styles/layout.css";
 import InteractiveSection from "../components/InteractiveSection";
 import SplitSection from "../components/SplitSection";
 import FeatureSection from "../components/FeatureSection";
