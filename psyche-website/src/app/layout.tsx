@@ -1,3 +1,15 @@
+/**
+ * This is the main layout file for the Year of Psyche website. It sets up the
+ * overall structure of the page, including the header with a starry background,
+ * waves, and the main content sections. The layout is styled using CSS and
+ * includes interactive elements like a 3D model viewer and feature sections.
+ * 
+ * This layout is designed to be responsive and visually appealing, with
+ * a focus on delivering information about the Psyche mission in a simple,
+ * engaging way. The header features a starry background with animated waves,
+ * and the main content includes sections for interactive elements and features.
+ */
+
 import "../styles/layout.css";
 import InteractiveSection from "../components/InteractiveSection";
 import SplitSection from "../components/SplitSection";
@@ -9,11 +21,19 @@ export const metadata = {
   description: "An interactive website to deliver information to users through text and clickable elements",
 };
 
+/**
+ * This is the main layout component for the Year of Psyche website.
+ * It defines the global HTML structure including the header, animated
+ * backgrounds (stars and waves), and main content sections.
+ * 
+ * @param {Object} props - Component properties.
+ * @param {React.ReactNode} props.children - Child elements to be rendered within the layout.
+ * @returns {JSX.Element} The complete HTML structure for the webpage.
+ */
 export default function RootLayout({ children, }: { children: React.ReactNode; }) {
   return (
     <html lang="en">
       <head>
-        {/* You can add basic meta tags if needed */}
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
@@ -21,11 +41,16 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
         <header className="header">
           <h1>YEAR OF PSYCHE</h1>
 
-          {/* Star Field Layer */}
+          {/* 
+            Star Field Layer:
+            This section renders a field of animated stars using an SVG.
+            It utilizes helper components such as CircleStar and DiamondStar
+            to display stars with different shapes, positions, and sizes.
+          */}
           <div className="header-stars">
             <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
               <g>
-                {/* Circle Stars Using the Helper Component */}
+                {/* Circle Shaped Stars */}
                 <CircleStar centerX={50} centerY={50} radius={2} className="star-svg" />
                 <CircleStar centerX={150} centerY={100} radius={3} className="star-svg" />
                 <CircleStar centerX={300} centerY={180} radius={1.5} className="star-svg" />
@@ -35,14 +60,18 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
                 <CircleStar centerX={1150} centerY={110} radius={3} className="star-svg" />
                 <CircleStar centerX={1300} centerY={160} radius={1.5} className="star-svg" />
 
-                {/* Diamond Shaped Stars Using the Helper Component */}
+                {/* Diamond Shaped Stars */}
                 <DiamondStar centerX={200} centerY={130} width={10} height={20} className="diamond-star" />
                 <DiamondStar centerX={1350} centerY={235} width={10} height={20} className="diamond-star" />
               </g>
             </svg>
           </div>
 
-          {/* Waves Container */}
+          {/* 
+            Waves Container:
+            This section creates a visual effect of animated waves at the bottom of the header.
+            It contains three overlapping SVG wave layers, each with unique fill colors.
+          */}
           <div className="header-waves">
             {/* Wave 1 */}
             <div className="wave wave1">
@@ -53,6 +82,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
                 />
               </svg>
             </div>
+            
             {/* Wave 2 */}
             <div className="wave wave2">
               <svg viewBox="0 0 1440 340" preserveAspectRatio="none">
@@ -62,6 +92,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
                 />
               </svg>
             </div>
+            
             {/* Wave 3 */}
             <div className="wave wave3">
               <svg viewBox="0 0 1440 360" preserveAspectRatio="none">
@@ -74,7 +105,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
           </div>
         </header>
 
-        {/* Main Content */}
+        {/* Website Content */}
         <InteractiveSection />
         <SplitSection />
         <FeatureSection />
