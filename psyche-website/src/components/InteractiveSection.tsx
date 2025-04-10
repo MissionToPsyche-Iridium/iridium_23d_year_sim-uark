@@ -1,41 +1,40 @@
-/**
- * This file contains the InteractiveSection component which renders a 3D model
- * using Three.js. The component sets up a Three.js scene, camera, and renderer,
- * loads a GLTF model, and allows the user to interact with the model by dragging to
- * rotate it.
- * 
- * NOTE: Need to adjust the model's scale and position as needed to fit the model in
- * the camera's view. Currently the Asteroid.glb model shows up and is interactable,
- * however, it is not centered or scaled properly.
- * 
- * To access the Asteroid.glb model set modelUrl to the following URL:
- * "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb"
- * 
- * Need to adjust the Psyche.glb model file size to show up on the screen.
- * 
- * Update the line: const upwardOffset = scaledSizeY * 1.5; with a different value
- * to adjust the upward offset of the model. This will help in centering the model
- * vertically.
- */
-
 "use client";
 
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import "../styles/InteractiveSection.css";
+import { useDragRotation } from "./mouseInput";
 
+/**
+ * InteractiveSection Component
+ *
+ * This component initializes a Three.js scene, loads a 3D model, and provides
+ * an interactive canvas where users can drag to rotate the model. It also includes
+ * a decorative SVG wave divider for visual separation.
+ *
+ * Features:
+ * - Sets up a Three.js scene with ambient and directional lighting.
+ * - Loads a .glb 3D model using GLTFLoader and adjusts its position, scale, and rotation.
+ * - Automatically centers and scales the model to fit within the scene.
+ * - Uses a custom hook (`useDragRotation`) to enable drag-to-rotate functionality.
+ * - Dynamically adjusts the camera to frame the model based on its dimensions.
+ *
+ * @returns {JSX.Element} A section containing the interactive Three.js canvas and a wave divider.
+ * Initializes a Three.js scene, loads a 3D model, and uses a custom hook for
+ * drag-to-rotate functionality.
+ */
 export default function InteractiveSection() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  // We'll store the rotation group (which rotates about the model's center) in modelRef
   const modelRef = useRef<THREE.Group | null>(null);
-  const isDragging = useRef(false);
-  const previousMousePosition = useRef({ x: 0, y: 0 });
+
+  // Use the custom hook to attach drag rotation events
+  useDragRotation({ canvasRef, modelRef });
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Set up scene, camera, and renderer
+    // Set up Three.js scene, camera, and renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       75,
@@ -59,58 +58,49 @@ export default function InteractiveSection() {
     // Position the camera
     camera.position.z = 5;
 
-    // Load the .glb model
+    // Load the .glb model with GLTFLoader
     const loader = new GLTFLoader();
-    const modelUrl = "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb";
+    const modelUrl =
+      "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb";
 
     loader.load(
       modelUrl,
       (gltf) => {
         const model = gltf.scene;
 
-        // Create an inner group that will be rotated (rotationGroup)
+        // Create a rotation group for the model
         const rotationGroup = new THREE.Group();
         rotationGroup.add(model);
 
-        // Compute the bounding box of the model
+        // Center the model inside the group
         const box = new THREE.Box3().setFromObject(model);
         const center = new THREE.Vector3();
         box.getCenter(center);
-    
-        // Center the model inside the rotation group (so the pivot is at the model's center)
         model.position.sub(center);
-    
-        // Optionally, adjust the rotationGroup's scale based on the model size
+
+        // Scale the model based on its maximum dimension
         const size = new THREE.Vector3();
         box.getSize(size);
         const maxDim = Math.max(size.x, size.y, size.z);
         const scaleFactor = 2 / maxDim;
         rotationGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
-    
-        // Create an outer group (offsetGroup) for vertical positioning
+
+        // Create an offset group for additional vertical positioning
         const offsetGroup = new THREE.Group();
         offsetGroup.add(rotationGroup);
-    
-        // Compute the model's effective (scaled) height
         const scaledSizeY = size.y * scaleFactor;
-        // Apply an upward offset to the outer group.
-        // Increase the multiplier until you achieve your desired placement.
-        const extraYOffset = scaledSizeY * 1.5; // Adjust this value as needed
+        const extraYOffset = scaledSizeY * 1.5;
         offsetGroup.position.y += extraYOffset;
-    
-        // Add offsetGroup to the scene.
+
         scene.add(offsetGroup);
-    
-        // Store the rotationGroup in modelRef so that mouse rotation only affects it.
         modelRef.current = rotationGroup;
-    
-        // Adjust the camera to frame the model nicely.
+
+        // Adjust the camera to frame the model
         const fovRadians = camera.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fovRadians / 2)) * 1.5;
+        const cameraZ = Math.abs(maxDim / 2 / Math.tan(fovRadians / 2)) * 1.5;
         camera.position.z = cameraZ;
-        // Optionally, set the camera to look at a point that makes the model appear higher on screen
         camera.lookAt(new THREE.Vector3(0, extraYOffset, 0));
-    
+
         console.log("Model loaded, centered, and offset:", gltf);
       },
       undefined,
@@ -119,52 +109,15 @@ export default function InteractiveSection() {
       }
     );
 
-    // Mouse event handlers for drag-to-rotate functionality (rotating the rotationGroup)
-    const canvasEl = canvasRef.current;
-
-    const onMouseDown = (event: MouseEvent) => {
-      isDragging.current = true;
-      previousMousePosition.current = { x: event.clientX, y: event.clientY };
-    };
-
-    const onMouseMove = (event: MouseEvent) => {
-      if (isDragging.current && modelRef.current) {
-        const deltaMove = {
-          x: event.clientX - previousMousePosition.current.x,
-          y: event.clientY - previousMousePosition.current.y,
-        };
-
-        const rotationSpeed = 0.005;
-        // Rotate only the rotationGroup (centered pivot)
-        modelRef.current.rotation.y += deltaMove.x * rotationSpeed;
-        modelRef.current.rotation.x += deltaMove.y * rotationSpeed;
-
-        previousMousePosition.current = { x: event.clientX, y: event.clientY };
-      }
-    };
-
-    const onMouseUpOrLeave = () => {
-      isDragging.current = false;
-    };
-
-    canvasEl.addEventListener("mousedown", onMouseDown);
-    canvasEl.addEventListener("mousemove", onMouseMove);
-    canvasEl.addEventListener("mouseup", onMouseUpOrLeave);
-    canvasEl.addEventListener("mouseleave", onMouseUpOrLeave);
-    
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
     };
     animate();
-    
-    // Cleanup
+
+    // Cleanup renderer on component unmount
     return () => {
-      canvasEl.removeEventListener("mousedown", onMouseDown);
-      canvasEl.removeEventListener("mousemove", onMouseMove);
-      canvasEl.removeEventListener("mouseup", onMouseUpOrLeave);
-      canvasEl.removeEventListener("mouseleave", onMouseUpOrLeave);
       renderer.dispose();
     };
   }, []);
@@ -172,7 +125,7 @@ export default function InteractiveSection() {
   return (
     <section className="interactive-section">
       <canvas ref={canvasRef}></canvas>
-      {/* SVG wave separator at the bottom */}
+      {/* SVG wave divider for visual separation */}
       <svg className="wave-divider" viewBox="0 0 1440 320" preserveAspectRatio="none">
         <path
           fill="#310945"
