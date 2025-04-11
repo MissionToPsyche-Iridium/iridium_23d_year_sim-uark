@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import ProgressBar from "./ProgressBar";
+import CalculatorStars from "./CalculatorStars";
 import "../styles/SplitSection.css";
 
 // Card Deck Component
@@ -69,6 +69,7 @@ const SplitSection: React.FC = () => {
   const [width, setWidth] = useState<number>(0);
   const [birthdate, setBirthdate] = useState<string>("");
   const [age, setAge] = useState<{ years: number; days: number } | null>(null);
+  const [showStars, setShowStars] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -96,6 +97,9 @@ const SplitSection: React.FC = () => {
       setAge(null);
       setTimeout(() => {
         setAge({ years: psycheYears, days: psycheDays });
+        // Triggers stars when age is calculated
+        setShowStars(true); 
+        // setTimeout(() => setShowStars(false), 3000);
       }, 100);
     }
   };
@@ -139,7 +143,7 @@ const SplitSection: React.FC = () => {
             <p>
               You are {age.years} years and {age.days} days old!
             </p>
-            <ProgressBar age={age} />
+            {showStars && <CalculatorStars showStars = {showStars}/>}
           </div>
         )}
       </div>
