@@ -14,6 +14,7 @@ import "../styles/layout.css";
 import InteractiveSection from "../components/InteractiveSection";
 import SplitSection from "../components/SplitSection";
 import FeatureSection from "../components/FeatureSection";
+import { CircleStar, DiamondStar } from "@/components/Star";
 
 export const metadata = {
   title: "Year of Psyche",
@@ -39,6 +40,32 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
       <body className="body">
         <header className="header">
           <h1>YEAR OF PSYCHE</h1>
+
+          {/* 
+            Star Field Layer:
+            This section renders a field of animated stars using an SVG.
+            It utilizes helper components such as CircleStar and DiamondStar
+            to display stars with different shapes, positions, and sizes.
+          */}
+          <div className="header-stars">
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+              <g>
+                {/* Circle Shaped Stars */}
+                <CircleStar centerX={50} centerY={50} radius={2} className="star-svg" />
+                <CircleStar centerX={150} centerY={100} radius={3} className="star-svg" />
+                <CircleStar centerX={300} centerY={180} radius={1.5} className="star-svg" />
+                <CircleStar centerX={500} centerY={70} radius={2} className="star-svg" />
+                <CircleStar centerX={700} centerY={210} radius={2.5} className="star-svg" />
+                <CircleStar centerX={900} centerY={40} radius={2} className="star-svg" />
+                <CircleStar centerX={1150} centerY={110} radius={3} className="star-svg" />
+                <CircleStar centerX={1300} centerY={160} radius={1.5} className="star-svg" />
+
+                {/* Diamond Shaped Stars */}
+                <DiamondStar centerX={200} centerY={130} width={10} height={20} className="diamond-star" />
+                <DiamondStar centerX={1350} centerY={235} width={10} height={20} className="diamond-star" />
+              </g>
+            </svg>
+          </div>
 
           {/* 
             Waves Container:
