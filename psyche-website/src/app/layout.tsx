@@ -33,18 +33,36 @@ export const metadata = {
             fontFamily: "'Caveat Brush', sans-serif",
           }}
         >
-          {/* Heading Section */}
-          <header
+        {/* Heading Section */}
+        <header
+          style={{
+            textAlign: "center",
+            padding: "10px",
+            margin: 0,
+          }}
+        >
+          <div
             style={{
-              textAlign: "center",
-              padding: "10px",
-              margin: 0,
-              fontSize: "calc(10px + 2vmin)",
+              backgroundColor: "#031e4d",  
+              display: "inline-block",
+              width:"100%",
+              padding: "10px 20px",       
+              margin: "0",
             }}
           >
-            <h1 style={{ margin: 0, padding: 0, lineHeight: "1.2" }}>YEAR OF PSYCHE</h1>
-          </header>
-  
+            <img
+              src="/pixelTitle.png"
+              alt="Year of Psyche"
+              style={{
+                width: "40%",
+                height: "auto",
+                maxWidth: "400px",
+              }}
+            />
+          </div>
+        </header>
+
+          
           {/* Interactive Section */}
           <InteractiveSection />
   
