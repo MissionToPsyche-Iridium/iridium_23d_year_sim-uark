@@ -15,6 +15,7 @@ import InteractiveSection from "../components/InteractiveSection";
 import SplitSection from "../components/SplitSection";
 import FeatureSection from "../components/FeatureSection";
 import { CircleStar, DiamondStar } from "@/components/Star";
+import SplitSectionTwo from "../components/SplitSectionTwo";
 
 export const metadata = {
   title: "Year of Psyche",
@@ -109,6 +110,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
         <InteractiveSection />
         <SplitSection />
         <FeatureSection />
+        <SplitSectionTwo />
 
         {children}
       </body>
