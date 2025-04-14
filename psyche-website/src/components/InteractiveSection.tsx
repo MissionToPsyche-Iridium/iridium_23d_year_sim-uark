@@ -11,25 +11,46 @@ import { useTouchRotation } from "./touchInput";
  * InteractiveSection Component
  *
  * This component initializes a Three.js scene, loads a 3D model, and provides
- * an interactive canvas where users can drag to rotate the model. It also includes
- * a decorative SVG wave divider for visual separation.
+ * an interactive canvas where users can drag or touch to rotate the model.
+ * It also provides Zoom In, Zoom Out, and Reset buttons to control the model's scale
+ * and rotation. A decorative SVG wave divider is included for visual separation.
  *
- * Features:
- * - Sets up a Three.js scene with ambient and directional lighting.
- * - Loads a .glb 3D model using GLTFLoader and adjusts its position, scale, and rotation.
- * - Automatically centers and scales the model to fit within the scene.
- * - Uses custom hooks (`useDragRotation` and `useTouchRotation`) to enable drag/touch-to-rotate functionality.
- * - Dynamically adjusts the camera to frame the model based on its dimensions.
- *
- * @returns {JSX.Element} A section containing the interactive Three.js canvas and a wave divider.
+ * @returns {JSX.Element} A section containing the interactive Three.js canvas,
+ * three control buttons, and an optional wave divider.
  */
 export default function InteractiveSection() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const modelRef = useRef<THREE.Group | null>(null);
+  // Store the initial scale of the model
+  const initialScaleRef = useRef<THREE.Vector3 | null>(null);
+  // Store the initial rotation of the model
+  const initialRotationRef = useRef<THREE.Euler | null>(null);
 
   // Attach both mouse and touch rotation event listeners
   useDragRotation({ canvasRef, modelRef });
   useTouchRotation({ canvasRef, modelRef });
+
+  // Handler to zoom the model in (increase scale)
+  const handleZoomIn = () => {
+    if (modelRef.current) {
+      modelRef.current.scale.multiplyScalar(1.1);
+    }
+  };
+
+  // Handler to zoom the model out (decrease scale)
+  const handleZoomOut = () => {
+    if (modelRef.current) {
+      modelRef.current.scale.multiplyScalar(0.9);
+    }
+  };
+
+  // Handler to reset the model's scale and rotation to their original values
+  const handleReset = () => {
+    if (modelRef.current && initialScaleRef.current && initialRotationRef.current) {
+      modelRef.current.scale.copy(initialScaleRef.current);
+      modelRef.current.rotation.copy(initialRotationRef.current);
+    }
+  };
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -60,8 +81,7 @@ export default function InteractiveSection() {
 
     // Load the .glb model with GLTFLoader
     const loader = new GLTFLoader();
-    const modelUrl =
-      "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb";
+    const modelUrl = "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb";
 
     loader.load(
       modelUrl,
@@ -84,6 +104,10 @@ export default function InteractiveSection() {
         const maxDim = Math.max(size.x, size.y, size.z);
         const scaleFactor = 2 / maxDim;
         rotationGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+        // Store the original scale and rotation for resetting
+        initialScaleRef.current = rotationGroup.scale.clone();
+        initialRotationRef.current = rotationGroup.rotation.clone();
 
         // Create an offset group for additional vertical positioning
         const offsetGroup = new THREE.Group();
@@ -125,7 +149,14 @@ export default function InteractiveSection() {
   return (
     <section className="interactive-section">
       <canvas ref={canvasRef}></canvas>
-      {/* SVG wave divider for visual separation */}
+
+      {/* Control buttons positioned on the right */}
+      <div className="zoom-controls">
+        <button onClick={handleZoomIn}>Zoom In</button>
+        <button onClick={handleZoomOut}>Zoom Out</button>
+        <button onClick={handleReset}>Reset</button>
+      </div>
+
       <svg
         className="wave-divider"
         viewBox="0 0 1440 320"
