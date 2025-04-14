@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import "../styles/InteractiveSection.css";
 import { useDragRotation } from "./mouseInput";
+import { useTouchRotation } from "./touchInput";
 
 /**
  * InteractiveSection Component
@@ -17,19 +18,18 @@ import { useDragRotation } from "./mouseInput";
  * - Sets up a Three.js scene with ambient and directional lighting.
  * - Loads a .glb 3D model using GLTFLoader and adjusts its position, scale, and rotation.
  * - Automatically centers and scales the model to fit within the scene.
- * - Uses a custom hook (`useDragRotation`) to enable drag-to-rotate functionality.
+ * - Uses custom hooks (`useDragRotation` and `useTouchRotation`) to enable drag/touch-to-rotate functionality.
  * - Dynamically adjusts the camera to frame the model based on its dimensions.
  *
  * @returns {JSX.Element} A section containing the interactive Three.js canvas and a wave divider.
- * Initializes a Three.js scene, loads a 3D model, and uses a custom hook for
- * drag-to-rotate functionality.
  */
 export default function InteractiveSection() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const modelRef = useRef<THREE.Group | null>(null);
 
-  // Use the custom hook to attach drag rotation events
+  // Attach both mouse and touch rotation event listeners
   useDragRotation({ canvasRef, modelRef });
+  useTouchRotation({ canvasRef, modelRef });
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -126,7 +126,11 @@ export default function InteractiveSection() {
     <section className="interactive-section">
       <canvas ref={canvasRef}></canvas>
       {/* SVG wave divider for visual separation */}
-      <svg className="wave-divider" viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <svg
+        className="wave-divider"
+        viewBox="0 0 1440 320"
+        preserveAspectRatio="none"
+      >
         <path
           fill="#310945"
           d="M0,224L48,186.7C96,149,192,75,288,80C384,85,480,171,576,202.7C672,235,768,213,864,186.7C960,160,1056,128,1152,117.3C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
