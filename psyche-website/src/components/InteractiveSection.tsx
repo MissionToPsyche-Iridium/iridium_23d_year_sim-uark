@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import "../styles/InteractiveSection.css";
@@ -30,27 +30,35 @@ export default function InteractiveSection() {
   useDragRotation({ canvasRef, modelRef });
   useTouchRotation({ canvasRef, modelRef });
 
-  // Handler to zoom the model in (increase scale)
-  const handleZoomIn = () => {
-    if (modelRef.current) {
-      modelRef.current.scale.multiplyScalar(1.1);
-    }
-  };
-
-  // Handler to zoom the model out (decrease scale)
-  const handleZoomOut = () => {
-    if (modelRef.current) {
-      modelRef.current.scale.multiplyScalar(0.9);
-    }
-  };
-
-  // Handler to reset the model's scale and rotation to their original values
-  const handleReset = () => {
-    if (modelRef.current && initialScaleRef.current && initialRotationRef.current) {
-      modelRef.current.scale.copy(initialScaleRef.current);
-      modelRef.current.rotation.copy(initialRotationRef.current);
-    }
-  };
+    // State to track zoom level
+    const [zoomLevel, setZoomLevel] = useState(0);
+    const maxZoomLevel = 6; // Maximum zoom-in steps
+    const minZoomLevel = -5; // Maximum zoom-out steps
+  
+    // Handler to zoom in the model
+    const handleZoomIn = () => {
+      if (modelRef.current && zoomLevel < maxZoomLevel) {
+        modelRef.current.scale.multiplyScalar(1.1);
+        setZoomLevel(zoomLevel + 1);
+      }
+    };
+  
+    // Handler to zoom out the model
+    const handleZoomOut = () => {
+      if (modelRef.current && zoomLevel > minZoomLevel) {
+        modelRef.current.scale.multiplyScalar(0.9);
+        setZoomLevel(zoomLevel - 1);
+      }
+    };
+  
+    // Handler to reset the model's scale and rotation to their original values
+    const handleReset = () => {
+      if (modelRef.current && initialScaleRef.current && initialRotationRef.current) {
+        modelRef.current.scale.copy(initialScaleRef.current);
+        modelRef.current.rotation.copy(initialRotationRef.current);
+        setZoomLevel(0); // Reset zoom level
+      }
+    };
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -152,21 +160,15 @@ export default function InteractiveSection() {
 
       {/* Control buttons positioned on the right */}
       <div className="zoom-controls">
-        <button onClick={handleZoomIn}>Zoom In</button>
-        <button onClick={handleZoomOut}>Zoom Out</button>
+        <button onClick={handleZoomIn} disabled={zoomLevel >= maxZoomLevel}>
+          Zoom In
+        </button>
+        <button onClick={handleZoomOut} disabled={zoomLevel <= minZoomLevel}>
+          Zoom Out
+        </button>
         <button onClick={handleReset}>Reset</button>
       </div>
 
-      <svg
-        className="wave-divider"
-        viewBox="0 0 1440 320"
-        preserveAspectRatio="none"
-      >
-        <path
-          fill="#310945"
-          d="M0,224L48,186.7C96,149,192,75,288,80C384,85,480,171,576,202.7C672,235,768,213,864,186.7C960,160,1056,128,1152,117.3C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-        ></path>
-      </svg>
     </section>
   );
 }
