@@ -85,7 +85,7 @@ const SplitSectionTwo: React.FC = () => {
       </div>
 
       {/* Right Section */}
-      <div className="right-section">
+      <div className="left-section">
         <CardDeck />
       </div>
     </div>
