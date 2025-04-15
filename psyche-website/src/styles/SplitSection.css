@@ -5,21 +5,54 @@
   align-items: center;
   width: calc(100% - 20px);
   padding: 0 10px;
-  margin: 20px auto;
+  margin: 200px auto;
   gap: 10px;
 }
 
 /* Wave overlay goes behind the content of the split section */
 .wave-overlay {
   position: absolute;
-  top: 10%;
   left: 0;
   width: 100%;
-  height: 350px;
+  height: 300px;
   transform: translateY(-50%);
   z-index: 0;
   pointer-events: none;
   overflow: visible;
+}
+
+.wave-overlay .rotated {
+  transform: translateY(-0.5) rotate(180deg); /* Moves the second wave below and rotates it */
+}
+
+.wave-overlay2 {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  transform: translateY(-90%);
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.wave-overlay2 .rotated {
+  transform: translateY(-10) rotate(180deg); /* Moves the second wave below and rotates it */
+}
+
+.wave-overlay3 {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  transform: translateY(-100%);
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.wave-overlay3 .rotated {
+  transform: translateY(50) rotate(180deg); /* Moves the second wave below and rotates it */
 }
 
 .wave-overlay svg {
@@ -31,26 +64,19 @@
 .left-section, .right-section {
   flex: 1;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative; /* Ensure they stack above the wave overlay */
   z-index: 1;
 }
 
 .right-section {
-  background-color: rgb(120, 120, 120);
-  border: 1px solid #ccc;
   text-align: center;
   padding: 20px;
 }
 
 /* Card Deck Styles */
 .card-deck {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
   text-align: center;
   padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
 }
@@ -69,16 +95,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card-text {
-  font-size: 16px;
+  font-size: 20px;
   margin: 0;
-  color: black;
+  color: white;
 }
 
 .card-button {
