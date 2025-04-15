@@ -1,11 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Jost:wght@300&family=Oregano:ital@0;1&family=Press+Start+2P&family=Wallpoet&display=swap');
 
-/* Universal box-sizing */
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-/* Base styling */
 body, html {
   margin: 0;
   padding: 0;
@@ -28,7 +26,6 @@ body, html {
   text-align: center;
   overflow: visible;
   z-index: 10;
-  height: auto;
 }
 
 .header h1 {
@@ -41,23 +38,25 @@ body, html {
   line-height: 1.2;
 }
 
-/* ---- STAR FIELD LAYER ---- */
+/* Star Field Layer */
 .header-stars {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: auto;
   min-height: 200px;
   max-height: 35vh;
   z-index: 2;
   pointer-events: none;
 }
 
+.star-svg, .diamond-star {
+  display: block;
+}
+
 .star-svg {
   width: 100%;
   height: 100%;
-  display: block;
   fill: #a508f4;
 }
 
@@ -66,25 +65,41 @@ body, html {
   transform-origin: center;
 }
 
+/* Interactive Star Layer */
+.interactive-star-layer {
+  pointer-events: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+}
+
+.clickable-star {
+  cursor: pointer;
+  fill: #ffd700;
+  filter: drop-shadow(0 0 5px rgba(115,46,140,0.4))
+          drop-shadow(0 0 15px rgba(115,46,140,0.3));
+}
+
 /* Controls overlay */
 .header-controls {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: auto;
   min-height: 200px;
   max-height: 35vh;
   z-index: 3;
 }
 
-/* ---- WAVES ---- */
+/* Waves */
 .header-waves {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: auto;
   min-height: 200px;
   max-height: 35vh;
   z-index: 1;
@@ -95,7 +110,6 @@ body, html {
 .wave {
   position: absolute;
   width: 100%;
-  display: block;
   bottom: 0;
 }
 
@@ -157,7 +171,7 @@ body, html {
   }
 }
 
-/* Landscape Mode Tweaks */
+/* Landscape Mode */
 @media screen and (orientation: landscape) and (max-height: 500px) {
   .header h1 {
     font-size: 1.4rem;
@@ -172,11 +186,7 @@ body, html {
   }
 }
 
-/* iPhone Portrait Adjustments:
-   This media query targets devices with a max-width of 600px and vertical orientation.
-   It adjusts the header waves so that the wave container isn’t inverted (which can look off on smaller screens)
-   and shifts the wave bottom offsets to better match the desired look.
-*/
+/* iPhone Portrait Adjustments */
 @media only screen and (max-width: 600px) and (orientation: portrait) {
   .header {
     min-height: 150px;
@@ -190,7 +200,6 @@ body, html {
     top: 0;
     left: 0;
     width: 100%;
-    height: auto;
     min-height: 150px;
     max-height: none;
     z-index: 2;
@@ -210,7 +219,6 @@ body, html {
     top: 0;
     left: 0;
     width: 100%;
-    height: auto;
     min-height: 150px;
     pointer-events: none;
     z-index: 1;

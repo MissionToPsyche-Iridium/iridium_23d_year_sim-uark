@@ -16,21 +16,13 @@ import SplitSection from "../components/SplitSection";
 import FeatureSection from "../components/FeatureSection";
 import { CircleStar, DiamondStar } from "@/components/Star";
 import SplitSectionTwo from "../components/SplitSectionTwo";
+import InteractiveStar from "@/components/InteractiveStar";
 
 export const metadata = {
   title: "Year of Psyche",
   description: "An interactive website to deliver information to users through text and clickable elements",
 };
 
-/**
- * This is the main layout component for the Year of Psyche website.
- * It defines the global HTML structure including the header, animated
- * backgrounds (stars and waves), and main content sections.
- * 
- * @param {Object} props - Component properties.
- * @param {React.ReactNode} props.children - Child elements to be rendered within the layout.
- * @returns {JSX.Element} The complete HTML structure for the webpage.
- */
 export default function RootLayout({ children, }: { children: React.ReactNode; }) {
   return (
     <html lang="en">
@@ -43,10 +35,8 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
           <h1>YEAR OF PSYCHE</h1>
 
           {/* 
-            Star Field Layer:
-            This section renders a field of animated stars using an SVG.
-            It utilizes helper components such as CircleStar and DiamondStar
-            to display stars with different shapes, positions, and sizes.
+            Star Field Layer (Decorative, Non-Interactive):
+            Renders a field of animated stars using an SVG.
           */}
           <div className="header-stars">
             <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
@@ -56,7 +46,6 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
                 <CircleStar centerX={150} centerY={100} radius={3} className="star-svg" />
                 <CircleStar centerX={300} centerY={180} radius={1.5} className="star-svg" />
                 <CircleStar centerX={500} centerY={70} radius={2} className="star-svg" />
-                <CircleStar centerX={700} centerY={210} radius={2.5} className="star-svg" />
                 <CircleStar centerX={900} centerY={40} radius={2} className="star-svg" />
                 <CircleStar centerX={1150} centerY={110} radius={3} className="star-svg" />
                 <CircleStar centerX={1300} centerY={160} radius={1.5} className="star-svg" />
@@ -69,9 +58,14 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
           </div>
 
           {/* 
+            Interactive Star Layer:
+            Renders the interactive star (with halo ring) imported from InteractiveStar.tsx.
+          */}
+          <InteractiveStar />
+
+          {/* 
             Waves Container:
             This section creates a visual effect of animated waves at the bottom of the header.
-            It contains three overlapping SVG wave layers, each with unique fill colors.
           */}
           <div className="header-waves">
             {/* Wave 1 */}
@@ -83,7 +77,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
                 />
               </svg>
             </div>
-            
+
             {/* Wave 2 */}
             <div className="wave wave2">
               <svg viewBox="0 0 1440 340" preserveAspectRatio="none">
@@ -93,7 +87,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
                 />
               </svg>
             </div>
-            
+
             {/* Wave 3 */}
             <div className="wave wave3">
               <svg viewBox="0 0 1440 360" preserveAspectRatio="none">
