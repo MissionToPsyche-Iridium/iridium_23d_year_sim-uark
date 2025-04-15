@@ -158,7 +158,7 @@ const SplitSection: React.FC = () => {
       {/* Right Section */}
       <div className="right-section">
         <div className="birthday-input">
-          <label htmlFor="birthdate">Enter your birthdate:</label>
+          <label className="label"> Enter your birthdate: </label>
           <br />
           <br />
           <div className="input-container">

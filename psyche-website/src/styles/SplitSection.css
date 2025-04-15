@@ -118,6 +118,15 @@
   left: 10px;
 }
 
+.label {
+  font-size: 20px;
+  color: white;
+  margin: 0;
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+}
+
 .card-button.right {
   right: 10px;
 }
@@ -139,4 +148,63 @@ input[type="date"] {
 button {
   padding: 5px 10px;
   cursor: pointer;
+}
+
+.hamburger-menu {
+  position: absolute;
+  top: 20px;
+  left: 20px; /* changed from right to left */
+  z-index: 999;
+}
+
+.hamburger-icon {
+  font-size: 36px; /* made it bigger */
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.menu-dropdown {
+  margin-top: 10px;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-dropdown button {
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px 12px;
+  transition: color 0.2s ease;
+}
+
+.menu-dropdown button:hover {
+  color: #ffcc00;
+}
+.top-header {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+}
+
+.page-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.5rem;
+  color: white;
+  margin: 0 auto;
 }

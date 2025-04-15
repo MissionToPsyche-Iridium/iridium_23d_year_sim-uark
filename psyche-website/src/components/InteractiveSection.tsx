@@ -3,78 +3,106 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import "../styles/InteractiveSection.css";
 import { useDragRotation } from "./mouseInput";
 import { useTouchRotation } from "./touchInput";
+import "../styles/InteractiveSection.css";
 
-// Define a type for device categories
 type DeviceType = "iphone" | "ipad" | "desktop" | "other";
 
-// Function to detect the device type based on the user agent and screen properties
 const detectDeviceType = (): DeviceType => {
-  if (typeof navigator === "undefined" || !navigator.userAgent) {
-    return "other"; // fallback in non-browser contexts (e.g., SSR)
-  }
-
+  if (typeof navigator === "undefined" || !navigator.userAgent) return "other";
   const ua = navigator.userAgent.toLowerCase();
-
-  // Check for iPhone
-  if (/iphone/.test(ua)) {
-    return "iphone";
-  }
-
-  // Check for iPad; note that iPadOS may report as "MacIntel" along with touch support
-  if (/ipad/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) {
-    return "ipad";
-  }
-
-  // Default to desktop for other cases
+  if (/iphone/.test(ua)) return "iphone";
+  if (/ipad/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) return "ipad";
   return "desktop";
 };
 
 export default function InteractiveSection() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const modelRef = useRef<THREE.Group | null>(null);
-  // Store the initial scale of the model
   const initialScaleRef = useRef<THREE.Vector3 | null>(null);
-  // Store the initial rotation of the model
   const initialRotationRef = useRef<THREE.Euler | null>(null);
+  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Attach both mouse and touch rotation event listeners
   useDragRotation({ canvasRef, modelRef });
   useTouchRotation({ canvasRef, modelRef });
 
-  // State to track zoom level
   const [zoomLevel, setZoomLevel] = useState(0);
-  const maxZoomLevel = 6; // Maximum zoom-in steps
-  const minZoomLevel = -5; // Maximum zoom-out steps
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [currentRotation, setCurrentRotation] = useState(0);
+  const maxZoomLevel = 10;
+  const minZoomLevel = -10;
 
-  // State to track the device type
   const [deviceType, setDeviceType] = useState<DeviceType>("other");
-  // State to track orientation ("portrait" or "landscape")
   const [orientation, setOrientation] = useState<"portrait" | "landscape">("portrait");
 
-  useEffect(() => {
-    // Set the device type on component mount
-    setDeviceType(detectDeviceType());
+  // Heading conversion
+  const getCompassHeading = (radians: number) => {
+    let degrees = -THREE.MathUtils.radToDeg(radians);
+    degrees = (degrees + 360) % 360;
+    return Math.round(degrees);
+  };
 
-    // Detect orientation initially and on window resize
+  const getDirectionLabel = (deg: number) => {
+    if (deg >= 337.5 || deg < 22.5) return "N";
+    if (deg < 67.5) return "NE";
+    if (deg < 112.5) return "E";
+    if (deg < 157.5) return "SE";
+    if (deg < 202.5) return "S";
+    if (deg < 247.5) return "SW";
+    if (deg < 292.5) return "W";
+    return "NW";
+  };
+
+  const heading = getCompassHeading(currentRotation);
+  const direction = getDirectionLabel(heading);
+
+  // Inactivity Timer
+  const startInactivityTimer = () => {
+    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+    inactivityTimerRef.current = setTimeout(() => {
+      setShowTooltip(true);
+    }, 5000);
+  };
+
+  const cancelTooltip = () => {
+    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+    setShowTooltip(false);
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const handleUserInteraction = () => {
+      cancelTooltip();
+      startInactivityTimer();
+    };
+
+    canvas.addEventListener("mousedown", handleUserInteraction);
+    canvas.addEventListener("touchstart", handleUserInteraction);
+    canvas.addEventListener("pointerdown", handleUserInteraction);
+
+    startInactivityTimer();
+
+    return () => {
+      canvas.removeEventListener("mousedown", handleUserInteraction);
+      canvas.removeEventListener("touchstart", handleUserInteraction);
+      canvas.removeEventListener("pointerdown", handleUserInteraction);
+      clearTimeout(inactivityTimerRef.current!);
+    };
+  }, []);
+
+  useEffect(() => {
+    setDeviceType(detectDeviceType());
     const handleResize = () => {
       setOrientation(window.innerWidth < window.innerHeight ? "portrait" : "landscape");
     };
-
     window.addEventListener("resize", handleResize);
     handleResize();
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Log device and orientation info (optional)
-  useEffect(() => {
-    console.log("Device Type:", deviceType, "Orientation:", orientation);
-  }, [deviceType, orientation]);
-
-  // Handler to zoom in the model
   const handleZoomIn = () => {
     if (modelRef.current && zoomLevel < maxZoomLevel) {
       modelRef.current.scale.multiplyScalar(1.1);
@@ -82,7 +110,6 @@ export default function InteractiveSection() {
     }
   };
 
-  // Handler to zoom out the model
   const handleZoomOut = () => {
     if (modelRef.current && zoomLevel > minZoomLevel) {
       modelRef.current.scale.multiplyScalar(0.9);
@@ -90,43 +117,29 @@ export default function InteractiveSection() {
     }
   };
 
-  // Handler to reset the model's scale and rotation to their original values
   const handleReset = () => {
     if (modelRef.current && initialScaleRef.current && initialRotationRef.current) {
       modelRef.current.scale.copy(initialScaleRef.current);
       modelRef.current.rotation.copy(initialRotationRef.current);
-      setZoomLevel(0); // Reset zoom level
+      setZoomLevel(0);
     }
   };
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Set up Three.js scene, camera, and renderer
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGLRenderer({
-      canvas: canvasRef.current,
-      antialias: true,
-    });
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // Add ambient and directional lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-    scene.add(ambientLight);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight.position.set(1, 1, 1);
     scene.add(directionalLight);
 
-    // Position the camera
     camera.position.z = 5;
 
-    // Load the .glb model with GLTFLoader
     const loader = new GLTFLoader();
     const modelUrl = "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb";
 
@@ -134,29 +147,23 @@ export default function InteractiveSection() {
       modelUrl,
       (gltf) => {
         const model = gltf.scene;
-
-        // Create a rotation group for the model
         const rotationGroup = new THREE.Group();
         rotationGroup.add(model);
 
-        // Center the model inside the group
         const box = new THREE.Box3().setFromObject(model);
         const center = new THREE.Vector3();
         box.getCenter(center);
         model.position.sub(center);
 
-        // Scale the model based on its maximum dimension
         const size = new THREE.Vector3();
         box.getSize(size);
         const maxDim = Math.max(size.x, size.y, size.z);
         const scaleFactor = 2 / maxDim;
         rotationGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-        // Store the original scale and rotation for resetting
         initialScaleRef.current = rotationGroup.scale.clone();
         initialRotationRef.current = rotationGroup.rotation.clone();
 
-        // Create an offset group for additional vertical positioning
         const offsetGroup = new THREE.Group();
         offsetGroup.add(rotationGroup);
         const scaledSizeY = size.y * scaleFactor;
@@ -166,13 +173,10 @@ export default function InteractiveSection() {
         scene.add(offsetGroup);
         modelRef.current = rotationGroup;
 
-        // Adjust the camera to frame the model
         const fovRadians = camera.fov * (Math.PI / 180);
         const cameraZ = Math.abs(maxDim / 2 / Math.tan(fovRadians / 2)) * 1.5;
         camera.position.z = cameraZ;
         camera.lookAt(new THREE.Vector3(0, extraYOffset, 0));
-
-        console.log("Model loaded, centered, and offset:", gltf);
       },
       undefined,
       (error) => {
@@ -180,25 +184,29 @@ export default function InteractiveSection() {
       }
     );
 
-    // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
+
+      if (modelRef.current) {
+        setCurrentRotation(modelRef.current.rotation.y);
+      }
     };
     animate();
 
-    // Cleanup renderer on component unmount
     return () => {
       renderer.dispose();
     };
   }, []);
 
   return (
-    // Add both device type and orientation as classes on the section element
     <section className={`interactive-section ${deviceType} ${orientation}`}>
+      {showTooltip && (
+        <div className="asteroid-tooltip">🌀 Drag to explore 🌀</div>
+      )}
+
       <canvas ref={canvasRef}></canvas>
 
-      {/* Control buttons positioned on the right (or repositioned via CSS) */}
       <div className="zoom-controls">
         <button onClick={handleZoomIn} disabled={zoomLevel >= maxZoomLevel}>
           Zoom In
@@ -208,6 +216,19 @@ export default function InteractiveSection() {
         </button>
         <button onClick={handleReset}>Reset</button>
       </div>
+
+
+      <div className="compass-container">
+  <img
+    src="/compass-needle.png"
+    alt="Compass"
+    className="compass-needle"
+    style={{ transform: `rotate(${-currentRotation}rad)` }}
+  />
+  <div className="compass-heading">
+    {heading}° {direction}
+  </div>
+</div>
     </section>
   );
 }
