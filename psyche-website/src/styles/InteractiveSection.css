@@ -3,7 +3,9 @@
 .interactive-section {
   position: relative;
   width: 100%;
+  min-height: 400px;
   height: 80vh;
+  max-height: 100vh;
   background: #160827;
   overflow: hidden;
   margin: 0;
@@ -29,7 +31,7 @@ canvas {
   height: 100px;
 }
 
-/* Zoom controls container */
+/* Default Zoom Controls */
 .zoom-controls {
   position: absolute;
   top: 50%;
@@ -42,7 +44,6 @@ canvas {
   padding: 10px;
 }
 
-/* Space-themed button styles */
 .zoom-controls button {
   position: relative;
   padding: 12px 20px;
@@ -55,14 +56,11 @@ canvas {
   letter-spacing: 1px;
   border-radius: 4px;
   transition: all 0.3s ease;
-  
-  /* Add a subtle glow */
-  box-shadow: 
+  box-shadow:
     0 0 5px rgba(115, 46, 140, 0.4),
     0 0 15px rgba(115, 46, 140, 0.3);
 }
 
-/* Hover state with a stronger glow and slight color shift */
 .zoom-controls button:hover {
   color: #ffeeff;
   border-color: #bb45cd;
@@ -73,9 +71,72 @@ canvas {
   transform: scale(1.05);
 }
 
-/* Active state to give quick feedback */
 .zoom-controls button:active {
   transform: scale(0.95);
   background: linear-gradient(135deg, #43105f 0%, #1e0b36 100%);
   box-shadow: none;
+}
+
+/*******************************************
+ * iPhone Portrait: Push Model & Buttons Up
+ *******************************************/
+ @media only screen and (max-width: 600px) and (orientation: portrait) {
+  .interactive-section.iphone.portrait {
+    height: 65vh;
+    min-height: 300px;
+  }
+
+  .interactive-section.iphone.portrait .zoom-controls {
+    top: 0;
+    right: 1rem;
+    transform: none;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4px 6px;
+    background-color: rgba(22, 8, 39, 0.6);
+    border-radius: 6px;
+    z-index: 999;
+  }
+}
+
+/* 
+  iPad Portrait
+  - Also move .zoom-controls to top-right corner
+  - Similarly reduce padding & font size
+*/
+.interactive-section.ipad.portrait .zoom-controls {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 8px;
+  background-color: rgba(22, 8, 39, 0.6);
+  border-radius: 6px;
+  z-index: 999;
+}
+
+.interactive-section.ipad.portrait .zoom-controls button {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+/* Landscape Adjustments (if needed) */
+.interactive-section.iphone.landscape,
+.interactive-section.ipad.landscape {
+  /* For landscape, you might go back to right‑side vertical controls */
+  .zoom-controls {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    background-color: transparent;
+  }
 }

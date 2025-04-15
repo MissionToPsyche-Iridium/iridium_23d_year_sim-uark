@@ -1,6 +1,11 @@
-/* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Jost:wght@300&family=Oregano:ital@0;1&family=Press+Start+2P&family=Wallpoet&display=swap');
 
+/* Universal box-sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Base styling */
 body, html {
   margin: 0;
   padding: 0;
@@ -15,20 +20,22 @@ body, html {
 /* Header styling */
 .header {
   position: relative;
-  height: 180px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
   overflow: visible;
   z-index: 10;
+  height: auto;
 }
 
 .header h1 {
   position: relative;
   z-index: 4;
   margin: 0;
-  padding: 15px 15px;
+  padding: 15px;
   font-family: 'Press Start 2P', sans-serif;
   font-size: calc(50px + 2vmin);
   line-height: 1.2;
@@ -40,7 +47,9 @@ body, html {
   top: 0;
   left: 0;
   width: 100%;
-  height: 300px;
+  height: auto;
+  min-height: 200px;
+  max-height: 35vh;
   z-index: 2;
   pointer-events: none;
 }
@@ -57,22 +66,27 @@ body, html {
   transform-origin: center;
 }
 
-/* Additional styling (Controls, Waves, etc.) */
+/* Controls overlay */
 .header-controls {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 300px; 
+  height: auto;
+  min-height: 200px;
+  max-height: 35vh;
   z-index: 3;
 }
 
+/* ---- WAVES ---- */
 .header-waves {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 300px; 
+  height: auto;
+  min-height: 200px;
+  max-height: 35vh;
   z-index: 1;
   pointer-events: none;
   transform: scale(-1, -1);
@@ -101,4 +115,121 @@ body, html {
   width: 100%;
   height: auto;
   display: block;
+}
+
+/* Phones */
+@media (max-width: 600px) {
+  .header h1 {
+    font-size: 1.5rem;
+    padding: 10px;
+  }
+
+  .header {
+    padding: 2rem 1rem;
+  }
+
+  .header-stars,
+  .header-controls,
+  .header-waves {
+    min-height: 150px;
+    max-height: 30vh;
+  }
+
+  .wave1,
+  .wave2,
+  .wave3 {
+    bottom: unset;
+    position: relative;
+  }
+}
+
+/* Tablets */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .header h1 {
+    font-size: 2.2rem;
+  }
+
+  .header-stars,
+  .header-controls,
+  .header-waves {
+    min-height: 180px;
+    max-height: 40vh;
+  }
+}
+
+/* Landscape Mode Tweaks */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .header h1 {
+    font-size: 1.4rem;
+  }
+
+  .header {
+    padding: 1rem;
+  }
+
+  .header-waves {
+    transform: scale(1, 1);
+  }
+}
+
+/* iPhone Portrait Adjustments:
+   This media query targets devices with a max-width of 600px and vertical orientation.
+   It adjusts the header waves so that the wave container isn’t inverted (which can look off on smaller screens)
+   and shifts the wave bottom offsets to better match the desired look.
+*/
+@media only screen and (max-width: 600px) and (orientation: portrait) {
+  .header {
+    min-height: 150px;
+  }
+
+  .header h1 {
+    transform: translateY(-30px);
+  }
+
+  .header-stars {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    min-height: 150px;
+    max-height: none;
+    z-index: 2;
+    pointer-events: none;
+  }
+  
+  .star-svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .header-stars .star-svg {
+    transform: translate(0, 0) scale(1.5);
+  }
+  
+  .header-waves {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    min-height: 150px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  .wave1 {
+    bottom: -90px;
+  }
+  
+  .wave2 {
+    bottom: -20px;
+  }
+  
+  .wave3 {
+    bottom: 65px;
+  }
+  
+  .wave3 svg {
+    transform-origin: top;
+    transform: scaleY(1.2);
+  }
 }

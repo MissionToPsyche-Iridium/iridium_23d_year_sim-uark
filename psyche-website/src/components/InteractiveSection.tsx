@@ -7,17 +7,31 @@ import "../styles/InteractiveSection.css";
 import { useDragRotation } from "./mouseInput";
 import { useTouchRotation } from "./touchInput";
 
-/**
- * InteractiveSection Component
- *
- * This component initializes a Three.js scene, loads a 3D model, and provides
- * an interactive canvas where users can drag or touch to rotate the model.
- * It also provides Zoom In, Zoom Out, and Reset buttons to control the model's scale
- * and rotation. A decorative SVG wave divider is included for visual separation.
- *
- * @returns {JSX.Element} A section containing the interactive Three.js canvas,
- * three control buttons, and an optional wave divider.
- */
+// Define a type for device categories
+type DeviceType = "iphone" | "ipad" | "desktop" | "other";
+
+// Function to detect the device type based on the user agent and screen properties
+const detectDeviceType = (): DeviceType => {
+  if (typeof navigator === "undefined" || !navigator.userAgent) {
+    return "other"; // fallback in non-browser contexts (e.g., SSR)
+  }
+
+  const ua = navigator.userAgent.toLowerCase();
+
+  // Check for iPhone
+  if (/iphone/.test(ua)) {
+    return "iphone";
+  }
+
+  // Check for iPad; note that iPadOS may report as "MacIntel" along with touch support
+  if (/ipad/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) {
+    return "ipad";
+  }
+
+  // Default to desktop for other cases
+  return "desktop";
+};
+
 export default function InteractiveSection() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const modelRef = useRef<THREE.Group | null>(null);
@@ -30,35 +44,60 @@ export default function InteractiveSection() {
   useDragRotation({ canvasRef, modelRef });
   useTouchRotation({ canvasRef, modelRef });
 
-    // State to track zoom level
-    const [zoomLevel, setZoomLevel] = useState(0);
-    const maxZoomLevel = 6; // Maximum zoom-in steps
-    const minZoomLevel = -5; // Maximum zoom-out steps
-  
-    // Handler to zoom in the model
-    const handleZoomIn = () => {
-      if (modelRef.current && zoomLevel < maxZoomLevel) {
-        modelRef.current.scale.multiplyScalar(1.1);
-        setZoomLevel(zoomLevel + 1);
-      }
+  // State to track zoom level
+  const [zoomLevel, setZoomLevel] = useState(0);
+  const maxZoomLevel = 6; // Maximum zoom-in steps
+  const minZoomLevel = -5; // Maximum zoom-out steps
+
+  // State to track the device type
+  const [deviceType, setDeviceType] = useState<DeviceType>("other");
+  // State to track orientation ("portrait" or "landscape")
+  const [orientation, setOrientation] = useState<"portrait" | "landscape">("portrait");
+
+  useEffect(() => {
+    // Set the device type on component mount
+    setDeviceType(detectDeviceType());
+
+    // Detect orientation initially and on window resize
+    const handleResize = () => {
+      setOrientation(window.innerWidth < window.innerHeight ? "portrait" : "landscape");
     };
-  
-    // Handler to zoom out the model
-    const handleZoomOut = () => {
-      if (modelRef.current && zoomLevel > minZoomLevel) {
-        modelRef.current.scale.multiplyScalar(0.9);
-        setZoomLevel(zoomLevel - 1);
-      }
-    };
-  
-    // Handler to reset the model's scale and rotation to their original values
-    const handleReset = () => {
-      if (modelRef.current && initialScaleRef.current && initialRotationRef.current) {
-        modelRef.current.scale.copy(initialScaleRef.current);
-        modelRef.current.rotation.copy(initialRotationRef.current);
-        setZoomLevel(0); // Reset zoom level
-      }
-    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Log device and orientation info (optional)
+  useEffect(() => {
+    console.log("Device Type:", deviceType, "Orientation:", orientation);
+  }, [deviceType, orientation]);
+
+  // Handler to zoom in the model
+  const handleZoomIn = () => {
+    if (modelRef.current && zoomLevel < maxZoomLevel) {
+      modelRef.current.scale.multiplyScalar(1.1);
+      setZoomLevel(zoomLevel + 1);
+    }
+  };
+
+  // Handler to zoom out the model
+  const handleZoomOut = () => {
+    if (modelRef.current && zoomLevel > minZoomLevel) {
+      modelRef.current.scale.multiplyScalar(0.9);
+      setZoomLevel(zoomLevel - 1);
+    }
+  };
+
+  // Handler to reset the model's scale and rotation to their original values
+  const handleReset = () => {
+    if (modelRef.current && initialScaleRef.current && initialRotationRef.current) {
+      modelRef.current.scale.copy(initialScaleRef.current);
+      modelRef.current.rotation.copy(initialRotationRef.current);
+      setZoomLevel(0); // Reset zoom level
+    }
+  };
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -155,10 +194,11 @@ export default function InteractiveSection() {
   }, []);
 
   return (
-    <section className="interactive-section">
+    // Add both device type and orientation as classes on the section element
+    <section className={`interactive-section ${deviceType} ${orientation}`}>
       <canvas ref={canvasRef}></canvas>
 
-      {/* Control buttons positioned on the right */}
+      {/* Control buttons positioned on the right (or repositioned via CSS) */}
       <div className="zoom-controls">
         <button onClick={handleZoomIn} disabled={zoomLevel >= maxZoomLevel}>
           Zoom In
@@ -168,7 +208,6 @@ export default function InteractiveSection() {
         </button>
         <button onClick={handleReset}>Reset</button>
       </div>
-
     </section>
   );
 }
