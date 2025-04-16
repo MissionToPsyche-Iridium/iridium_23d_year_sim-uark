@@ -17,7 +17,7 @@ import FeatureSection from "../components/FeatureSection";
 import { CircleStar, DiamondStar } from "@/components/Star";
 import SplitSectionTwo from "../components/SplitSectionTwo";
 import InteractiveStar from "@/components/InteractiveStar";
-import CustomCursor from "@/components/CustomCursor"; // 👈 Add this at the top
+import CustomCursor from "@/components/CustomCursor";
 
 
 export const metadata = {
@@ -44,13 +44,13 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
             <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
               <g>
                 {/* Circle Shaped Stars */}
-                <CircleStar centerX={50} centerY={50} radius={2} className="star-svg" />
-                <CircleStar centerX={150} centerY={100} radius={3} className="star-svg" />
-                <CircleStar centerX={300} centerY={180} radius={1.5} className="star-svg" />
-                <CircleStar centerX={500} centerY={70} radius={2} className="star-svg" />
-                <CircleStar centerX={900} centerY={40} radius={2} className="star-svg" />
-                <CircleStar centerX={1150} centerY={110} radius={3} className="star-svg" />
-                <CircleStar centerX={1300} centerY={160} radius={1.5} className="star-svg" />
+                <CircleStar centerX={50} centerY={50} radius={3.5} className="star-svg" />
+                <CircleStar centerX={150} centerY={100} radius={4} className="star-svg" />
+                <CircleStar centerX={300} centerY={180} radius={3.5} className="star-svg" />
+                <CircleStar centerX={500} centerY={70} radius={3} className="star-svg" />
+                <CircleStar centerX={900} centerY={40} radius={3.5} className="star-svg" />
+                <CircleStar centerX={1150} centerY={110} radius={4} className="star-svg" />
+                {/* <CircleStar centerX={1300} centerY={160} radius={3.5} className="star-svg" /> */}
 
                 {/* Diamond Shaped Stars */}
                 <DiamondStar centerX={200} centerY={130} width={10} height={20} className="diamond-star" />
