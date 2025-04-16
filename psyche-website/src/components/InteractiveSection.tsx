@@ -9,6 +9,10 @@ import "../styles/InteractiveSection.css";
 
 type DeviceType = "iphone" | "ipad" | "desktop" | "other";
 
+type InteractiveSectionProps = {
+  isPopupOpen?: boolean;
+};
+
 const detectDeviceType = (): DeviceType => {
   if (typeof navigator === "undefined" || !navigator.userAgent) return "other";
   const ua = navigator.userAgent.toLowerCase();
@@ -18,7 +22,7 @@ const detectDeviceType = (): DeviceType => {
   return "desktop";
 };
 
-export default function InteractiveSection() {
+export default function InteractiveSection({ isPopupOpen = false }: InteractiveSectionProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const modelRef = useRef<THREE.Group | null>(null);
   const initialScaleRef = useRef<THREE.Vector3 | null>(null);
@@ -228,11 +232,9 @@ export default function InteractiveSection() {
   }, []);
 
   return (
-    <section
-  className={`interactive-section ${deviceType} ${orientation}`}
->
-
-      {showTooltip && (
+    <section className={`interactive-section ${deviceType} ${orientation}`}>
+      {/* Tooltip hidden when popup is open */}
+      {showTooltip && !isPopupOpen && (
         <div className="asteroid-tooltip">🌀 Drag to explore 🌀</div>
       )}
 
@@ -260,7 +262,6 @@ export default function InteractiveSection() {
         </div>
       </div>
 
-      {/* Cursor image changes based on click state */}
       <img
         src={isClicking ? "/explosion.png" : "/spaceship.png"}
         alt="Cursor"
