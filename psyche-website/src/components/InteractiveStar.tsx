@@ -108,7 +108,7 @@ const InteractiveStar: React.FC = () => {
   const [translateY, setTranslateY] = useState(0);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  const handleClick = () => {
+  const handleClickYoutube = () => {
     window.open("https://www.youtube.com", "_blank");
   };
 
@@ -178,7 +178,7 @@ const InteractiveStar: React.FC = () => {
                 cursor: "pointer",
                 filter: `brightness(${brightness})`,
               }}
-              onClick={handleClick}
+              onClick={handleClickYoutube}
             />
           ) : (
             <circle
@@ -190,7 +190,7 @@ const InteractiveStar: React.FC = () => {
                 cursor: "pointer",
                 filter: `brightness(${brightness})`,
               }}
-              onClick={handleClick}
+              onClick={handleClickYoutube}
             />
           )}
         </g>
