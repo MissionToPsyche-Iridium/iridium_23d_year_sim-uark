@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import InteractiveSection from "./InteractiveSection";
+import InteractiveSection from "./InteractiveSection/InteractiveSection";
 import SplitSection from "./SplitSection";
 import FeatureSection from "./FeatureSection";
 import SplitSectionTwo from "./SplitSectionTwo";

@@ -5,13 +5,14 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useDragRotation } from "./mouseInput";
 import { useTouchRotation } from "./touchInput";
-import "../styles/InteractiveSection.css";
+import "../../styles/InteractiveSection.css";
 
 type DeviceType = "iphone" | "ipad" | "desktop" | "other";
+type InteractiveSectionProps = { isPopupOpen?: boolean };
 
-type InteractiveSectionProps = {
-  isPopupOpen?: boolean;
-};
+// ----------------------
+// Helper Functions
+// ----------------------
 
 const detectDeviceType = (): DeviceType => {
   if (typeof navigator === "undefined" || !navigator.userAgent) return "other";
@@ -21,6 +22,21 @@ const detectDeviceType = (): DeviceType => {
     return "ipad";
   return "desktop";
 };
+
+const getCompassHeading = (radians: number) => {
+  let degrees = -THREE.MathUtils.radToDeg(radians);
+  return Math.round((degrees + 360) % 360);
+};
+
+const getDirectionLabel = (deg: number) => {
+  const labels = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+  const index = Math.floor(((deg + 22.5) % 360) / 45);
+  return labels[index];
+};
+
+// ----------------------
+// Main Component
+// ----------------------
 
 export default function InteractiveSection({ isPopupOpen = false }: InteractiveSectionProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -34,45 +50,30 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
   const [currentRotation, setCurrentRotation] = useState(0);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isClicking, setIsClicking] = useState(false);
+  const [deviceType, setDeviceType] = useState<DeviceType>("other");
+  const [orientation, setOrientation] = useState<"portrait" | "landscape">("portrait");
 
   const maxZoomLevel = 10;
   const minZoomLevel = -10;
 
-  const [deviceType, setDeviceType] = useState<DeviceType>("other");
-  const [orientation, setOrientation] = useState<"portrait" | "landscape">("portrait");
+  // ----------------------
+  // Interaction Hooks
+  // ----------------------
 
   useDragRotation({ canvasRef, modelRef });
   useTouchRotation({ canvasRef, modelRef });
 
-  const getCompassHeading = (radians: number) => {
-    let degrees = -THREE.MathUtils.radToDeg(radians);
-    degrees = (degrees + 360) % 360;
-    return Math.round(degrees);
-  };
-
-  const getDirectionLabel = (deg: number) => {
-    if (deg >= 337.5 || deg < 22.5) return "N";
-    if (deg < 67.5) return "NE";
-    if (deg < 112.5) return "E";
-    if (deg < 157.5) return "SE";
-    if (deg < 202.5) return "S";
-    if (deg < 247.5) return "SW";
-    if (deg < 292.5) return "W";
-    return "NW";
-  };
-
-  const heading = getCompassHeading(currentRotation);
-  const direction = getDirectionLabel(heading);
+  // ----------------------
+  // Tooltip Timer
+  // ----------------------
 
   const startInactivityTimer = () => {
-    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
-    inactivityTimerRef.current = setTimeout(() => {
-      setShowTooltip(true);
-    }, 5000);
+    clearTimeout(inactivityTimerRef.current!);
+    inactivityTimerRef.current = setTimeout(() => setShowTooltip(true), 5000);
   };
 
   const cancelTooltip = () => {
-    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+    clearTimeout(inactivityTimerRef.current!);
     setShowTooltip(false);
   };
 
@@ -80,46 +81,75 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const handleUserInteraction = () => {
+    const handleInteraction = () => {
       cancelTooltip();
       startInactivityTimer();
     };
 
-    canvas.addEventListener("mousedown", handleUserInteraction);
-    canvas.addEventListener("touchstart", handleUserInteraction);
-    canvas.addEventListener("pointerdown", handleUserInteraction);
+    canvas.addEventListener("mousedown", handleInteraction);
+    canvas.addEventListener("touchstart", handleInteraction);
+    canvas.addEventListener("pointerdown", handleInteraction);
 
     startInactivityTimer();
 
     return () => {
-      canvas.removeEventListener("mousedown", handleUserInteraction);
-      canvas.removeEventListener("touchstart", handleUserInteraction);
-      canvas.removeEventListener("pointerdown", handleUserInteraction);
+      canvas.removeEventListener("mousedown", handleInteraction);
+      canvas.removeEventListener("touchstart", handleInteraction);
+      canvas.removeEventListener("pointerdown", handleInteraction);
       clearTimeout(inactivityTimerRef.current!);
     };
   }, []);
 
+  // ----------------------
+  // Device + Orientation
+  // ----------------------
+
   useEffect(() => {
     setDeviceType(detectDeviceType());
-    const handleResize = () => {
+
+    const handleResize = () =>
       setOrientation(window.innerWidth < window.innerHeight ? "portrait" : "landscape");
-    };
+
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // ----------------------
+  // Cursor Tracking
+  // ----------------------
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => setCursorPosition({ x: e.clientX, y: e.clientY });
+    const handleMouseDown = () => setIsClicking(true);
+    const handleMouseUp = () => setIsClicking(false);
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
+
+  // ----------------------
+  // Zoom + Reset Controls
+  // ----------------------
+
   const handleZoomIn = () => {
     if (modelRef.current && zoomLevel < maxZoomLevel) {
       modelRef.current.scale.multiplyScalar(1.1);
-      setZoomLevel(zoomLevel + 1);
+      setZoomLevel((prev) => prev + 1);
     }
   };
 
   const handleZoomOut = () => {
     if (modelRef.current && zoomLevel > minZoomLevel) {
       modelRef.current.scale.multiplyScalar(0.9);
-      setZoomLevel(zoomLevel - 1);
+      setZoomLevel((prev) => prev - 1);
     }
   };
 
@@ -131,28 +161,22 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
     }
   };
 
+  // ----------------------
+  // 3D Scene Setup
+  // ----------------------
+
   useEffect(() => {
     if (!canvasRef.current) return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGLRenderer({
-      canvas: canvasRef.current,
-      antialias: true,
-    });
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight.position.set(1, 1, 1);
-    scene.add(directionalLight);
-
-    camera.position.z = 5;
+    const light = new THREE.DirectionalLight(0xffffff, 0.5);
+    light.position.set(1, 1, 1);
+    scene.add(light);
 
     const loader = new GLTFLoader();
     const modelUrl = "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb";
@@ -171,69 +195,51 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
 
         const size = new THREE.Vector3();
         box.getSize(size);
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const scaleFactor = 2 / maxDim;
-        rotationGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
+        const scaleFactor = 2 / Math.max(size.x, size.y, size.z);
+        rotationGroup.scale.setScalar(scaleFactor);
 
         initialScaleRef.current = rotationGroup.scale.clone();
         initialRotationRef.current = rotationGroup.rotation.clone();
 
         const offsetGroup = new THREE.Group();
         offsetGroup.add(rotationGroup);
-        const scaledSizeY = size.y * scaleFactor;
-        const extraYOffset = scaledSizeY * 1.5;
-        offsetGroup.position.y += extraYOffset;
-
+        offsetGroup.position.y += size.y * scaleFactor * 1.5;
         scene.add(offsetGroup);
+
         modelRef.current = rotationGroup;
 
         const fovRadians = camera.fov * (Math.PI / 180);
-        const cameraZ = Math.abs(maxDim / 2 / Math.tan(fovRadians / 2)) * 1.5;
+        const cameraZ = Math.abs(Math.max(size.x, size.y, size.z) / 2 / Math.tan(fovRadians / 2)) * 1.5;
         camera.position.z = cameraZ;
-        camera.lookAt(new THREE.Vector3(0, extraYOffset, 0));
+        camera.lookAt(new THREE.Vector3(0, offsetGroup.position.y, 0));
       },
       undefined,
-      (error) => {
-        console.error("An error occurred while loading the .glb model", error);
-      }
+      (error) => console.error("Failed to load model", error)
     );
 
     const animate = () => {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
-      if (modelRef.current) {
-        setCurrentRotation(modelRef.current.rotation.y);
-      }
+      if (modelRef.current) setCurrentRotation(modelRef.current.rotation.y);
     };
     animate();
 
-    return () => {
-      renderer.dispose();
-    };
+    return () => renderer.dispose();
   }, []);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
-    };
+  // ----------------------
+  // Compass Values
+  // ----------------------
 
-    const handleMouseDown = () => setIsClicking(true);
-    const handleMouseUp = () => setIsClicking(false);
+  const heading = getCompassHeading(currentRotation);
+  const direction = getDirectionLabel(heading);
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, []);
+  // ----------------------
+  // JSX
+  // ----------------------
 
   return (
     <section className={`interactive-section ${deviceType} ${orientation}`}>
-      {/* Tooltip hidden when popup is open */}
       {showTooltip && !isPopupOpen && (
         <div className="asteroid-tooltip">🌀 Drag to explore 🌀</div>
       )}
@@ -241,12 +247,8 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
       <canvas ref={canvasRef}></canvas>
 
       <div className="zoom-controls">
-        <button onClick={handleZoomIn} disabled={zoomLevel >= maxZoomLevel}>
-          Zoom In
-        </button>
-        <button onClick={handleZoomOut} disabled={zoomLevel <= minZoomLevel}>
-          Zoom Out
-        </button>
+        <button onClick={handleZoomIn} disabled={zoomLevel >= maxZoomLevel}>Zoom In</button>
+        <button onClick={handleZoomOut} disabled={zoomLevel <= minZoomLevel}>Zoom Out</button>
         <button onClick={handleReset}>Reset</button>
       </div>
 
@@ -257,9 +259,7 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
           className="compass-needle"
           style={{ transform: `rotate(${-currentRotation}rad)` }}
         />
-        <div className="compass-heading">
-          {heading}° {direction}
-        </div>
+        <div className="compass-heading">{heading}° {direction}</div>
       </div>
 
       <img
