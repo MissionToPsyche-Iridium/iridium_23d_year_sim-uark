@@ -12,7 +12,7 @@ function calculateMouseEffects(
   svg: SVGSVGElement,
   cx: number,
   cy: number
-): { brightness: number; scale: number; translateX: number; translateY: number } {
+) {
   const rect = svg.getBoundingClientRect();
   const svgX = event.clientX - rect.left;
   const svgY = event.clientY - rect.top;
@@ -58,51 +58,71 @@ function generateStarPoints(
 }
 
 const InteractiveStar: React.FC<InteractiveStarProps> = ({ onPopupOpen, onPopupClose }) => {
-  const [brightness, setBrightness] = useState(1);
-  const [scale, setScale] = useState(1);
-  const [translateX, setTranslateX] = useState(0);
-  const [translateY, setTranslateY] = useState(0);
   const svgRef = useRef<SVGSVGElement>(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleClickYoutube = () => {
-    window.open("https://www.youtube.com", "_blank");
+  // Config
+  const shapeSwitchThreshold = 1.1;
+  const baseOuterRadius = 8;
+  const baseInnerRadius = 5;
+  const fallbackCircleRadius = 5;
+  const haloRadius = 10;
+
+  // Star data
+  const stars = [
+    {
+      id: "youtube",
+      cx: 700,
+      cy: 210,
+      onClick: () => window.open("https://www.youtube.com", "_blank"),
+    },
+    {
+      id: "image",
+      cx: 1300,
+      cy: 160,
+      onClick: () => {
+        setShowPopup(true);
+        onPopupOpen?.();
+      },
+    },
+  ];
+
+  // Track effects per star
+  const [hoverState, setHoverState] = useState<{
+    [key: string]: {
+      brightness: number;
+      scale: number;
+      translateX: number;
+      translateY: number;
+    };
+  }>({
+    youtube: { brightness: 1, scale: 1, translateX: 0, translateY: 0 },
+    image: { brightness: 1, scale: 1, translateX: 0, translateY: 0 },
+  });
+
+  const handleMouseMove = (event: MouseEvent) => {
+    if (!svgRef.current) return;
+
+    const updatedState: typeof hoverState = { ...hoverState };
+
+    stars.forEach(({ id, cx, cy }) => {
+      updatedState[id] = calculateMouseEffects(event, svgRef.current!, cx, cy);
+    });
+
+    setHoverState(updatedState);
   };
 
-  const handleClickImage = () => {
-    setShowPopup(true);
-    onPopupOpen?.(); // Notify parent
+  const handleMouseLeave = () => {
+    setHoverState({
+      youtube: { brightness: 1, scale: 1, translateX: 0, translateY: 0 },
+      image: { brightness: 1, scale: 1, translateX: 0, translateY: 0 },
+    });
   };
 
   const handleClosePopup = () => {
     setShowPopup(false);
-    onPopupClose?.(); // Notify parent
+    onPopupClose?.();
   };
-
-  const handleMouseMove = (event: MouseEvent) => {
-    if (!svgRef.current) return;
-    const { brightness, scale, translateX, translateY } = calculateMouseEffects(
-      event,
-      svgRef.current,
-      700,
-      210
-    );
-    setBrightness(brightness);
-    setScale(scale);
-    setTranslateX(translateX);
-    setTranslateY(translateY);
-  };
-
-  const handleMouseLeave = () => {
-    setBrightness(1);
-    setScale(1);
-    setTranslateX(0);
-    setTranslateY(0);
-  };
-
-  const shapeSwitchThreshold = 1.1;
-  const baseOuterRadius = 4;
-  const baseInnerRadius = 2.5;
 
   return (
     <div className="interactive-star-layer">
@@ -113,54 +133,49 @@ const InteractiveStar: React.FC<InteractiveStarProps> = ({ onPopupOpen, onPopupC
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        {/* YouTube Star */}
-        <g
-          transform={`translate(${700 + translateX}, ${210 + translateY}) scale(${scale}) translate(${-700}, ${-210})`}
-        >
-          <circle
-            cx={700}
-            cy={210}
-            r={6}
-            fill="none"
-            stroke="#ffd700"
-            strokeOpacity="0.4"
-            strokeWidth="3"
-            pointerEvents="none"
-          />
-          {scale > shapeSwitchThreshold ? (
-            <polygon
-              points={generateStarPoints(700, 210, baseOuterRadius, baseInnerRadius)}
-              fill="#ffd700"
-              style={{
-                cursor: "pointer",
-                filter: `brightness(${brightness})`,
-              }}
-              onClick={handleClickYoutube}
-            />
-          ) : (
-            <circle
-              cx={700}
-              cy={210}
-              r={2.5}
-              fill="#ffd700"
-              style={{
-                cursor: "pointer",
-                filter: `brightness(${brightness})`,
-              }}
-              onClick={handleClickYoutube}
-            />
-          )}
-        </g>
-
-        {/* Image Popup Star */}
-        <circle
-          cx={1300}
-          cy={160}
-          r={2.5}
-          fill="#ffd700"
-          style={{ cursor: "pointer" }}
-          onClick={handleClickImage}
-        />
+        {stars.map(({ id, cx, cy, onClick }) => {
+          const { brightness, scale, translateX, translateY } = hoverState[id];
+          return (
+            <g
+              key={id}
+              transform={`translate(${cx + translateX}, ${cy + translateY}) scale(${scale}) translate(${-cx}, ${-cy})`}
+            >
+              <circle
+                cx={cx}
+                cy={cy}
+                r={haloRadius}
+                fill="none"
+                stroke="#ffd700"
+                strokeOpacity="0.4"
+                strokeWidth="3"
+                pointerEvents="none"
+              />
+              {scale > shapeSwitchThreshold ? (
+                <polygon
+                  points={generateStarPoints(cx, cy, baseOuterRadius, baseInnerRadius)}
+                  fill="#ffd700"
+                  style={{
+                    cursor: "pointer",
+                    filter: `brightness(${brightness})`,
+                  }}
+                  onClick={onClick}
+                />
+              ) : (
+                <circle
+                  cx={cx}
+                  cy={cy}
+                  r={fallbackCircleRadius}
+                  fill="#ffd700"
+                  style={{
+                    cursor: "pointer",
+                    filter: `brightness(${brightness})`,
+                  }}
+                  onClick={onClick}
+                />
+              )}
+            </g>
+          );
+        })}
       </svg>
 
       {showPopup && (
