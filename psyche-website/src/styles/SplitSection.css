@@ -1,100 +1,210 @@
 .split-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: calc(100% - 20px); /* 10px padding on both sides */
-    padding: 0 10px;
-    margin: 20px auto;
-    gap: 10px;
-  }
-  
-  .left-section,
-  .right-section {
-    flex: 1;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .right-section {
-    background-color: rgb(120, 120, 120);
-    border: 1px solid #ccc;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  /* Card Deck Styles */
-  .card-deck {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    text-align: center;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .card-container {
-    position: relative;
-    height: 150px;
-  }
-  
-  .card {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.5s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .card-text {
-    font-size: 16px;
-    margin: 0;
-    color: black;
-  }
-  
-  /* Navigation Arrows */
-  .card-button {
-    position: absolute;
-    top: 50%;
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    z-index: 10;
-    transform: translateY(-50%);
-  }
-  
-  .card-button.left {
-    left: 10px;
-  }
-  
-  .card-button.right {
-    right: 10px;
-  }
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: calc(100% - 20px);
+  padding: 0 10px;
+  margin: 200px auto;
+  gap: 10px;
+}
 
-  .birthday-input {
-    text-align: center;
-  }
-  
-  .input-container {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  input[type="date"] {
-    margin-right: 10px;
-  }
-  
-  button {
-    padding: 5px 10px;
-    cursor: pointer;
-  }
+/* Wave overlay goes behind the content of the split section */
+.wave-overlay {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  transform: translateY(-50%);
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.wave-overlay .rotated {
+  transform: translateY(-0.5) rotate(180deg); /* Moves the second wave below and rotates it */
+}
+
+.wave-overlay2 {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  transform: translateY(-90%);
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.wave-overlay2 .rotated {
+  transform: translateY(-10) rotate(180deg); /* Moves the second wave below and rotates it */
+}
+
+.wave-overlay3 {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  transform: translateY(-100%);
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.wave-overlay3 .rotated {
+  transform: translateY(50) rotate(180deg); /* Moves the second wave below and rotates it */
+}
+
+.wave-overlay svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.left-section, .right-section {
+  flex: 1;
+  border-radius: 8px;
+  position: relative; /* Ensure they stack above the wave overlay */
+  z-index: 1;
+}
+
+.right-section {
+  text-align: center;
+  padding: 20px;
+}
+
+/* Card Deck Styles */
+.card-deck {
+  text-align: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-container {
+  position: relative;
+  height: 150px;
+}
+
+.card {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-text {
+  font-size: 20px;
+  margin: 0;
+  color: white;
+}
+
+.card-button {
+  position: absolute;
+  top: 50%;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  transform: translateY(-50%);
+}
+
+.card-button.left {
+  left: 10px;
+}
+
+.label {
+  font-size: 20px;
+  color: white;
+  margin: 0;
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+}
+
+.card-button.right {
+  right: 10px;
+}
+
+.birthday-input {
+  text-align: center;
+}
+
+.input-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input[type="date"] {
+  margin-right: 10px;
+}
+
+button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.hamburger-menu {
+  position: absolute;
+  top: 20px;
+  left: 20px; /* changed from right to left */
+  z-index: 999;
+}
+
+.hamburger-icon {
+  font-size: 36px; /* made it bigger */
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.menu-dropdown {
+  margin-top: 10px;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-dropdown button {
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px 12px;
+  transition: color 0.2s ease;
+}
+
+.menu-dropdown button:hover {
+  color: #ffcc00;
+}
+.top-header {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+}
+
+.page-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.5rem;
+  color: white;
+  margin: 0 auto;
+}
