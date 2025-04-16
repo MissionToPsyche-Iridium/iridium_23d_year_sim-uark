@@ -13,6 +13,8 @@ body, html {
   background-color: black;
   color: white;
   font-family: 'Jost', sans-serif;
+    cursor: none !important;
+  
 }
 
 /* Header styling */
@@ -241,3 +243,4 @@ body, html {
     transform: scaleY(1.2);
   }
 }
+

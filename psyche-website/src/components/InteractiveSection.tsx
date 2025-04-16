@@ -13,7 +13,8 @@ const detectDeviceType = (): DeviceType => {
   if (typeof navigator === "undefined" || !navigator.userAgent) return "other";
   const ua = navigator.userAgent.toLowerCase();
   if (/iphone/.test(ua)) return "iphone";
-  if (/ipad/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) return "ipad";
+  if (/ipad/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1))
+    return "ipad";
   return "desktop";
 };
 
@@ -24,19 +25,21 @@ export default function InteractiveSection() {
   const initialRotationRef = useRef<THREE.Euler | null>(null);
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  useDragRotation({ canvasRef, modelRef });
-  useTouchRotation({ canvasRef, modelRef });
-
   const [zoomLevel, setZoomLevel] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const [currentRotation, setCurrentRotation] = useState(0);
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [isClicking, setIsClicking] = useState(false);
+
   const maxZoomLevel = 10;
   const minZoomLevel = -10;
 
   const [deviceType, setDeviceType] = useState<DeviceType>("other");
   const [orientation, setOrientation] = useState<"portrait" | "landscape">("portrait");
 
-  // Heading conversion
+  useDragRotation({ canvasRef, modelRef });
+  useTouchRotation({ canvasRef, modelRef });
+
   const getCompassHeading = (radians: number) => {
     let degrees = -THREE.MathUtils.radToDeg(radians);
     degrees = (degrees + 360) % 360;
@@ -57,7 +60,6 @@ export default function InteractiveSection() {
   const heading = getCompassHeading(currentRotation);
   const direction = getDirectionLabel(heading);
 
-  // Inactivity Timer
   const startInactivityTimer = () => {
     if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
     inactivityTimerRef.current = setTimeout(() => {
@@ -129,8 +131,16 @@ export default function InteractiveSection() {
     if (!canvasRef.current) return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: true });
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvasRef.current,
+      antialias: true,
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.8));
@@ -187,7 +197,6 @@ export default function InteractiveSection() {
     const animate = () => {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
-
       if (modelRef.current) {
         setCurrentRotation(modelRef.current.rotation.y);
       }
@@ -199,8 +208,30 @@ export default function InteractiveSection() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setCursorPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    const handleMouseDown = () => setIsClicking(true);
+    const handleMouseUp = () => setIsClicking(false);
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
+
   return (
-    <section className={`interactive-section ${deviceType} ${orientation}`}>
+    <section
+  className={`interactive-section ${deviceType} ${orientation}`}
+>
+
       {showTooltip && (
         <div className="asteroid-tooltip">🌀 Drag to explore 🌀</div>
       )}
@@ -217,18 +248,35 @@ export default function InteractiveSection() {
         <button onClick={handleReset}>Reset</button>
       </div>
 
-
       <div className="compass-container">
-  <img
-    src="/compass-needle.png"
-    alt="Compass"
-    className="compass-needle"
-    style={{ transform: `rotate(${-currentRotation}rad)` }}
-  />
-  <div className="compass-heading">
-    {heading}° {direction}
-  </div>
-</div>
+        <img
+          src="/compass-needle.png"
+          alt="Compass"
+          className="compass-needle"
+          style={{ transform: `rotate(${-currentRotation}rad)` }}
+        />
+        <div className="compass-heading">
+          {heading}° {direction}
+        </div>
+      </div>
+
+      {/* Cursor image changes based on click state */}
+      <img
+        src={isClicking ? "/explosion.png" : "/spaceship.png"}
+        alt="Cursor"
+        style={{
+          position: "fixed",
+          top: cursorPosition.y,
+          left: cursorPosition.x,
+          width: "28px",
+          height: "28px",
+          transform: "translate(-50%, -50%)",
+          pointerEvents: "none",
+          zIndex: 9999,
+          transition: "filter 0.2s ease",
+          filter: isClicking ? "drop-shadow(0 0 8px orange)" : "none",
+        }}
+      />
     </section>
   );
 }
