@@ -59,8 +59,8 @@ const CardDeck: React.FC = () => {
       </div>
 
       {/* Navigation Arrows */}
-      <button onClick={handlePrevious} className="card-button left">⬅️</button>
-      <button onClick={handleNext} className="card-button right">➡️</button>
+      <button onClick={handlePrevious} className="card-button left">&lt;</button>
+      <button onClick={handleNext} className="card-button right">&gt;</button>
     </div>
   );
 };

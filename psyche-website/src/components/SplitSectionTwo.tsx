@@ -60,8 +60,8 @@ const CardDeck: React.FC = () => {
       </div>
 
       {/* Navigation Arrows */}
-      <button onClick={handlePrevious} className="card-button left">⬅️</button>
-      <button onClick={handleNext} className="card-button right">➡️</button>
+      <button onClick={handlePrevious} className="card-button left">&lt;</button>
+      <button onClick={handleNext} className="card-button right">&gt;</button>
     </div>
   );
 };
@@ -119,7 +119,7 @@ const SplitSectionTwo: React.FC = () => {
       </div>
 
       {/* Right Section */}
-      <div className="left-section">
+      <div className="right-section">
         <CardDeck />
       </div>
     </div>
