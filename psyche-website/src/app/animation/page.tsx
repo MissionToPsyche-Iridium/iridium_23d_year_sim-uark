@@ -1,4 +1,4 @@
-import LaunchScene from '@/components/LaunchScene'; // Adjust the import path if needed
+import LaunchScene from '@/components/LaunchScene';
 
 export default function AnimationPage() {
   return (

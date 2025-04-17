@@ -34,7 +34,7 @@ export default function LaunchScene() {
 
     // --- Launch Pad ---
     const padGeometry = new THREE.BoxGeometry(20, 1, 20);
-    const padMaterial = new THREE.MeshStandardMaterial({ color: 0x555555 });
+    const padMaterial = new THREE.MeshStandardMaterial({ color: 0x555555, transparent: true, opacity: 1 });
     const pad = new THREE.Mesh(padGeometry, padMaterial);
     pad.receiveShadow = true;
     scene.add(pad);
@@ -117,6 +117,19 @@ export default function LaunchScene() {
     satellite.visible = false;
     scene.add(satellite);
 
+    // --- Cloud Layer Setup ---
+    const cloudMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
+
+    const cloud1 = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), cloudMaterial);
+    cloud1.rotation.x = -Math.PI / 2;
+    cloud1.position.y = 50;
+    scene.add(cloud1);
+
+    const cloud2 = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), cloudMaterial);
+    cloud2.rotation.x = -Math.PI / 2;
+    cloud2.position.y = 60;
+    scene.add(cloud2);
+
     // --- Starfield Setup ---
     const starGeometry = new THREE.BufferGeometry();
     const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0 });
@@ -151,36 +164,72 @@ export default function LaunchScene() {
     // --- Animation Timeline ---
     const timeline = gsap.timeline();
 
-    timeline.to(titleDiv, { opacity: 0, duration: 2, delay: 2 });
-    timeline.to(rocket.position, { y: "+=200", duration: 20, ease: "power2.in" }, "launch");
-    timeline.to(camera.position, { y: "+=180", duration: 20, ease: "power2.in" }, "launch");
-    timeline.to(scene.background, { r: 0, g: 0, b: 0, duration: 10, ease: "power1.in" }, "launch+=5");
-    timeline.to(starMaterial, { opacity: 1, duration: 10, ease: "power1.in" }, "launch+=10");
+    timeline.to(titleDiv, { opacity: 0, duration: 2, delay: 3 });
+    timeline.to(rocket.position, { y: "+=200", duration: 3, ease: "power2.in" }, "launch");
+    timeline.to(camera.position, { y: "+=180", duration: 3, ease: "power2.in" }, "launch");
 
     // --- Animate Loop ---
     const clock = new THREE.Clock();
+    let transitionStarted = false;
+    let orbitRadiusObj = { radius: 30 };
+
     const animate = () => {
       requestAnimationFrame(animate);
 
       const elapsed = clock.getElapsedTime();
       rocket.rotation.y += 0.01;
-      camera.lookAt(rocket.position);
-
       flame.scale.set(1 + Math.sin(elapsed * 20) * 0.2, 1 + Math.sin(elapsed * 20) * 0.2, 1);
 
-      // Satellite deployment logic
-      if (rocket.position.y > 150 && rocket.visible) {
-        rocket.visible = false;
-        satellite.position.copy(rocket.position);
-        satellite.visible = true;
+      if (rocket.position.y >= 55 && !transitionStarted) {
+        transitionStarted = true;
+
+        gsap.to(scene.background, { r: 0, g: 0, b: 0, duration: 1, ease: "power1.inOut" });
+        gsap.to(starMaterial, { opacity: 1, duration: 2, ease: "power1.inOut" });
+
+        gsap.to(rocket.position, { y: "+=100", duration: 3, ease: "power1.in" });
+        gsap.to(rocket.scale, { x: 0.2, y: 0.2, z: 0.2, duration: 3, ease: "power1.in" });
+
+        gsap.to(cloud1.material, { opacity: 0, duration: 1.5, ease: "power1.inOut" });
+        gsap.to(cloud2.material, { opacity: 0, duration: 1.5, ease: "power1.inOut" });
+        gsap.to(pad.material, { opacity: 0, duration: 1.5, ease: "power1.inOut" });
+
+        gsap.delayedCall(1.5, () => {
+          cloud1.visible = false;
+          cloud2.visible = false;
+          pad.visible = false;
+
+          satellite.visible = true;
+          satellite.position.copy(rocket.position);
+          satellite.position.y -= 50;
+          satellite.scale.set(0.1, 0.1, 0.1);
+
+          gsap.to(satellite.scale, { x: 1, y: 1, z: 1, duration: 3, ease: "power1.out" });
+          gsap.to(camera.position, { y: camera.position.y - 20, duration: 3, ease: "power1.inOut" });
+          gsap.to(satellite.position, { y: "+=10", duration: 5, ease: "power1.out" });
+          gsap.to(orbitRadiusObj, { radius: 7, duration: 5, ease: "power1.inOut" });
+        });
       }
 
-      if (satellite.visible) {
+      if (!satellite.visible) {
+        camera.lookAt(rocket.position);
+      } else {
         satellite.rotation.y += 0.002;
+
+        const orbitSpeed = 0.10;
+        const t = elapsed * orbitSpeed;
+
+        camera.position.x = satellite.position.x + orbitRadiusObj.radius * Math.cos(t);
+        camera.position.z = satellite.position.z + orbitRadiusObj.radius * Math.sin(t);
+        camera.lookAt(satellite.position);
+      }
+
+      if (rocket.position.y - camera.position.y > 30 && rocket.visible) {
+        rocket.visible = false;
       }
 
       renderer.render(scene, camera);
     };
+
     animate();
 
     // --- Handle Resizing ---
