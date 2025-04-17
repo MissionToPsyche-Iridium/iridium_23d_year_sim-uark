@@ -1,0 +1,46 @@
+.planet-spin-compare {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    width: 100%;
+  }
+  
+  .title {
+    margin-bottom: 16px;
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  .spin-view {
+    display: flex;
+    justify-content: space-around;
+    gap: 24px;
+    width: 100%;
+  }
+  
+  .planet-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
+  }
+  
+  .planet-container canvas {
+    width: 100% !important;
+    height: 250px !important;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+  
+  .label {
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .stats {
+    font-size: 14px;
+    margin-top: 6px;
+    text-align: center;
+  }  
