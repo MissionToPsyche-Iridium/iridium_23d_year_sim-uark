@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import "../styles/SplitSection.css";
+import StarAnimation from "./StarAnimation";
 
 // Card Deck Component
 const CardDeck: React.FC = () => {
@@ -205,6 +206,7 @@ const SplitSection: React.FC = () => {
             </p>
           </div>
         )}
+          <StarAnimation show={showStars} />
       </div>
     </div>
   );
