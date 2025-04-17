@@ -61,7 +61,7 @@ const TemperatureSlider: React.FC = () => {
         }}
       />
       <div className="temperature-readout">
-        <h2>{temperature}°F on Psyche {temperature + 207}°F on Earth</h2>
+        <h2>{temperature}°F on Psyche {Math.floor(((temperature + 220) / 120) * 134)}°F on Earth</h2>
         <p>{description}</p>
       </div>
     </div>
