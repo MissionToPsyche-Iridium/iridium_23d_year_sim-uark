@@ -3,10 +3,12 @@
 import React, { useEffect, useState } from "react";
 
 export default function CustomCursor() {
+  const [hasMounted, setHasMounted] = useState(false);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [isClicking, setIsClicking] = useState(false);
 
   useEffect(() => {
+    setHasMounted(true);
     const move = (e: MouseEvent) => setPos({ x: e.clientX, y: e.clientY });
     const down = () => setIsClicking(true);
     const up = () => setIsClicking(false);
@@ -20,6 +22,8 @@ export default function CustomCursor() {
       window.removeEventListener("mouseup", up);
     };
   }, []);
+
+  if (!hasMounted) return null; // 🛡️ Skip rendering until mounted
 
   return (
     <img
