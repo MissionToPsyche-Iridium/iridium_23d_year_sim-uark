@@ -71,8 +71,8 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       {/* Main Sections */}
       <InteractiveSection isPopupOpen={isPopupOpen} />
       <SplitSection />
-      <FeatureSection />
       <SplitSectionTwo />
+      <FeatureSection />
       <CustomCursor />
 
       {children}
