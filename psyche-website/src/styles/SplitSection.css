@@ -66,11 +66,13 @@
   border-radius: 8px;
   position: relative; /* Ensure they stack above the wave overlay */
   z-index: 1;
+  transform: translateY(-50px);
 }
 
 .right-section {
   text-align: center;
   padding: 20px;
+  transform: translateY(50px);
 }
 
 /* Card Deck Styles */
@@ -84,6 +86,10 @@
 .card-container {
   position: relative;
   height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 50px;
 }
 
 .card {
@@ -101,6 +107,8 @@
   font-size: 20px;
   margin: 0;
   color: white;
+  padding: 0 60px;
+  z-index: 5;
 }
 
 .card-button {
@@ -108,14 +116,21 @@
   top: 50%;
   background: transparent;
   border: none;
-  font-size: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
   cursor: pointer;
   z-index: 10;
   transform: translateY(-50%);
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .card-button.left {
   left: 10px;
+}
+
+.card-button.right {
+  right: 10px;
 }
 
 .label {
@@ -125,10 +140,6 @@
   text-align: center;
   padding: 10px;
   width: 100%;
-}
-
-.card-button.right {
-  right: 10px;
 }
 
 .hamburger-menu {
