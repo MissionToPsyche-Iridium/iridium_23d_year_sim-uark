@@ -46,7 +46,7 @@
   
   .temperature-readout {
     text-align: center;
-    max-width: 250px;
+    max-width: 400px;
     padding: 0.5rem;
     margin-top: 1rem;
     background-color: rgba(0, 0, 0, 0.4);
@@ -68,7 +68,7 @@
   .slider-label {
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
-    color: #ffb347;
+    color: #ffffff;
   }
   
   .thermometer-slider::-webkit-slider-thumb {
