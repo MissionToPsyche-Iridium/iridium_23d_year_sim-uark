@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import InteractiveSection from "./InteractiveSection/InteractiveSection";
 import SplitSection from "./SplitSection";
-import FeatureSection from "./FeatureSection";
 import SplitSectionTwo from "./SplitSectionTwo";
 import InteractiveStar from "./InteractiveStar";
 import CustomCursor from "./CustomCursor";
@@ -69,13 +68,15 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       </header>
 
       {/* Main Sections */}
+
       <InteractiveSection isPopupOpen={isPopupOpen} />
-      <FeatureSection />
+      {children}
+
       {/* <SplitSection />
       <SplitSectionTwo /> */}
       <CustomCursor />
 
-      {children}
+
     </>
   );
 }
