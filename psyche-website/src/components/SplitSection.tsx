@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import "../styles/SplitSection.css";
+import StarAnimation from "./StarAnimation";
 
 // Card Deck Component
 const CardDeck: React.FC = () => {
@@ -58,8 +59,8 @@ const CardDeck: React.FC = () => {
       </div>
 
       {/* Navigation Arrows */}
-      <button onClick={handlePrevious} className="card-button left">⬅️</button>
-      <button onClick={handleNext} className="card-button right">➡️</button>
+      <button onClick={handlePrevious} className="card-button left">&lt;</button>
+      <button onClick={handleNext} className="card-button right">&gt;</button>
     </div>
   );
 };
@@ -198,13 +199,14 @@ const SplitSection: React.FC = () => {
         {age !== null && (
           <div className="psyche-result">
             <h3 className="psyche-birthday">
-              {age !== null ? `You are ${age.years} Years & ${age.days} Days old on Psyche!` : 'Your Psyche Birthday:'}
+              {age !== null ? `You are ${age.years} Years & ${age.days} Psyche Days old!` : 'Your Psyche Birthday:'}
             </h3>
             <p className="fun-fact">
-              Fun Fact: Psyche takes about 5 Earth years to orbit the Sun, and days are only ~4.2 hours long!
+              Fun Fact: Psyche takes about 5 Earth years to orbit the Sun, and days are about 4.2 hours long!
             </p>
           </div>
         )}
+          <StarAnimation show={showStars} />
       </div>
     </div>
   );
