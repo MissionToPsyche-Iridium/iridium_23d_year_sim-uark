@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import "../styles/TemperatureSlider.css";
 
 const spaceTempDescriptions = [
-  { temp: -340, label: "Psyche Temperature vs. Earth Temperature", description: "This is the coldest it gets on Psyche and Earth. It would be around -340°F on the dark side of Psyche and the coldest record temperature on Earth was -133°F in Antarctica" },
-  { temp: -220, label: "Psyche Temperature vs. Earth Temperature", description: "This is still pretty cold for Earth but it is only a standard day for Psyche. These temperatures would be around where the Sun barely hits the asteroid." },
-  { temp: -100, label: "Psyche Temperature vs. Earth Temperature", description: "This is about as hot as it gets for Psyche and Earth. This would happen when the Sun is directly above you on the asteroid." },
+  { temp: -340, description: "This is the coldest it gets on Psyche and Earth. It would be around -340°F on the dark side of Psyche and the coldest record temperature on Earth was -133°F in Antarctica" },
+  { temp: -220, description: "This is still pretty cold for Earth but it is only a standard day for Psyche. These temperatures would be around where the Sun barely hits the asteroid." },
+  { temp: -100, description: "This is about as hot as it gets for Psyche and Earth. This would happen when the Sun is directly above you on the asteroid." },
 ];
 
 const getDescription = (temp: number) => {
@@ -36,7 +36,7 @@ const getTempColor = (temp: number) => {
 const TemperatureSlider: React.FC = () => {
   const [temperature, setTemperature] = useState(-220);
 
-  const { label, description } = getDescription(temperature);
+  const { description } = getDescription(temperature);
   const fillColor = getTempColor(temperature);
 
   return (
@@ -46,8 +46,9 @@ const TemperatureSlider: React.FC = () => {
             background: `radial-gradient(circle at center, ${fillColor}, #000)`,
             transition: "background 0.8s ease-in-out"
         }}
->
-      <div className="slider-label">{label}</div>
+>      
+      <h1 className="slider-title">Psyche Temperature vs. Earth Temperature</h1>
+      
       <input
         type="range"
         min={-340}
