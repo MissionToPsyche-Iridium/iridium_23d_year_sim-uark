@@ -1,16 +1,17 @@
-"use client";
+import "../styles/layout.css";
+import LayoutContent from "../components/LayoutContent";
 
-import { usePathname } from 'next/navigation';
-import "@/styles/globals.css";
+export const metadata = {
+  title: "Year of Psyche",
+  description: "An interactive website to deliver information through text and clickable elements",
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const isComparePage = pathname.startsWith("/compare");
-
   return (
     <html lang="en">
-      <body className="body" style={isComparePage ? { margin: 0, background: "black", color: "white" } : {}}>
-        {children}
+      <head />
+      <body className="body">
+        <LayoutContent>{children}</LayoutContent>
       </body>
     </html>
   );

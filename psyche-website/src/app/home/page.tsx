@@ -8,8 +8,10 @@ export default function Home() {
     <section className="feature-section">
       <div className="widget welcome-widget">
         <h2 className="widget-title">🌌 Welcome to Year of Psyche</h2>
-        <Link href="../compare" className="launch-button">
-          🚀 Launch Comparison
+        <Link href="/home/compare">
+          <button className="launch-button">
+            🚀 Launch Comparison
+          </button>
         </Link>
       </div>
     </section>
