@@ -8,7 +8,7 @@ export default function Home() {
     <section className="feature-section">
       <div className="widget welcome-widget">
         <h2 className="widget-title">🌌 Welcome to Year of Psyche</h2>
-        <Link href="/home/compare">
+        <Link href="/compare">
           <button className="launch-button">
             🚀 Launch Comparison
           </button>
