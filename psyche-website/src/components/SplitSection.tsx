@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import CalculatorStars from "./CalculatorStars";
 import "../styles/SplitSection.css";
 
 // Card Deck Component
@@ -70,6 +69,9 @@ const SplitSection: React.FC = () => {
   const [birthdate, setBirthdate] = useState<string>("");
   const [age, setAge] = useState<{ years: number; days: number } | null>(null);
   const [showStars, setShowStars] = useState(false);
+  const [showTitle, setShowTitle] = useState(true);
+  const [psycheAge, setPsycheAge] = useState<{ years: number; days: number }>({ years: 0, days: 0 });
+  const [timelinePosition, setTimelinePosition] = useState<number>(0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -93,15 +95,23 @@ const SplitSection: React.FC = () => {
       const psycheYears = Math.floor(ageInDays / psycheYear);
       const remainingEarthDays = ageInDays % psycheYear;
       const psycheDays = Math.floor(remainingEarthDays / psycheDay);
+
       // Brief delay to simulate asynchronous update if needed
       setAge(null);
       setTimeout(() => {
         setAge({ years: psycheYears, days: psycheDays });
-        // Triggers stars when age is calculated
         setShowStars(true); 
-        // setTimeout(() => setShowStars(false), 3000);
+        setShowTitle(false);
       }, 100);
     }
+  };
+
+  // reset button
+  const resetCalculator = () => {
+    setBirthdate("");
+    setAge(null);
+    setShowStars(false);
+    setShowTitle(true);
   };
 
   return (
@@ -156,33 +166,48 @@ const SplitSection: React.FC = () => {
       </div>
 
       {/* Right Section */}
+
       <div className="right-section">
         <div className="birthday-input">
-          <label className="label"> Enter your birthdate: </label>
-          <br />
-          <br />
+          {/* Conditionally render the title */}
+          {age === null && (
+            <h2 className="futuristic-title">When Were You Born on Earth?</h2>
+          )}
+
           <div className="input-container">
             <input
               type="date"
               id="birthdate"
               value={birthdate}
               onChange={(e) => setBirthdate(e.target.value)}
+              className="date-input"
             />
-            <button onClick={calculateAge}>Calculate Age</button>
+
+            {age === null ? (
+              <button className="calculate-button" onClick={calculateAge}>
+                Calculate My Psyche Age
+              </button>
+            ) : (
+              <button className="calculate-button" onClick={resetCalculator}>
+                Reset
+              </button>
+            )}
           </div>
         </div>
 
         {age !== null && (
-          <div className="age-result">
-            <p>
-              You are {age.years} years and {age.days} days old!
+          <div className="psyche-result">
+            <h3 className="psyche-birthday">
+              {age !== null ? `You are ${age.years} Years & ${age.days} Days old on Psyche!` : 'Your Psyche Birthday:'}
+            </h3>
+            <p className="fun-fact">
+              Fun Fact: Psyche takes about 5 Earth years to orbit the Sun, and days are only ~4.2 hours long!
             </p>
-            {showStars && <CalculatorStars showStars = {showStars}/>}
           </div>
         )}
       </div>
     </div>
   );
 };
-
+    
 export default SplitSection;
