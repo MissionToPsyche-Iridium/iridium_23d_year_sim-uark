@@ -88,7 +88,7 @@ const RotatingPlanet = ({
 };
 
 const CompareScene = () => {
-  const earthTextureUrl = "../textures/mars.jpg";
+  const earthTextureUrl = "../textures/earth.jpg";
   const earthFallbackUrl = "https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg";
   const finalScale = 2;
 
