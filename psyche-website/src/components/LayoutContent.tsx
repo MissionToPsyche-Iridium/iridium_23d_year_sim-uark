@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import InteractiveSection from "./InteractiveSection/InteractiveSection";
 import SplitSection from "./SplitSection";
+import MarsScene from "./MarsScene";
 import SplitSectionTwo from "./SplitSectionTwo";
 import InteractiveStar from "./InteractiveStar";
 import CustomCursor from "./CustomCursor";
@@ -81,6 +82,8 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       {/* <SplitSection />
       <SplitSectionTwo /> */}
       <CustomCursor />
+      <MarsScene />
+      {/* <LaunchScene /> */}
     </>
   );
 }

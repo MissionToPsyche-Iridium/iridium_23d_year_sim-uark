@@ -1,17 +1,18 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 
 export default function LaunchScene() {
   const mountRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
-    // --- Scene Setup ---
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x87ceeb);
 
@@ -23,7 +24,6 @@ export default function LaunchScene() {
     renderer.shadowMap.enabled = true;
     mount.appendChild(renderer.domElement);
 
-    // --- Lighting ---
     const sunLight = new THREE.DirectionalLight(0xfff7e8, 5);
     sunLight.position.set(20, 40, 10);
     sunLight.castShadow = true;
@@ -32,45 +32,38 @@ export default function LaunchScene() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
 
-    // --- Launch Pad ---
+    // Pad
     const padGeometry = new THREE.BoxGeometry(20, 1, 20);
-    const padMaterial = new THREE.MeshStandardMaterial({ color: 0x555555 });
+    const padMaterial = new THREE.MeshStandardMaterial({ color: 0x555555, transparent: true, opacity: 1 });
     const pad = new THREE.Mesh(padGeometry, padMaterial);
     pad.receiveShadow = true;
     scene.add(pad);
 
-    // --- Rocket ---
+    // Rocket
     const rocket = new THREE.Group();
-
     const rocketBody = new THREE.Mesh(
       new THREE.CylinderGeometry(0.8, 0.8, 8, 32),
       new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.8, roughness: 0.3 })
     );
-    rocketBody.castShadow = true;
-    rocket.add(rocketBody);
-
     const noseCone = new THREE.Mesh(
       new THREE.ConeGeometry(0.8, 2, 32),
       new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness: 0.8, roughness: 0.3 })
     );
     noseCone.position.y = 5;
-    noseCone.castShadow = true;
-    rocket.add(noseCone);
-
+    rocket.add(rocketBody, noseCone);
     rocket.position.set(0, 4.5, 0);
     scene.add(rocket);
 
-    // --- Flame Trail ---
-    const flameGeometry = new THREE.ConeGeometry(1.5, 3, 32);
-    const flameMaterial = new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.8 });
-    const flame = new THREE.Mesh(flameGeometry, flameMaterial);
+    const flame = new THREE.Mesh(
+      new THREE.ConeGeometry(1.5, 3, 32),
+      new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.8 })
+    );
     flame.rotation.x = Math.PI;
     flame.position.y = -5;
     rocket.add(flame);
 
-    // --- Satellite (Hidden Initially) ---
+    // Satellite
     const satellite = new THREE.Group();
-
     const body = new THREE.Mesh(
       new THREE.BoxGeometry(2, 2, 2),
       new THREE.MeshStandardMaterial({ color: 0x999999, metalness: 0.7, roughness: 0.4 })
@@ -83,57 +76,66 @@ export default function LaunchScene() {
       new THREE.MeshStandardMaterial({ color: 0xcccccc })
     );
     dishBase.position.y = 1.25;
-    dish.add(dishBase);
-
     const dishCone = new THREE.Mesh(
       new THREE.ConeGeometry(0.7, 0.4, 32),
       new THREE.MeshStandardMaterial({ color: 0xffffff })
     );
     dishCone.position.y = 1.6;
-    dish.add(dishCone);
-
+    dish.add(dishBase, dishCone);
     satellite.add(dish);
 
     const panelMaterial = new THREE.MeshStandardMaterial({ color: 0x4444ff, metalness: 0.6, roughness: 0.3 });
-
-    const panel1 = new THREE.Mesh(new THREE.PlaneGeometry(4, 1), panelMaterial);
-    panel1.position.set(2.5, 0, 0);
-    satellite.add(panel1);
-
-    const panel2 = new THREE.Mesh(new THREE.PlaneGeometry(4, 1), panelMaterial);
-    panel2.position.set(-2.5, 0, 0);
-    satellite.add(panel2);
-
-    const panel3 = new THREE.Mesh(new THREE.PlaneGeometry(4, 1), panelMaterial);
-    panel3.rotation.z = Math.PI / 2;
-    panel3.position.set(0, 2.5, 0);
-    satellite.add(panel3);
-
-    const panel4 = new THREE.Mesh(new THREE.PlaneGeometry(4, 1), panelMaterial);
-    panel4.rotation.z = Math.PI / 2;
-    panel4.position.set(0, -2.5, 0);
-    satellite.add(panel4);
-
+    const panels = [
+      [2.5, 0, 0],
+      [-2.5, 0, 0],
+      [0, 2.5, 0],
+      [0, -2.5, 0],
+    ];
+    panels.forEach(([x, y, z], idx) => {
+      const panel = new THREE.Mesh(new THREE.PlaneGeometry(4, 1), panelMaterial);
+      if (idx >= 2) panel.rotation.z = Math.PI / 2;
+      panel.position.set(x, y, z);
+      satellite.add(panel);
+    });
     satellite.visible = false;
     scene.add(satellite);
 
-    // --- Starfield Setup ---
+    // Mars!
+    const marsTexture = new THREE.TextureLoader().load('../textures/mars.jpg');
+    const mars = new THREE.Mesh(
+      new THREE.SphereGeometry(5, 64, 64),
+      new THREE.MeshStandardMaterial({ map: marsTexture })
+    );
+    mars.visible = false;
+    scene.add(mars);
+
+    // Clouds
+    const cloudMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
+    const cloud1 = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), cloudMaterial);
+    cloud1.rotation.x = -Math.PI / 2;
+    cloud1.position.y = 50;
+    scene.add(cloud1);
+
+    const cloud2 = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), cloudMaterial);
+    cloud2.rotation.x = -Math.PI / 2;
+    cloud2.position.y = 60;
+    scene.add(cloud2);
+
+    // Stars
     const starGeometry = new THREE.BufferGeometry();
     const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0 });
     const starVertices = [];
-
     for (let i = 0; i < 10000; i++) {
       const x = THREE.MathUtils.randFloatSpread(4000);
       const y = THREE.MathUtils.randFloatSpread(4000);
       const z = THREE.MathUtils.randFloatSpread(4000);
       starVertices.push(x, y, z);
     }
-
     starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
     const stars = new THREE.Points(starGeometry, starMaterial);
     scene.add(stars);
 
-    // --- Title Overlay ---
+    // Title
     const titleDiv = document.createElement('div');
     titleDiv.innerText = 'Kennedy Space Center\nOctober 13, 2023 — 10:19 AM EDT';
     titleDiv.style.position = 'absolute';
@@ -148,42 +150,98 @@ export default function LaunchScene() {
     titleDiv.style.textShadow = '2px 2px 8px rgba(0,0,0,0.8)';
     mount.appendChild(titleDiv);
 
-    // --- Animation Timeline ---
+    // Timeline
     const timeline = gsap.timeline();
+    timeline.to(titleDiv, { opacity: 0, duration: 2, delay: 3 });
+    timeline.to(rocket.position, { y: "+=200", duration: 3, ease: "power2.in" }, "launch");
+    timeline.to(camera.position, { y: "+=180", duration: 3, ease: "power2.in" }, "launch");
 
-    timeline.to(titleDiv, { opacity: 0, duration: 2, delay: 2 });
-    timeline.to(rocket.position, { y: "+=200", duration: 20, ease: "power2.in" }, "launch");
-    timeline.to(camera.position, { y: "+=180", duration: 20, ease: "power2.in" }, "launch");
-    timeline.to(scene.background, { r: 0, g: 0, b: 0, duration: 10, ease: "power1.in" }, "launch+=5");
-    timeline.to(starMaterial, { opacity: 1, duration: 10, ease: "power1.in" }, "launch+=10");
-
-    // --- Animate Loop ---
     const clock = new THREE.Clock();
+    let transitionStarted = false;
+    let orbitRadiusObj = { radius: 30 };
+
     const animate = () => {
       requestAnimationFrame(animate);
 
       const elapsed = clock.getElapsedTime();
       rocket.rotation.y += 0.01;
-      camera.lookAt(rocket.position);
-
       flame.scale.set(1 + Math.sin(elapsed * 20) * 0.2, 1 + Math.sin(elapsed * 20) * 0.2, 1);
 
-      // Satellite deployment logic
-      if (rocket.position.y > 150 && rocket.visible) {
-        rocket.visible = false;
-        satellite.position.copy(rocket.position);
-        satellite.visible = true;
+      if (rocket.position.y >= 55 && !transitionStarted) {
+        transitionStarted = true;
+
+        gsap.to(scene.background, { r: 0, g: 0, b: 0, duration: 1 });
+        gsap.to(starMaterial, { opacity: 1, duration: 2 });
+
+        gsap.to(rocket.position, { y: "+=100", duration: 3 });
+        gsap.to(rocket.scale, { x: 0.2, y: 0.2, z: 0.2, duration: 3 });
+
+        gsap.to(cloud1.material, { opacity: 0, duration: 1.5 });
+        gsap.to(cloud2.material, { opacity: 0, duration: 1.5 });
+        gsap.to(pad.material, { opacity: 0, duration: 1.5 });
+
+        gsap.delayedCall(1.5, () => {
+          cloud1.visible = false;
+          cloud2.visible = false;
+          pad.visible = false;
+
+          // Satellite comes
+          satellite.visible = true;
+          satellite.position.set(0, camera.position.y - 5, 0);
+          satellite.scale.set(0.1, 0.1, 0.1);
+
+          // Mars shows up
+          mars.visible = true;
+          mars.position.set(0, camera.position.y - 5, 0);
+
+          satellite.traverse(child => {
+            if (child instanceof THREE.Mesh) {
+              child.material.transparent = true;
+              child.material.opacity = 0;
+              gsap.to(child.material, { opacity: 1, duration: 2 });
+            }
+          });
+
+          rocket.traverse(child => {
+            if (child instanceof THREE.Mesh) {
+              child.material.transparent = true;
+              gsap.to(child.material, { opacity: 0, duration: 2, onComplete: () => {
+                rocket.visible = false;
+              }});
+            }
+          });
+
+          gsap.to(satellite.scale, { x: 1, y: 1, z: 1, duration: 3 });
+          gsap.to(camera.position, { y: camera.position.y - 20, duration: 3 });
+          gsap.to(satellite.position, { y: "+=10", duration: 5 });
+          gsap.to(orbitRadiusObj, { radius: 5, duration: 5 });
+
+          // gsap.delayedCall(5, () => {
+          //   router.push('/mars');
+          // });
+        });
       }
 
-      if (satellite.visible) {
+      if (!satellite.visible) {
+        camera.lookAt(rocket.position);
+      } else {
+        const orbitSpeed = 0.10;
+        const t = elapsed * orbitSpeed;
+
         satellite.rotation.y += 0.002;
+        satellite.position.x = mars.position.x + orbitRadiusObj.radius * Math.cos(t);
+        satellite.position.z = mars.position.z + orbitRadiusObj.radius * Math.sin(t);
+
+        camera.position.x = mars.position.x + (orbitRadiusObj.radius + 10) * Math.cos(t + 0.5);
+        camera.position.z = mars.position.z + (orbitRadiusObj.radius + 10) * Math.sin(t + 0.5);
+        camera.lookAt(mars.position);
       }
 
       renderer.render(scene, camera);
     };
+
     animate();
 
-    // --- Handle Resizing ---
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -191,13 +249,12 @@ export default function LaunchScene() {
     };
     window.addEventListener('resize', handleResize);
 
-    // --- Cleanup ---
     return () => {
       mount.removeChild(renderer.domElement);
       mount.removeChild(titleDiv);
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [router]);
 
   return (
     <div ref={mountRef} style={{ width: '100vw', height: '100vh', position: 'relative' }} />

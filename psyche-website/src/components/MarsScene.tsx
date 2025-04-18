@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useRef, useEffect, useState, Suspense } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
@@ -6,9 +6,6 @@ import { OrbitControls, Stars } from "@react-three/drei";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { TextureLoader } from "three";
-
-// const PSYCHE_RADIUS_KM = 112;
-// const EARTH_RADIUS_KM = 6371;
 
 const PsycheModel = ({ position }: { position: [number, number, number] }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -87,13 +84,13 @@ const RotatingPlanet = ({
   );
 };
 
-const CompareScene = () => {
+export default function MarsScene() {
   const earthTextureUrl = "../textures/mars.jpg";
-  const earthFallbackUrl = "https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg";
+  const earthFallbackUrl = "https://www.solarsystemscope.com/textures/download/2k_mars.jpg";
   const finalScale = 2;
 
   return (
-    <div style={{ height: "700px", width: "100%", position: "relative" }}>
+    <div style={{ width: "100vw", height: "100vh", position: "relative" }}>
       <Canvas camera={{ position: [0, 0, 14] }}>
         <ambientLight intensity={0.5} />
         <directionalLight position={[4, 4, 4]} intensity={1} />
@@ -103,7 +100,7 @@ const CompareScene = () => {
         {/* Psyche */}
         <PsycheModel position={[-8, 0, 0]} />
 
-        {/* Earth */}
+        {/* Mars */}
         <Suspense fallback={null}>
           <RotatingPlanet
             position={[4, 0, 0]}
@@ -115,6 +112,4 @@ const CompareScene = () => {
       </Canvas>
     </div>
   );
-};
-
-export default CompareScene;
+}
