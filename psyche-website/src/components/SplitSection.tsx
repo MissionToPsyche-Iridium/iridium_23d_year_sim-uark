@@ -202,7 +202,7 @@ const SplitSection: React.FC = () => {
               {age !== null ? `You are ${age.years} Years & ${age.days} Psyche Days old!` : 'Your Psyche Birthday:'}
             </h3>
             <p className="fun-fact">
-              Fun Fact: Psyche takes about 5 Earth years to orbit the Sun, and days are about 4.2 hours long!
+              Fun Fact: Psyche takes about 5 Earth years to orbit the Sun with each day being 4.2 hours long, making one Pysche year 10,428 Psyche days long!
             </p>
           </div>
         )}
