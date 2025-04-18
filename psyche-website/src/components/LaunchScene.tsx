@@ -32,14 +32,12 @@ export default function LaunchScene() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
 
-    // Pad
     const padGeometry = new THREE.BoxGeometry(20, 1, 20);
     const padMaterial = new THREE.MeshStandardMaterial({ color: 0x555555, transparent: true, opacity: 1 });
     const pad = new THREE.Mesh(padGeometry, padMaterial);
     pad.receiveShadow = true;
     scene.add(pad);
 
-    // Rocket
     const rocket = new THREE.Group();
     const rocketBody = new THREE.Mesh(
       new THREE.CylinderGeometry(0.8, 0.8, 8, 32),
@@ -62,7 +60,6 @@ export default function LaunchScene() {
     flame.position.y = -5;
     rocket.add(flame);
 
-    // Satellite
     const satellite = new THREE.Group();
     const body = new THREE.Mesh(
       new THREE.BoxGeometry(2, 2, 2),
@@ -100,7 +97,6 @@ export default function LaunchScene() {
     satellite.visible = false;
     scene.add(satellite);
 
-    // Mars!
     const marsTexture = new THREE.TextureLoader().load('../textures/mars.jpg');
     const mars = new THREE.Mesh(
       new THREE.SphereGeometry(5, 64, 64),
@@ -109,7 +105,6 @@ export default function LaunchScene() {
     mars.visible = false;
     scene.add(mars);
 
-    // Clouds
     const cloudMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
     const cloud1 = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), cloudMaterial);
     cloud1.rotation.x = -Math.PI / 2;
@@ -121,7 +116,6 @@ export default function LaunchScene() {
     cloud2.position.y = 60;
     scene.add(cloud2);
 
-    // Stars
     const starGeometry = new THREE.BufferGeometry();
     const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0 });
     const starVertices = [];
@@ -135,7 +129,6 @@ export default function LaunchScene() {
     const stars = new THREE.Points(starGeometry, starMaterial);
     scene.add(stars);
 
-    // Title
     const titleDiv = document.createElement('div');
     titleDiv.innerText = 'Kennedy Space Center\nOctober 13, 2023 — 10:19 AM EDT';
     titleDiv.style.position = 'absolute';
@@ -150,7 +143,6 @@ export default function LaunchScene() {
     titleDiv.style.textShadow = '2px 2px 8px rgba(0,0,0,0.8)';
     mount.appendChild(titleDiv);
 
-    // Timeline
     const timeline = gsap.timeline();
     timeline.to(titleDiv, { opacity: 0, duration: 2, delay: 3 });
     timeline.to(rocket.position, { y: "+=200", duration: 3, ease: "power2.in" }, "launch");
@@ -185,15 +177,6 @@ export default function LaunchScene() {
           cloud2.visible = false;
           pad.visible = false;
 
-          // Satellite comes
-          satellite.visible = true;
-          satellite.position.set(0, camera.position.y - 5, 0);
-          satellite.scale.set(0.1, 0.1, 0.1);
-
-          // Mars shows up
-          mars.visible = true;
-          mars.position.set(0, camera.position.y - 5, 0);
-
           satellite.traverse(child => {
             if (child instanceof THREE.Mesh) {
               child.material.transparent = true;
@@ -216,25 +199,56 @@ export default function LaunchScene() {
           gsap.to(satellite.position, { y: "+=10", duration: 5 });
           gsap.to(orbitRadiusObj, { radius: 5, duration: 5 });
 
-          // gsap.delayedCall(5, () => {
-          //   router.push('/mars');
-          // });
+          satellite.position.set(0, camera.position.y - 5, 20);
+
+          mars.position.set(0, camera.position.y - 5, 0);
+          const overlay = document.getElementById('overlay');
+          const overlayText = document.getElementById('overlayText');
+
+          gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
+            gsap.to(overlayText, { opacity: 1, duration: 1 });
+            gsap.delayedCall(2, () => {
+              gsap.to(overlay, { opacity: 0, duration: 1, onComplete: () => {
+                satellite.visible = true;
+                mars.visible = true;
+
+                const flybyTimeline = gsap.timeline();
+                flybyTimeline.to(satellite.position, {
+                  x: "+=120",
+                  y: "+=70",
+                  z: "-=150",
+                  duration: 5,
+                  ease: "power2.in",
+                  onUpdate: () => {
+                    camera.lookAt(satellite.position);
+                  },
+                }, 0);
+
+                flybyTimeline.to(camera.position, {
+                  x: "+=100",
+                  y: "+=50",
+                  z: "-=140",
+                  duration: 5,
+                  ease: "power2.inOut",
+                }, 0);
+
+                flybyTimeline.to(camera.rotation, {
+                  z: "-=0.1", // small tilt for cinematic effect
+                  duration: 5,
+                  ease: "power2.inOut",
+                }, 0);
+
+                flybyTimeline.call(() => {
+                  console.log("Satellite cinematic escape complete!");
+                });
+              }});
+            });
+          }});
         });
       }
 
       if (!satellite.visible) {
         camera.lookAt(rocket.position);
-      } else {
-        const orbitSpeed = 0.10;
-        const t = elapsed * orbitSpeed;
-
-        satellite.rotation.y += 0.002;
-        satellite.position.x = mars.position.x + orbitRadiusObj.radius * Math.cos(t);
-        satellite.position.z = mars.position.z + orbitRadiusObj.radius * Math.sin(t);
-
-        camera.position.x = mars.position.x + (orbitRadiusObj.radius + 10) * Math.cos(t + 0.5);
-        camera.position.z = mars.position.z + (orbitRadiusObj.radius + 10) * Math.sin(t + 0.5);
-        camera.lookAt(mars.position);
       }
 
       renderer.render(scene, camera);
@@ -257,6 +271,30 @@ export default function LaunchScene() {
   }, [router]);
 
   return (
-    <div ref={mountRef} style={{ width: '100vw', height: '100vh', position: 'relative' }} />
+    <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+      <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
+  
+      <div id="overlay" style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'black',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: '"Comic Sans MS", cursive, sans-serif',
+        fontSize: '3rem',
+        color: 'white',
+        opacity: 0,
+        pointerEvents: 'none',
+        zIndex: 20,
+      }}>
+        <div id="overlayText" style={{ opacity: 0 }}>
+          Comparison with Mars
+        </div>
+      </div>
+    </div>
   );
 }
