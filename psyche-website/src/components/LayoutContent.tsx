@@ -82,7 +82,7 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       {/* <SplitSection />
       <SplitSectionTwo /> */}
       <CustomCursor />
-      <MarsScene />
+      {/* <MarsScene /> */}
       {/* <LaunchScene /> */}
     </>
   );
