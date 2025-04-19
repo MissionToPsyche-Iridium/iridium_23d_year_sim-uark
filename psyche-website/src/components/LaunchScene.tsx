@@ -4,6 +4,7 @@ import { useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
+import '../styles/LaunchScene.css';
 
 export default function LaunchScene() {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -13,6 +14,7 @@ export default function LaunchScene() {
     const mount = mountRef.current;
     if (!mount) return;
 
+    // === THREE.js Setup ===
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x87ceeb);
 
@@ -129,18 +131,10 @@ export default function LaunchScene() {
     const stars = new THREE.Points(starGeometry, starMaterial);
     scene.add(stars);
 
+    // Create Title Div (uses CSS now)
     const titleDiv = document.createElement('div');
     titleDiv.innerText = 'Kennedy Space Center\nOctober 13, 2023 — 10:19 AM EDT';
-    titleDiv.style.position = 'absolute';
-    titleDiv.style.top = '20%';
-    titleDiv.style.width = '100%';
-    titleDiv.style.textAlign = 'center';
-    titleDiv.style.color = '#eeeeee';
-    titleDiv.style.fontSize = '3em';
-    titleDiv.style.opacity = '1';
-    titleDiv.style.lineHeight = '1.2';
-    titleDiv.style.whiteSpace = 'pre-line';
-    titleDiv.style.textShadow = '2px 2px 8px rgba(0,0,0,0.8)';
+    titleDiv.className = 'titleDiv';
     mount.appendChild(titleDiv);
 
     const timeline = gsap.timeline();
@@ -164,10 +158,8 @@ export default function LaunchScene() {
 
         gsap.to(scene.background, { r: 0, g: 0, b: 0, duration: 1 });
         gsap.to(starMaterial, { opacity: 1, duration: 2 });
-
         gsap.to(rocket.position, { y: "+=100", duration: 3 });
         gsap.to(rocket.scale, { x: 0.2, y: 0.2, z: 0.2, duration: 3 });
-
         gsap.to(cloud1.material, { opacity: 0, duration: 1.5 });
         gsap.to(cloud2.material, { opacity: 0, duration: 1.5 });
         gsap.to(pad.material, { opacity: 0, duration: 1.5 });
@@ -200,8 +192,8 @@ export default function LaunchScene() {
           gsap.to(orbitRadiusObj, { radius: 5, duration: 5 });
 
           satellite.position.set(0, camera.position.y - 5, 20);
-
           mars.position.set(0, camera.position.y - 5, 0);
+
           const overlay = document.getElementById('overlay');
           const overlayText = document.getElementById('overlayText');
 
@@ -232,14 +224,45 @@ export default function LaunchScene() {
                   ease: "power2.inOut",
                 }, 0);
 
-                flybyTimeline.to(camera.rotation, {
-                  z: "-=0.1", // small tilt for cinematic effect
-                  duration: 5,
-                  ease: "power2.inOut",
-                }, 0);
-
                 flybyTimeline.call(() => {
-                  console.log("Satellite cinematic escape complete!");
+                  // New "Journey Into Deep Space" overlay
+                  const deepSpaceOverlay = document.createElement('div');
+                  deepSpaceOverlay.innerText = 'Journey Into Deep Space';
+                  deepSpaceOverlay.className = 'deepSpaceOverlay';
+                  mount.appendChild(deepSpaceOverlay);
+
+                  gsap.to(deepSpaceOverlay, { opacity: 1, duration: 2 });
+                  gsap.delayedCall(2.5, () => {
+                    gsap.to(deepSpaceOverlay, { opacity: 0, duration: 2, onComplete: () => {
+                      mount.removeChild(deepSpaceOverlay);
+
+                      const deepSpaceTimeline = gsap.timeline();
+                      deepSpaceTimeline.to(satellite.position, {
+                        x: "+=500",
+                        y: "+=300",
+                        z: "-=1000",
+                        duration: 10,
+                        ease: "power1.inOut",
+                        onUpdate: () => {
+                          camera.lookAt(satellite.position);
+                        }
+                      }, 0);
+
+                      deepSpaceTimeline.to(camera.position, {
+                        x: "+=450",
+                        y: "+=250",
+                        z: "-=950",
+                        duration: 10,
+                        ease: "power1.inOut",
+                      }, 0);
+
+                      deepSpaceTimeline.to(satellite.rotation, {
+                        y: "+=2*Math.PI",
+                        duration: 10,
+                        ease: "none",
+                      }, 0);
+                    }});
+                  });
                 });
               }});
             });
@@ -274,24 +297,8 @@ export default function LaunchScene() {
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
       <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
   
-      <div id="overlay" style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        background: 'black',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: '"Comic Sans MS", cursive, sans-serif',
-        fontSize: '3rem',
-        color: 'white',
-        opacity: 0,
-        pointerEvents: 'none',
-        zIndex: 20,
-      }}>
-        <div id="overlayText" style={{ opacity: 0 }}>
+      <div id="overlay">
+        <div id="overlayText">
           Comparison with Mars
         </div>
       </div>
