@@ -7,9 +7,6 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { TextureLoader } from "three";
 
-// const PSYCHE_RADIUS_KM = 112;
-// const EARTH_RADIUS_KM = 6371;
-
 const PsycheModel = ({ position }: { position: [number, number, number] }) => {
   const groupRef = useRef<THREE.Group>(null);
   const gltf = useLoader(GLTFLoader, "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb");
@@ -40,30 +37,23 @@ const PsycheModel = ({ position }: { position: [number, number, number] }) => {
 
   useFrame(() => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += 0.0025;
+      groupRef.current.rotation.x += 0.0025;
     }
   });
 
   return <group ref={groupRef} position={position} />;
 };
 
-const RotatingPlanet = ({
-  textureUrl,
-  fallbackUrl,
-  position,
-  scaleFactor = 1,
-}: {
-  textureUrl: string;
-  fallbackUrl: string;
-  position: [number, number, number];
-  scaleFactor: number;
-}) => {
+const EarthModel = ({ position, radius }: { position: [number, number, number]; radius: number }) => {
+  const textureUrl = "../textures/earth.jpg";
+  const fallbackUrl = "https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg";
   const [textureSrc, setTextureSrc] = useState(textureUrl);
+  const meshRef = useRef<THREE.Mesh>(null);
 
   useEffect(() => {
     const img = new Image();
     img.src = textureUrl;
-    img.onload = () => { };
+    img.onload = () => {};
     img.onerror = () => {
       console.warn("Local texture failed, switching to fallback URL:", fallbackUrl);
       setTextureSrc(fallbackUrl);
@@ -71,47 +61,57 @@ const RotatingPlanet = ({
   }, [textureUrl, fallbackUrl]);
 
   const texture = useLoader(TextureLoader, textureSrc);
-  const meshRef = useRef<THREE.Mesh>(null);
 
   useFrame(() => {
     if (meshRef.current) {
-      meshRef.current.rotation.y += 0.0025;
+      meshRef.current.rotation.y += 0.01;
     }
   });
 
   return (
-    <mesh ref={meshRef} position={position} scale={[scaleFactor, scaleFactor, scaleFactor]}>
-      <sphereGeometry args={[2, 64, 64]} />
+    <mesh ref={meshRef} position={position} scale={[1, 1, 1]}>
+      <sphereGeometry args={[radius, 64, 64]} />
       <meshStandardMaterial map={texture} metalness={0.2} roughness={0.7} />
     </mesh>
   );
 };
 
 const CompareScene = () => {
-  const earthTextureUrl = "../textures/earth.jpg";
-  const earthFallbackUrl = "https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg";
-  const finalScale = 2;
+  const PSYCHE_RADIUS_KM = 112;
+  const EARTH_RADIUS_KM = 6371;
+  const psycheNormalizedDiameter = 1.5;
+  const scaleMultiplier = EARTH_RADIUS_KM / PSYCHE_RADIUS_KM;
+
+  const earthDiameterUnits = psycheNormalizedDiameter * scaleMultiplier;
+  const earthRadiusUnits = earthDiameterUnits / 2;
+
+  // Dynamic camera calculation
+  const fov = 50;
+  const aspect = window.innerWidth / window.innerHeight;
+  const marginMultiplier = 1.2;
+
+  const maxObjectRadius = earthRadiusUnits;
+  const visibleHeight = maxObjectRadius * 2 * marginMultiplier;
+  const visibleWidth = visibleHeight * aspect;
+  const requiredView = Math.max(visibleHeight, visibleWidth);
+  const fovInRadians = (fov * Math.PI) / 180;
+  const cameraZ = requiredView / (2 * Math.tan(fovInRadians / 2));
 
   return (
     <div style={{ height: "700px", width: "100%", position: "relative" }}>
-      <Canvas camera={{ position: [0, 0, 14] }}>
+      <Canvas camera={{ position: [0, 0, cameraZ], fov }}>
         <ambientLight intensity={0.5} />
         <directionalLight position={[4, 4, 4]} intensity={1} />
         <Stars radius={100} depth={50} count={3000} factor={4} />
         <OrbitControls enableZoom={true} />
 
-        {/* Psyche */}
-        <PsycheModel position={[-8, 0, 0]} />
-
-        {/* Earth */}
-        <Suspense fallback={null}>
-          <RotatingPlanet
-            position={[4, 0, 0]}
-            textureUrl={earthTextureUrl}
-            fallbackUrl={earthFallbackUrl}
-            scaleFactor={finalScale}
-          />
-        </Suspense>
+        {/* Centered Group */}
+        <group>
+          <PsycheModel position={[-earthRadiusUnits * 1.5, 0, 0]} />
+          <Suspense fallback={null}>
+            <EarthModel position={[earthRadiusUnits * 1.5, 0, 0]} radius={earthRadiusUnits} />
+          </Suspense>
+        </group>
       </Canvas>
     </div>
   );
