@@ -51,8 +51,8 @@ canvas {
 }
 
 @keyframes float {
-  0%   { transform: translateY(-50%) translateX(0); }
-  50%  { transform: translateY(-52%) translateX(5px); }
+  0% { transform: translateY(-50%) translateX(0); }
+  50% { transform: translateY(-52%) translateX(5px); }
   100% { transform: translateY(-50%) translateX(0); }
 }
 
@@ -175,6 +175,9 @@ canvas {
   }
 }
 
+/*******************************************
+ * Asteroid Tooltip
+ *******************************************/
 .asteroid-tooltip {
   position: absolute;
   top: 41%;
@@ -203,13 +206,13 @@ canvas {
 
 @keyframes tooltipFloat {
   0%, 100% { transform: translate(-50%, -50%) translateY(0); }
-  50%      { transform: translate(-50%, -50%) translateY(-6px); }
+  50% { transform: translate(-50%, -50%) translateY(-6px); }
 }
 
 /*******************************************
  * Compass Overlay
  *******************************************/
- .compass-container {
+.compass-container {
   position: absolute;
   bottom: 20px;
   left: 20px;
@@ -227,6 +230,7 @@ canvas {
   transform-origin: center;
   transition: transform 0.1s linear;
 }
+
 .compass-heading {
   margin-top: 4px;
   text-align: center;

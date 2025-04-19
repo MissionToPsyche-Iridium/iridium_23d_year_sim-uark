@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import InteractiveSection from "./InteractiveSection/InteractiveSection";
 import SplitSection from "./SplitSection";
-import MarsScene from "./MarsScene";
+import FeatureSection from "./FeatureSection";
 import SplitSectionTwo from "./SplitSectionTwo";
 import InteractiveStar from "./InteractiveStar";
 import CustomCursor from "./CustomCursor";
@@ -18,7 +18,6 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
     return <>{children}</>;
   }
 
-  // ✨ Otherwise (on homepage), render full styled layout
   return (
     <>
       <header className="header">
@@ -78,12 +77,10 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       {/* Main Sections */}
       <InteractiveSection isPopupOpen={isPopupOpen} />
       {children}
-
-      {/* <SplitSection />
-      <SplitSectionTwo /> */}
+      <SplitSection />
+      <SplitSectionTwo />
+      <FeatureSection />
       <CustomCursor />
-      {/* <MarsScene /> */}
-      {/* <LaunchScene /> */}
     </>
   );
 }
