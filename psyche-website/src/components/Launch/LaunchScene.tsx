@@ -10,7 +10,7 @@ import { createSatellite } from '@/components/Launch/Satellite';
 import { createMars } from '@/components/Launch/Mars';
 import { createClouds } from '@/components/Launch/Clouds';
 import { createStars } from '@/components/Launch/DeepSpace';
-import '../styles/LaunchScene.css';
+import '../../styles/LaunchScene.css';
 
 export default function LaunchScene() {
   const mountRef = useRef<HTMLDivElement>(null);

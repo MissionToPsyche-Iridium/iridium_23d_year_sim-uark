@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import LaunchScene from '@/components/LaunchScene';
+import LaunchScene from '@/components/Launch/LaunchScene';
 import { use } from "react";
 
 export default function AnimationPage() {
