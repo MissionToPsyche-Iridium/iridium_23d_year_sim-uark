@@ -14,6 +14,14 @@ export default function Home() {
           </button>
         </Link>
       </div>
+      <div className="widget welcome-widget">
+        <h2 className="widget-title">🌌 Welcome to Year of Psyche</h2>
+        <Link href="/animation">
+          <button className="launch-button">
+            Flight Path Animation
+          </button>
+        </Link>
+      </div>
     </section>
   );
 }

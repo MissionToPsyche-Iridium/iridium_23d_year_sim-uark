@@ -1,6 +1,6 @@
 export const metadata = {
-    title: "Psyche vs Earth Comparison",
-    description: "Compare the rotation of Psyche and Earth in a 3D scene.",
+    title: "Psyche Mission Flight Path Animation",
+    description: "Explore the flight path of the Psyche mission in a 3D scene.",
   };
   
   export default function CompareLayout({ children }: { children: React.ReactNode }) {
