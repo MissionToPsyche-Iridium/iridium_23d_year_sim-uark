@@ -1,3 +1,5 @@
-export default function Home() {
-  return null; // No content renders on the screen
+import { redirect } from "next/navigation";
+
+export default function Page() {
+  redirect("/home");
 }

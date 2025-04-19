@@ -1,0 +1,51 @@
+.titleDiv {
+    position: absolute;
+    top: 20%;
+    width: 100%;
+    text-align: center;
+    color: #eeeeee;
+    font-size: 3em;
+    opacity: 1;
+    line-height: 1.2;
+    white-space: pre-line;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  }
+  
+  #overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: 3rem;
+    color: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 20;
+  }
+  
+  #overlayText {
+    opacity: 0;
+  }
+  
+  .deepSpaceOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+    opacity: 0;
+    z-index: 30;
+    pointer-events: none;
+  }  

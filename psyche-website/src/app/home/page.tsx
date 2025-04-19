@@ -1,0 +1,27 @@
+"use client";
+
+import Link from "next/link";
+import "../../styles/FeatureSection.css";
+
+export default function Home() {
+  return (
+    <section className="feature-section">
+      <div className="widget welcome-widget">
+        <h2 className="widget-title">🌌 Welcome to Year of Psyche</h2>
+        <Link href="/compare">
+          <button className="launch-button">
+            🚀 Launch Comparison
+          </button>
+        </Link>
+      </div>
+      <div className="widget welcome-widget">
+        <h2 className="widget-title">🌌 Welcome to Year of Psyche</h2>
+        <Link href="/animation">
+          <button className="launch-button">
+            Flight Path Animation
+          </button>
+        </Link>
+      </div>
+    </section>
+  );
+}

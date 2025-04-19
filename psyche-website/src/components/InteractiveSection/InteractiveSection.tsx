@@ -45,6 +45,7 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
   const initialRotationRef = useRef<THREE.Euler | null>(null);
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [hasMounted, setHasMounted] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const [currentRotation, setCurrentRotation] = useState(0);
@@ -56,17 +57,15 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
   const maxZoomLevel = 10;
   const minZoomLevel = -10;
 
-  // ----------------------
-  // Interaction Hooks
-  // ----------------------
-
   useDragRotation({ canvasRef, modelRef });
   useTouchRotation({ canvasRef, modelRef });
 
-  // ----------------------
-  // Tooltip Timer
-  // ----------------------
+  // Mount flag
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
+  // Tooltip timer
   const startInactivityTimer = () => {
     clearTimeout(inactivityTimerRef.current!);
     inactivityTimerRef.current = setTimeout(() => setShowTooltip(true), 5000);
@@ -100,25 +99,20 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
     };
   }, []);
 
-  // ----------------------
-  // Device + Orientation
-  // ----------------------
-
+  // Device + orientation detection
   useEffect(() => {
     setDeviceType(detectDeviceType());
 
-    const handleResize = () =>
+    const handleResize = () => {
       setOrientation(window.innerWidth < window.innerHeight ? "portrait" : "landscape");
+    };
 
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // ----------------------
-  // Cursor Tracking
-  // ----------------------
-
+  // Cursor tracking
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => setCursorPosition({ x: e.clientX, y: e.clientY });
     const handleMouseDown = () => setIsClicking(true);
@@ -135,10 +129,7 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
     };
   }, []);
 
-  // ----------------------
-  // Zoom + Reset Controls
-  // ----------------------
-
+  // Zoom + reset controls
   const handleZoomIn = () => {
     if (modelRef.current && zoomLevel < maxZoomLevel) {
       modelRef.current.scale.multiplyScalar(1.1);
@@ -161,10 +152,7 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
     }
   };
 
-  // ----------------------
   // 3D Scene Setup
-  // ----------------------
-
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -227,16 +215,8 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
     return () => renderer.dispose();
   }, []);
 
-  // ----------------------
-  // Compass Values
-  // ----------------------
-
   const heading = getCompassHeading(currentRotation);
   const direction = getDirectionLabel(heading);
-
-  // ----------------------
-  // JSX
-  // ----------------------
 
   return (
     <section className={`interactive-section ${deviceType} ${orientation}`}>
@@ -262,22 +242,25 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
         <div className="compass-heading">{heading}° {direction}</div>
       </div>
 
-      <img
-        src={isClicking ? "/explosion.png" : "/spaceship.png"}
-        alt="Cursor"
-        style={{
-          position: "fixed",
-          top: cursorPosition.y,
-          left: cursorPosition.x,
-          width: "28px",
-          height: "28px",
-          transform: "translate(-50%, -50%)",
-          pointerEvents: "none",
-          zIndex: 9999,
-          transition: "filter 0.2s ease",
-          filter: isClicking ? "drop-shadow(0 0 8px orange)" : "none",
-        }}
-      />
+      {/* 🛡️ Only render after mount */}
+      {hasMounted && (
+        <img
+          src={isClicking ? "/explosion.png" : "/spaceship.png"}
+          alt="Cursor"
+          style={{
+            position: "fixed",
+            top: cursorPosition.y,
+            left: cursorPosition.x,
+            width: "28px",
+            height: "28px",
+            transform: "translate(-50%, -50%)",
+            pointerEvents: "none",
+            zIndex: 9999,
+            transition: "filter 0.2s ease",
+            filter: isClicking ? "drop-shadow(0 0 8px orange)" : "none",
+          }}
+        />
+      )}
     </section>
   );
 }
