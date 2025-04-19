@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import "../styles/TemperatureSlider.css";
 
 const spaceTempDescriptions = [
-  { temp: -270, label: "Deep Space", description: "Near absolute zero. Background radiation of space." },
-  { temp: -150, label: "Asteroid Night Side", description: "Extremely cold shadow side of Psyche." },
-  { temp: 0, label: "Freezing Point", description: "Still too cold for humans, but getting warmer." },
-  { temp: 100, label: "Sunlit Asteroid", description: "Scorching heat from unfiltered sunlight." },
-  { temp: 500, label: "Venus Surface", description: "Lead melts. Heat shields failing." },
-  { temp: 1000, label: "Molten Metal", description: "Spacecraft materials vaporize!" },
+  { temp: -340, description: "This is the coldest it gets on Psyche and Earth. It would be around -340°F on the dark side of Psyche and the coldest record temperature on Earth was -133°F in Antarctica." },
+  { temp: -220, description: "This is still pretty cold for Earth but it is only a standard day for Psyche. These temperatures would be around where the Sun barely hits the asteroid." },
+  { temp: -100, description: "This is about as hot as it gets for Psyche and Earth. This would happen when the Sun is directly above you on the asteroid." },
 ];
 
 const getDescription = (temp: number) => {
@@ -18,7 +15,7 @@ const getDescription = (temp: number) => {
 
 // Interpolate color from temperature
 const getTempColor = (temp: number) => {
-  const percent = (temp + 270) / (1000 + 270); // Normalize to 0–1
+  const percent = (temp + 340) / (240); // Normalize to 0–1
 
   if (percent < 0.33) {
     // Cold: blue → cyan
@@ -37,9 +34,9 @@ const getTempColor = (temp: number) => {
 };
 
 const TemperatureSlider: React.FC = () => {
-  const [temperature, setTemperature] = useState(-150);
+  const [temperature, setTemperature] = useState(-220);
 
-  const { label, description } = getDescription(temperature);
+  const { description } = getDescription(temperature);
   const fillColor = getTempColor(temperature);
 
   return (
@@ -49,12 +46,13 @@ const TemperatureSlider: React.FC = () => {
             background: `radial-gradient(circle at center, ${fillColor}, #000)`,
             transition: "background 0.8s ease-in-out"
         }}
->
-      <div className="slider-label">{label}</div>
+>      
+      <h1 className="slider-title">Psyche Temperature vs. Earth Temperature</h1>
+      
       <input
         type="range"
-        min={-270}
-        max={1000}
+        min={-340}
+        max={-100}
         value={temperature}
         step={1}
         onChange={(e) => setTemperature(Number(e.target.value))}
@@ -64,7 +62,7 @@ const TemperatureSlider: React.FC = () => {
         }}
       />
       <div className="temperature-readout">
-        <h2>{temperature}°C</h2>
+        <h2>{temperature}°F on Psyche {Math.floor(((temperature + 220) / 120) * 134)}°F on Earth</h2>
         <p>{description}</p>
       </div>
     </div>

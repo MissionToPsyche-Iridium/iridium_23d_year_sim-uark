@@ -30,14 +30,14 @@
   left: 0;
   width: 100%;
   height: 300px;
-  transform: translateY(-90%);
+  transform: translateY(-65%);
   z-index: 0;
   pointer-events: none;
   overflow: visible;
 }
 
 .wave-overlay2 .rotated {
-  transform: translateY(-10) rotate(180deg); /* Moves the second wave below and rotates it */
+  transform: translateY(15) rotate(180deg); /* Moves the second wave below and rotates it */
 }
 
 .wave-overlay3 {
@@ -45,14 +45,14 @@
   left: 0;
   width: 100%;
   height: 300px;
-  transform: translateY(-100%);
+  transform: translateY(-75%);
   z-index: 0;
   pointer-events: none;
   overflow: visible;
 }
 
 .wave-overlay3 .rotated {
-  transform: translateY(50) rotate(180deg); /* Moves the second wave below and rotates it */
+  transform: translateY(75) rotate(180deg); /* Moves the second wave below and rotates it */
 }
 
 .wave-overlay svg {
@@ -66,11 +66,13 @@
   border-radius: 8px;
   position: relative; /* Ensure they stack above the wave overlay */
   z-index: 1;
+  transform: translateY(-50px);
 }
 
 .right-section {
   text-align: center;
   padding: 20px;
+  transform: translateY(50px);
 }
 
 /* Card Deck Styles */
@@ -84,6 +86,10 @@
 .card-container {
   position: relative;
   height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 50px;
 }
 
 .card {
@@ -101,6 +107,8 @@
   font-size: 20px;
   margin: 0;
   color: white;
+  padding: 0 60px;
+  z-index: 5;
 }
 
 .card-button {
@@ -108,14 +116,21 @@
   top: 50%;
   background: transparent;
   border: none;
-  font-size: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
   cursor: pointer;
   z-index: 10;
   transform: translateY(-50%);
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .card-button.left {
   left: 10px;
+}
+
+.card-button.right {
+  right: 10px;
 }
 
 .label {
@@ -125,29 +140,6 @@
   text-align: center;
   padding: 10px;
   width: 100%;
-}
-
-.card-button.right {
-  right: 10px;
-}
-
-.birthday-input {
-  text-align: center;
-}
-
-.input-container {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-input[type="date"] {
-  margin-right: 10px;
-}
-
-button {
-  padding: 5px 10px;
-  cursor: pointer;
 }
 
 .hamburger-menu {
@@ -190,6 +182,7 @@ button {
 .menu-dropdown button:hover {
   color: #ffcc00;
 }
+
 .top-header {
   position: absolute;
   top: 20px;
@@ -207,4 +200,102 @@ button {
   font-size: 1.5rem;
   color: white;
   margin: 0 auto;
+}
+
+
+/* age calculator formats*/
+.birthday-input {
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.input-container {
+  position: relative;
+  background: radial-gradient(circle, #1a1a2e, #162447);
+  display: inline-block;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.6), 0px 0px 25px rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.input-container input {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px;
+  padding: 10px;
+  border: 2px solid #ffffff;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* Glowing effect for the date input */
+.input-container input:focus {
+  border-color: #00eaff;
+  box-shadow: 0px 0px 10px 2px #00eaff;
+}
+
+input[type="date"] {
+select {
+  background: #1a1a3d;
+  color: #c0c0c0;
+  border: 2px solid #7a7aff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  appearance: none;
+  outline: none;
+  }
+}
+
+input[type="date"]::placeholder {
+  color: #7a7aff;
+}
+
+button {
+  padding: 8px 18px;
+  background: linear-gradient(45deg, #7a7aff, #c0c0c0);
+  color: #0d0d2b;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 0 10px #7a7aff;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(45deg, #c0c0c0, #7a7aff);
+}
+
+/* Result After Submit */
+.result-section {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(13, 13, 43, 0.9);
+  border-radius: 10px;
+  margin-top: 10px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.psyche-birthday {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  color: #ffffff;
+  margin-bottom: 10px;
+  text-shadow: 0 0 15px #7a7aff;
+}
+
+.fun-fact {
+  font-size: 1rem;
+  color: #cccccc;
+  margin-top: 10px;
 }
