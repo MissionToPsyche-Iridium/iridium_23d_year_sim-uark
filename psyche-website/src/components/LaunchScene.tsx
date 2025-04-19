@@ -3,7 +3,13 @@
 import { useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { gsap } from 'gsap';
+import { createRocket } from '@/components/Launch/Rocket';
+import { createSatellite } from '@/components/Launch/Satellite';
+import { createMars } from '@/components/Launch/Mars';
+import { createClouds } from '@/components/Launch/Clouds';
+import { createStars } from '@/components/Launch/DeepSpace';
 import '../styles/LaunchScene.css';
 
 export default function LaunchScene() {
@@ -14,11 +20,10 @@ export default function LaunchScene() {
     const mount = mountRef.current;
     if (!mount) return;
 
-    // === THREE.js Setup ===
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x87ceeb);
 
-    const camera = new THREE.PerspectiveCamera(85, window.innerWidth / window.innerHeight, 0.1, 5000);
+    const camera = new THREE.PerspectiveCamera(85, window.innerWidth / window.innerHeight, 0.1, 10000);
     camera.position.set(0, 5, 20);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -34,117 +39,37 @@ export default function LaunchScene() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
 
-    const padGeometry = new THREE.BoxGeometry(20, 1, 20);
     const padMaterial = new THREE.MeshStandardMaterial({ color: 0x555555, transparent: true, opacity: 1 });
-    const pad = new THREE.Mesh(padGeometry, padMaterial);
+    const pad = new THREE.Mesh(new THREE.BoxGeometry(20, 1, 20), padMaterial);
     pad.receiveShadow = true;
     scene.add(pad);
 
-    const rocket = new THREE.Group();
-    const rocketBody = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.8, 0.8, 8, 32),
-      new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.8, roughness: 0.3 })
-    );
-    const noseCone = new THREE.Mesh(
-      new THREE.ConeGeometry(0.8, 2, 32),
-      new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness: 0.8, roughness: 0.3 })
-    );
-    noseCone.position.y = 5;
-    rocket.add(rocketBody, noseCone);
-    rocket.position.set(0, 4.5, 0);
+    const rocket = createRocket();
     scene.add(rocket);
 
-    const flame = new THREE.Mesh(
-      new THREE.ConeGeometry(1.5, 3, 32),
-      new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.8 })
-    );
-    flame.rotation.x = Math.PI;
-    flame.position.y = -5;
-    rocket.add(flame);
-
-    const satellite = new THREE.Group();
-    const body = new THREE.Mesh(
-      new THREE.BoxGeometry(2, 2, 2),
-      new THREE.MeshStandardMaterial({ color: 0x999999, metalness: 0.7, roughness: 0.4 })
-    );
-    satellite.add(body);
-
-    const dish = new THREE.Group();
-    const dishBase = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.1, 0.1, 0.5, 32),
-      new THREE.MeshStandardMaterial({ color: 0xcccccc })
-    );
-    dishBase.position.y = 1.25;
-    const dishCone = new THREE.Mesh(
-      new THREE.ConeGeometry(0.7, 0.4, 32),
-      new THREE.MeshStandardMaterial({ color: 0xffffff })
-    );
-    dishCone.position.y = 1.6;
-    dish.add(dishBase, dishCone);
-    satellite.add(dish);
-
-    const panelMaterial = new THREE.MeshStandardMaterial({ color: 0x4444ff, metalness: 0.6, roughness: 0.3 });
-    const panels = [
-      [2.5, 0, 0],
-      [-2.5, 0, 0],
-      [0, 2.5, 0],
-      [0, -2.5, 0],
-    ];
-    panels.forEach(([x, y, z], idx) => {
-      const panel = new THREE.Mesh(new THREE.PlaneGeometry(4, 1), panelMaterial);
-      if (idx >= 2) panel.rotation.z = Math.PI / 2;
-      panel.position.set(x, y, z);
-      satellite.add(panel);
-    });
-    satellite.visible = false;
+    const flame = rocket.getObjectByName('Flame') as THREE.Mesh;
+    const satellite = createSatellite();
     scene.add(satellite);
 
-    const marsTexture = new THREE.TextureLoader().load('../textures/mars.jpg');
-    const mars = new THREE.Mesh(
-      new THREE.SphereGeometry(5, 64, 64),
-      new THREE.MeshStandardMaterial({ map: marsTexture })
-    );
-    mars.visible = false;
+    const mars = createMars();
     scene.add(mars);
 
-    const cloudMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
-    const cloud1 = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), cloudMaterial);
-    cloud1.rotation.x = -Math.PI / 2;
-    cloud1.position.y = 50;
+    const { cloud1, cloud2 } = createClouds();
     scene.add(cloud1);
-
-    const cloud2 = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), cloudMaterial);
-    cloud2.rotation.x = -Math.PI / 2;
-    cloud2.position.y = 60;
     scene.add(cloud2);
 
-    const starGeometry = new THREE.BufferGeometry();
-    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0 });
-    const starVertices = [];
-    for (let i = 0; i < 10000; i++) {
-      const x = THREE.MathUtils.randFloatSpread(4000);
-      const y = THREE.MathUtils.randFloatSpread(4000);
-      const z = THREE.MathUtils.randFloatSpread(4000);
-      starVertices.push(x, y, z);
-    }
-    starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-    const stars = new THREE.Points(starGeometry, starMaterial);
+    const { stars, starMaterial } = createStars();
     scene.add(stars);
 
-    // Create Title Div (uses CSS now)
     const titleDiv = document.createElement('div');
     titleDiv.innerText = 'Kennedy Space Center\nOctober 13, 2023 — 10:19 AM EDT';
     titleDiv.className = 'titleDiv';
     mount.appendChild(titleDiv);
 
-    const timeline = gsap.timeline();
-    timeline.to(titleDiv, { opacity: 0, duration: 2, delay: 3 });
-    timeline.to(rocket.position, { y: "+=200", duration: 3, ease: "power2.in" }, "launch");
-    timeline.to(camera.position, { y: "+=180", duration: 3, ease: "power2.in" }, "launch");
-
     const clock = new THREE.Clock();
     let transitionStarted = false;
     let orbitRadiusObj = { radius: 30 };
+    let asteroid: THREE.Group | null = null;
 
     const animate = () => {
       requestAnimationFrame(animate);
@@ -152,6 +77,10 @@ export default function LaunchScene() {
       const elapsed = clock.getElapsedTime();
       rocket.rotation.y += 0.01;
       flame.scale.set(1 + Math.sin(elapsed * 20) * 0.2, 1 + Math.sin(elapsed * 20) * 0.2, 1);
+
+      if (asteroid !== null) {
+        asteroid.rotation.y += 0.001;
+      }
 
       if (rocket.position.y >= 55 && !transitionStarted) {
         transitionStarted = true;
@@ -162,7 +91,7 @@ export default function LaunchScene() {
         gsap.to(rocket.scale, { x: 0.2, y: 0.2, z: 0.2, duration: 3 });
         gsap.to(cloud1.material, { opacity: 0, duration: 1.5 });
         gsap.to(cloud2.material, { opacity: 0, duration: 1.5 });
-        gsap.to(pad.material, { opacity: 0, duration: 1.5 });
+        gsap.to(padMaterial, { opacity: 0, duration: 1.5 });
 
         gsap.delayedCall(1.5, () => {
           cloud1.visible = false;
@@ -211,9 +140,7 @@ export default function LaunchScene() {
                   z: "-=150",
                   duration: 5,
                   ease: "power2.in",
-                  onUpdate: () => {
-                    camera.lookAt(satellite.position);
-                  },
+                  onUpdate: () => camera.lookAt(satellite.position),
                 }, 0);
 
                 flybyTimeline.to(camera.position, {
@@ -225,7 +152,6 @@ export default function LaunchScene() {
                 }, 0);
 
                 flybyTimeline.call(() => {
-                  // New "Journey Into Deep Space" overlay
                   const deepSpaceOverlay = document.createElement('div');
                   deepSpaceOverlay.innerText = 'Journey Into Deep Space';
                   deepSpaceOverlay.className = 'deepSpaceOverlay';
@@ -243,9 +169,7 @@ export default function LaunchScene() {
                         z: "-=1000",
                         duration: 10,
                         ease: "power1.inOut",
-                        onUpdate: () => {
-                          camera.lookAt(satellite.position);
-                        }
+                        onUpdate: () => camera.lookAt(satellite.position),
                       }, 0);
 
                       deepSpaceTimeline.to(camera.position, {
@@ -261,6 +185,61 @@ export default function LaunchScene() {
                         duration: 10,
                         ease: "none",
                       }, 0);
+
+                      deepSpaceTimeline.call(() => {
+                        const loader = new GLTFLoader();
+                        loader.load(
+                          "https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb",
+                          (gltf) => {
+                            asteroid = new THREE.Group();
+                            const model = gltf.scene;
+                      
+                            // Center the model
+                            const box = new THREE.Box3().setFromObject(model);
+                            const center = new THREE.Vector3();
+                            box.getCenter(center);
+                            model.position.sub(center);
+                      
+                            // Scale the model
+                            const size = new THREE.Vector3();
+                            box.getSize(size);
+                            const maxDim = Math.max(size.x, size.y, size.z);
+                            const scale = 20 / maxDim; // Adjust bigger (your old was 20 scale, remember?)
+                            model.scale.setScalar(scale);
+                      
+                            asteroid.add(model);
+                            asteroid.position.set(
+                              satellite.position.x + 300,
+                              satellite.position.y,
+                              satellite.position.z - 300
+                            );
+                            scene.add(asteroid);
+                      
+                            // Move camera toward asteroid
+                            gsap.to(camera.position, {
+                              x: asteroid.position.x - 30,
+                              y: asteroid.position.y + 20,
+                              z: asteroid.position.z + 60,
+                              duration: 5,
+                              ease: "power2.inOut",
+                              onUpdate: () => {
+                                if (asteroid) camera.lookAt(asteroid.position);
+                              }
+                            });
+                      
+                            // Move satellite near asteroid
+                            gsap.to(satellite.position, {
+                              x: asteroid.position.x - 20,
+                              y: asteroid.position.y + 10,
+                              z: asteroid.position.z + 30,
+                              duration: 5,
+                              ease: "power2.inOut",
+                            });
+                          },
+                          undefined,
+                          (error) => console.error('Failed to load Psyche model:', error)
+                        );
+                      });                      
                     }});
                   });
                 });
@@ -279,6 +258,11 @@ export default function LaunchScene() {
 
     animate();
 
+    const launchTimeline = gsap.timeline();
+    launchTimeline.to(titleDiv, { opacity: 0, duration: 2, delay: 3 });
+    launchTimeline.to(rocket.position, { y: "+=200", duration: 3, ease: "power2.in" }, "launch");
+    launchTimeline.to(camera.position, { y: "+=180", duration: 3, ease: "power2.in" }, "launch");
+
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -296,11 +280,8 @@ export default function LaunchScene() {
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
       <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
-  
       <div id="overlay">
-        <div id="overlayText">
-          Comparison with Mars
-        </div>
+        <div id="overlayText">Comparison with Mars</div>
       </div>
     </div>
   );
