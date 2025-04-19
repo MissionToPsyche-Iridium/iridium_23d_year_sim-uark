@@ -1,0 +1,8 @@
+.full-width-paragraph {
+    width: 100%;
+    padding: 40px;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+  }
+  

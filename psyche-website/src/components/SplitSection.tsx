@@ -3,6 +3,13 @@
 import React, { useState, useEffect } from "react";
 import "../styles/SplitSection.css";
 import StarAnimation from "./StarAnimation";
+import AgeContentParagraph from "./Paragraphs/AgeContentParagraph";
+import TemperatureSlider from "./TemperatureSlider";
+import MetallicInfoParagraph from "./Paragraphs/MetallicInfoParagraph";
+import SpacecraftParagraph from "./Paragraphs/SpacecraftParagraph";
+import TempContentParagraph from "./Paragraphs/TempContentParagraph";
+import MissionInfoParagraph from "./Paragraphs/MissionInfoParagraph";
+import Magnet from "./Magnet";
 
 // Card Deck Component
 const CardDeck: React.FC = () => {
@@ -72,7 +79,6 @@ const SplitSection: React.FC = () => {
   const [showStars, setShowStars] = useState(false);
   const [showTitle, setShowTitle] = useState(true);
   const [psycheAge, setPsycheAge] = useState<{ years: number; days: number }>({ years: 0, days: 0 });
-  const [timelinePosition, setTimelinePosition] = useState<number>(0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -163,7 +169,10 @@ const SplitSection: React.FC = () => {
 
       {/* Left Section */}
       <div className="left-section">
-        <CardDeck />
+        <AgeContentParagraph />
+        <TemperatureSlider />
+        <MetallicInfoParagraph />
+        <SpacecraftParagraph />
       </div>
 
       {/* Right Section */}
@@ -208,6 +217,9 @@ const SplitSection: React.FC = () => {
         )}
           <StarAnimation show={showStars} />
       </div>
+      <TempContentParagraph />
+      <Magnet />
+      <MissionInfoParagraph />
     </div>
   );
 };

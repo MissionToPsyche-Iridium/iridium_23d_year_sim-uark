@@ -1,0 +1,25 @@
+.paragraph-container {
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    text-align: left;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .paragraph-title {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    color: #333;
+  }
+  
+  .paragraph-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+  }
+
+
+  
