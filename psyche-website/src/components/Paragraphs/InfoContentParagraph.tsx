@@ -3,12 +3,10 @@ import "../../styles/InfoContentParagraph.css";
 
 const InfoContentParagraph: React.FC = () => {
   return (
-    <div className="paragraph-contrainer">
-      <h2 className="paragraph-title">Fun Fact!</h2>
-      <p className="paragraph-text">
-        Did you know that the highest temperature ever recorded on Earth was 134°F (56.7°C)
-        in Furnace Creek, California, back in 1913? Extreme temperatures like this remind us
-        of how powerful nature can be! 
+    <div className="info-content-container">
+      <h2 className="info-content-title">MAIN INFO ABOUT PSYCHE</h2>
+      <p className="info-content-text">
+        don't include any specifics. only basic info from asu website and make this box extend to both ends of the page 
       </p>
     </div>
   );

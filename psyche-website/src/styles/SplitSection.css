@@ -1,13 +1,18 @@
 .split-section {
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: calc(100% - 20px);
-  padding: 0 10px;
-  margin: 200px auto;
-  gap: 10px;
+  align-items: flex-start; /* or center, depending on if you want perfect vertical centering */
+  padding: 5rem;
+  gap: 3rem; /* space between left and right */
 }
+
+.paragraph-wrapper {
+  margin-bottom: 500px;
+}
+
 
 /* Wave overlay goes behind the content of the split section */
 .wave-overlay {
@@ -15,44 +20,44 @@
   left: 0;
   width: 100%;
   height: 300px;
-  transform: translateY(-50%);
+  transform: translateY(20%);
   z-index: 0;
   pointer-events: none;
   overflow: visible;
 }
 
 .wave-overlay .rotated {
-  transform: translateY(-0.5) rotate(180deg); /* Moves the second wave below and rotates it */
+  transform: translateY(-0.5) rotate(180deg); 
 }
 
 .wave-overlay2 {
   position: absolute;
   left: 0;
   width: 100%;
-  height: 300px;
-  transform: translateY(-65%);
+  height: 40px;
+  transform: translateY(-85%);
   z-index: 0;
   pointer-events: none;
   overflow: visible;
 }
 
 .wave-overlay2 .rotated {
-  transform: translateY(15) rotate(180deg); /* Moves the second wave below and rotates it */
+  transform: translateY(-220) rotate(180deg);
 }
 
 .wave-overlay3 {
   position: absolute;
   left: 0;
   width: 100%;
-  height: 300px;
-  transform: translateY(-75%);
+  height: 150px;
+  transform: translateY(-65%);
   z-index: 0;
   pointer-events: none;
   overflow: visible;
 }
 
 .wave-overlay3 .rotated {
-  transform: translateY(75) rotate(180deg); /* Moves the second wave below and rotates it */
+  transform: translateY(-85) rotate(180deg); 
 }
 
 .wave-overlay svg {
@@ -65,81 +70,10 @@
   flex: 1;
   border-radius: 8px;
   position: relative; /* Ensure they stack above the wave overlay */
-  z-index: 1;
-  transform: translateY(-50px);
 }
 
 .right-section {
   text-align: center;
-  padding: 20px;
-  transform: translateY(50px);
-}
-
-/* Card Deck Styles */
-.card-deck {
-  text-align: center;
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
-}
-
-.card-container {
-  position: relative;
-  height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 50px;
-}
-
-.card {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.5s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card-text {
-  font-size: 20px;
-  margin: 0;
-  color: white;
-  padding: 0 60px;
-  z-index: 5;
-}
-
-.card-button {
-  position: absolute;
-  top: 50%;
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  font-weight: bold;
-  color: white;
-  cursor: pointer;
-  z-index: 10;
-  transform: translateY(-50%);
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.card-button.left {
-  left: 10px;
-}
-
-.card-button.right {
-  right: 10px;
-}
-
-.label {
-  font-size: 20px;
-  color: white;
-  margin: 0;
-  text-align: center;
-  padding: 10px;
-  width: 100%;
 }
 
 .hamburger-menu {
@@ -208,18 +142,20 @@
   text-align: center;
   padding: 20px;
   border-radius: 10px;
+  margin-top: 17rem; /* matches alignment with content box */
+
 }
 
 .input-container {
   position: relative;
   background: radial-gradient(circle, #1a1a2e, #162447);
   display: inline-block;
-  padding: 15px;
+  padding: 25px;
   border-radius: 10px;
   box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.6), 0px 0px 25px rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .input-container input {

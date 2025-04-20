@@ -3,12 +3,10 @@ import "../../styles/Paragraph.css";
 
 const AgeContentParagraph: React.FC = () => {
   return (
-    <div className="paragraph-container">
-      <h2 className="paragraph-title">Fun Fact!</h2>
-      <p className="paragraph-text">
-        Did you know that the highest temperature ever recorded on Earth was 134°F (56.7°C)
-        in Furnace Creek, California, back in 1913? Extreme temperatures like this remind us
-        of how powerful nature can be! 
+    <div className="agecontent-container">
+      <h2 className="agecontent-title">AGE/TIME CONTENT</h2>
+      <p className="agecontent-text">
+        info about time on psyche with specifics about days, years, and hours so that the age calculator can make sense
       </p>
     </div>
   );

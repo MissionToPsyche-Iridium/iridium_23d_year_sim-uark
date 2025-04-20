@@ -3,12 +3,10 @@ import "../../styles/Paragraph.css";
 
 const TempContentParagraph: React.FC = () => {
   return (
-    <div className="paragraph-container">
-      <h2 className="paragraph-title">Fun Fact!</h2>
-      <p className="paragraph-text">
-        Did you know that the highest temperature ever recorded on Earth was 134°F (56.7°C)
-        in Furnace Creek, California, back in 1913? Extreme temperatures like this remind us
-        of how powerful nature can be! 
+    <div className="tempcontent-container">
+      <h2 className="tempcontent-title">TEMPERATURE CONTENT</h2>
+      <p className="tempcontent-text">
+        info about temp on psyche. pull specific numbers from the research paper 
       </p>
     </div>
   );

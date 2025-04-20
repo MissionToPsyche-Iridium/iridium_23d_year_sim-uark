@@ -12,6 +12,8 @@
   background: #0c2159;
   background-clip: padding-box;
   border: 2px solid #0c2159;
+  margin-top: 35rem; /* moves temp slider up or down */
+
 
   /* Fading effect */
   -webkit-mask-image: radial-gradient(
@@ -42,6 +44,7 @@
   border: 2px solid #555;
   margin: 1rem 0;
   box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
+  
 }
 
 .thermometer-slider::-webkit-slider-thumb {

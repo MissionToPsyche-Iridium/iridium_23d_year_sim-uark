@@ -1,0 +1,122 @@
+/* Wave overlay goes behind the content of the split section w/ temperatures */
+
+.tempwave-overlay {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    transform: translateY(200%);
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
+  }
+  
+  .tempwave-overlay .rotated {
+    transform: translateY(-0.5) rotate(180deg); 
+  }
+  
+  .tempwave-overlay2 {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 600px;
+    transform: translateY(90%);
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
+  }
+  
+  .tempwave-overlay2 .rotated {
+    transform: translateY(-220) rotate(180deg);
+  }
+  
+  .tempwave-overlay3 {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: -2px;
+    transform: translateY(50%);
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
+  }
+  
+  .tempwave-overlay3 .rotated {
+    transform: translateY(-85) rotate(180deg); 
+  }
+  
+  .tempwave-overlay svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+/* Metal content box */
+.metal-row-container {
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto 0; /* Adjust margin-top for spacing */
+    text-align: left;
+    background: radial-gradient(circle, #1a1a2e, #162447);
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.6), 0px 0px 25px rgba(255, 255, 255, 0.3);
+    position: relative;
+    top: 0; /* Remove any conflicting positioning */
+}
+
+.metal-row-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    color: #ffffff;
+    text-shadow: 0px 0px 10px #7a7aff;
+    margin-bottom: 15px;
+}
+
+.metal-row-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    color: #cccccc;
+    text-shadow: 0px 0px 5px #7a7aff;
+}
+
+
+/* Mission Timeline Cards */
+.vertical-carousel-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
+    margin-top: 6rem;
+    position: relative;
+  }
+  
+  .vertical-carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 800px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .carousel-card {
+    background: #1a1a40;
+    color: white;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 300px;
+    margin: 1rem 0;
+    text-align: center;
+    opacity: 0.5;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+    z-index: 1;
+  }
+  
+  .carousel-card.active {
+    opacity: 1;
+    transform: scale(1);
+    background: #2d2d80;
+    z-index: 2;
+  }

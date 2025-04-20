@@ -4,11 +4,9 @@ import "../../styles/Paragraph.css";
 const MissionInfoParagraph: React.FC = () => {
   return (
     <div className="paragraph-container">
-      <h2 className="paragraph-title">Fun Fact!</h2>
+      <h2 className="paragraph-title">MISSION CAROUSEL CARDS</h2>
       <p className="paragraph-text">
-        Did you know that the highest temperature ever recorded on Earth was 134°F (56.7°C)
-        in Furnace Creek, California, back in 1913? Extreme temperatures like this remind us
-        of how powerful nature can be! 
+        info about mission timeline with each card being different timestamps with the corresponding info. theres should be a draggable slider that works with the cards
       </p>
     </div>
   );

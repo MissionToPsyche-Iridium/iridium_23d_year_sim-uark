@@ -1,25 +1,59 @@
-.paragraph-container {
-    padding: 20px;
-    width: 100%;
-    max-width: 800px;
-    margin: auto;
-    text-align: left;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .paragraph-title {
-    font-size: 1.8rem;
-    margin-bottom: 12px;
-    color: #333;
-  }
-  
-  .paragraph-text {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #555;
-  }
+/* Age Content Box */
+.agecontent-container {
+  padding: 20px;
+  width: 100%;
+  max-width: 800px;
+  margin: 20rem auto 0; /* Adjust margin-top for spacing */
+  text-align: left;
+  background: radial-gradient(circle, #1a1a2e, #162447);
+  border-radius: 8px;
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.6), 0px 0px 25px rgba(255, 255, 255, 0.3);
+  position: relative;
+  top: 0; /* Remove any conflicting positioning */
+}
 
+/* Title and Text for Age Content Box */
+.agecontent-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  color: #ffffff;
+  text-shadow: 0px 0px 10px #7a7aff;
+  margin-bottom: 15px;
+}
 
-  
+.agecontent-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  color: #cccccc;
+  text-shadow: 0px 0px 5px #7a7aff;
+}
+
+/* Temp Content Box */
+.tempcontent-container {
+  padding: 20px;
+  width: 100%;
+  max-width: 800px;
+  margin: 55rem auto 0; /* moves content box up or down */
+  text-align: left;
+  background: radial-gradient(circle, #1a1a2e, #162447);
+  border-radius: 8px;
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.6), 0px 0px 25px rgba(255, 255, 255, 0.3);
+  position: relative;
+  top: 0; /* Remove any conflicting positioning */
+}
+
+/* Title and Text for Age Content Box */
+.tempcontent-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  color: #ffffff;
+  text-shadow: 0px 0px 10px #7a7aff;
+  margin-bottom: 15px;
+}
+
+.tempcontent-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  color: #cccccc;
+  text-shadow: 0px 0px 5px #7a7aff;
+}
