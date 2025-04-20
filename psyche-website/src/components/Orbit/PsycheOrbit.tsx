@@ -1,15 +1,15 @@
 'use client';
 
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Line, Text } from '@react-three/drei';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useRef } from 'react';
 import * as THREE from 'three';
 
 const ORBITS = [
-  { name: 'A', color: 'blue', radius: 2 },
-  { name: 'B', color: 'green', radius: 3 },
-  { name: 'C', color: 'red', radius: 4 },
-  { name: 'D', color: 'purple', radius: 5 },
+  { name: 'A', color: 'blue', radiusX: 2, radiusZ: 2.5, rotation: [0.2, 0, 0] as [number, number, number] },
+  { name: 'B', color: 'green', radiusX: 3, radiusZ: 3, rotation: [0, 0, 0] as [number, number, number] },
+  { name: 'C', color: 'red', radiusX: 4, radiusZ: 2, rotation: [0.4, 0, 0] as [number, number, number] },
+  { name: 'D', color: 'purple', radiusX: 5, radiusZ: 4, rotation: [0.1, 0.3, 0] as [number, number, number] },
 ];
 
 const PLANETS = [
@@ -20,124 +20,173 @@ const PLANETS = [
   { name: 'Psyche', color: 'lightblue', radius: 0.6, distance: 18 },
 ];
 
-export default function OrbitPhaseExplorer() {
+export default function PsycheOrbit() {
   const [selectedOrbit, setSelectedOrbit] = useState<string | null>(null);
   const [showOrbits, setShowOrbits] = useState(false);
+  const [focusPsyche, setFocusPsyche] = useState(false);
+
+  const handleOrbitButtonClick = (orbitName: string) => {
+    if (selectedOrbit === orbitName) {
+      setSelectedOrbit(null);
+    } else {
+      setSelectedOrbit(orbitName);
+    }
+  };
 
   return (
     <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
-      <Canvas camera={{ position: [0, 8, 30], fov: 50 }} style={{ background: '#111' }}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[5, 5, 5]} intensity={1} />
-
-        {/* Sun */}
-        <mesh>
-          <sphereGeometry args={[1.5, 32, 32]} />
-          <meshStandardMaterial color="yellow" />
-        </mesh>
-
-        {/* Planet Orbit Rings */}
-        {PLANETS.filter(planet => planet.name !== 'Psyche').map((planet) => (
-          <Line
-            key={planet.name + '-orbit'}
-            points={new THREE.EllipseCurve(0, 0, planet.distance, planet.distance, 0, 2 * Math.PI, false, 0).getPoints(100).map((p) => new THREE.Vector3(p.x, 0, p.y))}
-            color="white"
-            lineWidth={0.5}
-            dashed={false}
-          />
-        ))}
-
-        {/* Planets */}
-        {PLANETS.map((planet) => (
-          <group key={planet.name} position={[planet.distance, 0, 0]}>
-            <mesh
-              onClick={() => {
-                if (planet.name === 'Psyche') {
-                  setShowOrbits(true);
-                }
+      {showOrbits && (
+        <div style={{
+          position: 'absolute',
+          top: 20,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 10,
+          display: 'flex',
+          gap: '10px',
+          pointerEvents: 'none',
+        }}>
+          {ORBITS.map((orbit) => (
+            <button
+              key={orbit.name}
+              style={{
+                pointerEvents: 'auto',
+                padding: '8px 12px',
+                borderRadius: '8px',
+                border: 'none',
+                background: selectedOrbit === orbit.name ? orbit.color : '#333',
+                color: 'white',
+                cursor: 'pointer',
               }}
+              onClick={() => handleOrbitButtonClick(orbit.name)}
             >
-              <sphereGeometry args={[planet.radius, 32, 32]} />
-              <meshStandardMaterial color={planet.color} />
-            </mesh>
-            <Text
-              position={[0, planet.radius + 0.5, 0]}
-              fontSize={0.3}
-              color="white"
-              anchorX="center"
-              anchorY="middle"
-            >
-              {planet.name === 'Psyche' && !showOrbits ? 'Click to Explore!' : planet.name}
-            </Text>
-          </group>
-        ))}
-
-        {/* Psyche Orbit Rings */}
-        {showOrbits && ORBITS.map((orbit) => (
-          <ClickableOrbitRing
-            key={orbit.name}
-            radius={orbit.radius}
-            color={orbit.color}
-            name={orbit.name}
-            onSelect={setSelectedOrbit}
-          />
-        ))}
-
-        {/* Satellite */}
-        <Satellite selectedOrbit={selectedOrbit} />
-
+              Orbit {orbit.name}
+            </button>
+          ))}
+        </div>
+      )}
+      <Canvas camera={{ position: [0, 8, 30], fov: 50 }} style={{ background: '#111' }}>
+        <Scene
+          showOrbits={showOrbits}
+          setShowOrbits={setShowOrbits}
+          setFocusPsyche={setFocusPsyche}
+          focusPsyche={focusPsyche}
+          selectedOrbit={selectedOrbit}
+          setSelectedOrbit={setSelectedOrbit}
+        />
         <OrbitControls enableZoom enablePan={false} />
       </Canvas>
 
-      {/* Info Panel */}
       {selectedOrbit && <InfoPanel orbitName={selectedOrbit} />}
     </div>
   );
 }
 
-function ClickableOrbitRing({ radius, color, name, onSelect }: { radius: number; color: string; name: string; onSelect: (orbit: string) => void }) {
-  const points = useMemo(() => {
-    const curve = new THREE.EllipseCurve(0, 0, radius, radius, 0, 2 * Math.PI, false, 0);
-    return curve.getPoints(100).map((p) => new THREE.Vector3(p.x, 0, p.y));
-  }, [radius]);
+function Scene({ showOrbits, setShowOrbits, setFocusPsyche, focusPsyche, selectedOrbit, setSelectedOrbit }: any) {
+  const { camera } = useThree();
+  const asteroidRef = useRef<THREE.Mesh>(null);
 
-  return (
-    <group>
-      <Line points={points} color={color} lineWidth={2} dashed={false} />
-      <mesh
-        onClick={() => onSelect(name)}
-        position={[0, 0, 0]}
-      >
-        {/* Invisible clickable mesh */}
-        <ringGeometry args={[radius - 0.05, radius + 0.05, 64]} />
-        <meshBasicMaterial color="white" transparent opacity={0} />
-      </mesh>
-    </group>
-  );
-}
-
-function Satellite({ selectedOrbit }: { selectedOrbit: string | null }) {
-  const radius = ORBITS.find((o) => o.name === selectedOrbit)?.radius || 0;
-
-  useFrame(({ clock }) => {
-    if (radius > 0) {
-      const t = clock.getElapsedTime() * 0.5;
-      const x = Math.cos(t) * radius;
-      const z = Math.sin(t) * radius;
+  useFrame(() => {
+    if (focusPsyche) {
+      camera.position.lerp(new THREE.Vector3(0, 5, 10), 0.05);
+      camera.lookAt(0, 0, 0);
+      if (asteroidRef.current) {
+        asteroidRef.current.scale.setScalar(1 + 0.03 * Math.sin(Date.now() * 0.005));
+      }
+    } else {
+      camera.position.lerp(new THREE.Vector3(0, 8, 30), 0.05);
+      camera.lookAt(0, 0, 0);
     }
   });
 
-  if (!radius) return null;
-
-  const t = 0;
-  const x = Math.cos(t) * radius;
-  const z = Math.sin(t) * radius;
-
   return (
-    <mesh position={[x, 0, z]}>
-      <sphereGeometry args={[0.2, 16, 16]} />
-      <meshStandardMaterial color="white" />
-    </mesh>
+    <>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[5, 5, 5]} intensity={1} />
+
+      {!focusPsyche && (
+        <mesh>
+          <sphereGeometry args={[1.5, 32, 32]} />
+          <meshStandardMaterial color="yellow" />
+        </mesh>
+      )}
+
+      {!focusPsyche && PLANETS.filter((planet) => planet.name !== 'Psyche').map((planet) => (
+        <Line
+          key={planet.name + '-orbit'}
+          points={new THREE.EllipseCurve(0, 0, planet.distance, planet.distance, 0, 2 * Math.PI, false, 0)
+            .getPoints(100)
+            .map((p) => new THREE.Vector3(p.x, 0, p.y))}
+          color="white"
+          lineWidth={0.5}
+          dashed={false}
+        />
+      ))}
+
+      {!focusPsyche && PLANETS.map((planet) => (
+        <group key={planet.name} position={[planet.distance, 0, 0]}>
+          <mesh
+            onClick={() => {
+              if (planet.name === 'Psyche') {
+                setShowOrbits(true);
+                setFocusPsyche(true);
+              }
+            }}
+          >
+            <sphereGeometry args={[planet.radius, 32, 32]} />
+            <meshStandardMaterial color={planet.color} />
+          </mesh>
+          <Text
+            position={[0, planet.radius + 0.5, 0]}
+            fontSize={0.3}
+            color="white"
+            anchorX="center"
+            anchorY="middle"
+          >
+            {planet.name === 'Psyche' && !showOrbits ? 'Click to Explore!' : planet.name}
+          </Text>
+        </group>
+      ))}
+
+      {focusPsyche && (
+        <>
+          <mesh
+            ref={asteroidRef}
+            position={[0, 0, 0]}
+            onClick={() => {
+              setShowOrbits(false);
+              setFocusPsyche(false);
+              setSelectedOrbit(null);
+            }}
+          >
+            <sphereGeometry args={[1, 32, 32]} />
+            <meshStandardMaterial color="lightblue" />
+          </mesh>
+
+          {showOrbits && ORBITS.map((orbit) => (
+            <group key={orbit.name} rotation={orbit.rotation}>
+              <Line
+                points={new THREE.EllipseCurve(0, 0, orbit.radiusX, orbit.radiusZ, 0, 2 * Math.PI, false, 0)
+                  .getPoints(100)
+                  .map((p) => new THREE.Vector3(p.x, 0, p.y))}
+                color={orbit.color}
+                lineWidth={2}
+                dashed={false}
+                opacity={selectedOrbit && selectedOrbit !== orbit.name ? 0.2 : 1}
+                transparent
+              />
+              <mesh
+                onClick={() => setSelectedOrbit(orbit.name)}
+                position={[0, 0, 0]}
+              >
+                <ringGeometry args={[orbit.radiusX - 0.2, orbit.radiusX + 0.2, 64]} />
+                <meshBasicMaterial color="white" transparent opacity={0} />
+              </mesh>
+            </group>
+          ))}
+        </>
+      )}
+    </>
   );
 }
 
@@ -150,7 +199,17 @@ function InfoPanel({ orbitName }: { orbitName: string }) {
   };
 
   return (
-    <div style={{ position: 'absolute', top: 20, left: 20, padding: '10px 20px', backgroundColor: 'rgba(0,0,0,0.7)', color: 'white', borderRadius: '10px' }}>
+    <div
+      style={{
+        position: 'absolute',
+        top: 80,
+        left: 20,
+        padding: '10px 20px',
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        color: 'white',
+        borderRadius: '10px',
+      }}
+    >
       <h2>Selected Orbit {orbitName}</h2>
       <p>{info[orbitName as keyof typeof info]}</p>
     </div>

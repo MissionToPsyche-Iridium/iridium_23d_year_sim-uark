@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-// import OrbitPhaseExplorer from "@/components/Orbit/PsycheOrbit";
-import OrbitPhaseExplorer from "@/components/PsycheOrbit";
+import PsycheOrbit from "@/components/Orbit/PsycheOrbit";
 
 export default function Page() {
   return (
@@ -15,7 +14,7 @@ export default function Page() {
         🪐 Psyche vs Earth: Rotation Comparison
       </h1>
 
-      <OrbitPhaseExplorer />
+      <PsycheOrbit />
     </main>
   );
 }
