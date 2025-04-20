@@ -1,0 +1,94 @@
+.vertical-carousel-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem; /* Added space between carousel, slider, and new card deck */
+    margin: 15rem auto;
+    position: relative;
+  }
+  
+  .carousel-and-slider {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem; /* Space between carousel and slider */
+  }
+  
+  .vertical-carousel {
+    position: relative;
+    width: 600px; /* Adjusted width */
+    height: 300px; /* Adjusted height */
+    background: #0c0c1e;
+    overflow: hidden;
+    border-radius: 16px;
+    perspective: 1000px;
+  }
+  
+  .carousel-card {
+    position: absolute;
+    width: 100%; /* Full width of the carousel */
+    height: 80%; /* Full height of the carousel */
+    left: 0%;
+    background: linear-gradient(135deg, #182c61, #2c3e50);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    color: white;
+    transition: transform 0.5s ease, opacity 0.5s ease, filter 0.5s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+  
+  .carousel-card h3 {
+    margin: 0;
+  }
+  
+  .vertical-slider {
+    writing-mode: vertical-rl;
+    transform: rotate(360deg);
+    width: 12px;
+    height: 250px;
+    background: transparent;
+    cursor: pointer;
+    position: absolute;
+    left: 90%; /* Aligns the slider to the right side of the carousel */
+    transform-origin: center center;
+  }
+  
+  .vertical-slider::-webkit-slider-thumb {
+    background: #ffffff;
+    border: 2px solid #555;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    margin-top: -8px;
+  }
+  
+  .vertical-slider::-webkit-slider-runnable-track {
+    background: #444;
+    border-radius: 6px;
+  }
+  
+  /* New Card Deck Styling */
+  .new-card-deck {
+    width: 250px;
+    height: 300px;
+    background: #1e1e2d;
+    color: white;
+    padding: 1rem;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .new-card-deck h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .new-card-deck p {
+    text-align: center;
+  }
+  
