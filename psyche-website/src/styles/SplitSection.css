@@ -7,6 +7,7 @@
   align-items: flex-start; /* or center, depending on if you want perfect vertical centering */
   padding: 5rem;
   gap: 3rem; /* space between left and right */
+  z-index: 1;
 }
 
 .paragraph-wrapper {
@@ -70,6 +71,7 @@
   flex: 1;
   border-radius: 8px;
   position: relative; /* Ensure they stack above the wave overlay */
+  z-index: 2;
 }
 
 .right-section {
@@ -143,6 +145,7 @@
   padding: 20px;
   border-radius: 10px;
   margin-top: 17rem; /* matches alignment with content box */
+  z-index: 3;
 
 }
 
@@ -156,6 +159,7 @@
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   margin-top: 10px;
+  z-index: 3;
 }
 
 .input-container input {
@@ -220,6 +224,7 @@ button:hover {
   border-radius: 10px;
   margin-top: 10px;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  z-index: 3;
 }
 
 .psyche-birthday {
