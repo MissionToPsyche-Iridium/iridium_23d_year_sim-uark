@@ -71,6 +71,21 @@ export default function LaunchScene() {
     let orbitRadiusObj = { radius: 30 };
     let asteroid: THREE.Group | null = null;
 
+    // ✨ Helper function to show mission text
+    const showMissionText = (text: string, duration = 3) => {
+      const missionTextDiv = document.createElement('div');
+      missionTextDiv.innerText = text;
+      missionTextDiv.className = 'missionText';
+      mount.appendChild(missionTextDiv);
+
+      gsap.to(missionTextDiv, { opacity: 1, duration: 1 });
+      gsap.delayedCall(duration, () => {
+        gsap.to(missionTextDiv, { opacity: 0, duration: 1, onComplete: () => {
+          mount.removeChild(missionTextDiv);
+        }});
+      });
+    };
+
     const animate = () => {
       requestAnimationFrame(animate);
 
@@ -128,6 +143,11 @@ export default function LaunchScene() {
 
           gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
             gsap.to(overlayText, { opacity: 1, duration: 1 });
+
+            gsap.delayedCall(1, () => {
+              showMissionText('Using Mars gravity to slingshot toward Psyche.', 4);
+            });
+
             gsap.delayedCall(2, () => {
               gsap.to(overlay, { opacity: 0, duration: 1, onComplete: () => {
                 satellite.visible = true;
@@ -186,6 +206,12 @@ export default function LaunchScene() {
                         ease: "none",
                       }, 0);
 
+                      // ✨ Show deep space cruise text
+                      deepSpaceTimeline.call(() => {
+                        showMissionText('Psyche ventures into uncharted deep space.', 5);
+                      }, [], "+=2"); // <-- add a 2 second delay during cruise
+
+                      // ✨ Then load asteroid after a while
                       deepSpaceTimeline.call(() => {
                         const loader = new GLTFLoader();
                         loader.load(
@@ -193,20 +219,15 @@ export default function LaunchScene() {
                           (gltf) => {
                             asteroid = new THREE.Group();
                             const model = gltf.scene;
-                      
-                            // Center the model
                             const box = new THREE.Box3().setFromObject(model);
                             const center = new THREE.Vector3();
                             box.getCenter(center);
                             model.position.sub(center);
-                      
-                            // Scale the model
                             const size = new THREE.Vector3();
                             box.getSize(size);
                             const maxDim = Math.max(size.x, size.y, size.z);
-                            const scale = 20 / maxDim; // Adjust bigger (your old was 20 scale, remember?)
+                            const scale = 20 / maxDim;
                             model.scale.setScalar(scale);
-                      
                             asteroid.add(model);
                             asteroid.position.set(
                               satellite.position.x + 300,
@@ -214,8 +235,7 @@ export default function LaunchScene() {
                               satellite.position.z - 300
                             );
                             scene.add(asteroid);
-                      
-                            // Move camera toward asteroid
+
                             gsap.to(camera.position, {
                               x: asteroid.position.x - 30,
                               y: asteroid.position.y + 20,
@@ -226,8 +246,7 @@ export default function LaunchScene() {
                                 if (asteroid) camera.lookAt(asteroid.position);
                               }
                             });
-                      
-                            // Move satellite near asteroid
+
                             gsap.to(satellite.position, {
                               x: asteroid.position.x - 20,
                               y: asteroid.position.y + 10,
@@ -235,11 +254,13 @@ export default function LaunchScene() {
                               duration: 5,
                               ease: "power2.inOut",
                             });
+
+                            showMissionText('Target acquired: 16 Psyche — a metal world.', 6);
                           },
                           undefined,
                           (error) => console.error('Failed to load Psyche model:', error)
                         );
-                      });                      
+                      }, [], "+=5"); // <-- add a delay after deep space text
                     }});
                   });
                 });
@@ -260,6 +281,11 @@ export default function LaunchScene() {
 
     const launchTimeline = gsap.timeline();
     launchTimeline.to(titleDiv, { opacity: 0, duration: 2, delay: 3 });
+
+    launchTimeline.call(() => {
+      showMissionText('Liftoff! Psyche begins its journey to a metal world.', 4);
+    }, [], "launch");
+
     launchTimeline.to(rocket.position, { y: "+=200", duration: 3, ease: "power2.in" }, "launch");
     launchTimeline.to(camera.position, { y: "+=180", duration: 3, ease: "power2.in" }, "launch");
 
