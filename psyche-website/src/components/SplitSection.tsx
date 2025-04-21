@@ -9,7 +9,7 @@ import AgeContentParagraph from "./Paragraphs/AgeContentParagraph";
 import MetallicInfoParagraph from "./Paragraphs/MetallicInfoParagraph";
 
 const SplitSection: React.FC = () => {
-  const [width, setWidth] = useState<number | null>(null); // Defaulting to null until mounted on the client
+  const [width, setWidth] = useState<number>(0);
   const [birthdate, setBirthdate] = useState<string>("");
   const [age, setAge] = useState<{ years: number; days: number } | null>(null);
   const [showStars, setShowStars] = useState(false);

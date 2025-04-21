@@ -24,7 +24,7 @@ const newDescriptions = [
 ];
 
 const SplitSectionTwo: React.FC = () => {
-  const [width, setWidth] = useState<number | null>(null); // Defaulting to null until mounted on the client
+  const [width, setWidth] = useState<number>(0);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
