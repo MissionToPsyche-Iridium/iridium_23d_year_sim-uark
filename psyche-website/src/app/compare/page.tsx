@@ -3,7 +3,7 @@
 import Link from "next/link";
 import CompareScene from "@/components/CompareScene";
 
-export default function ComparePage() {
+export default function Page() {
   return (
     <main style={{ padding: "40px" }}>
       <Link href="/" scroll={true} style={{ color: "white", textDecoration: "underline", marginBottom: "20px", display: "inline-block" }}>
