@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { Carousel } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/ImageCarousel.css";
 
 const spacecraftData = [
-  { imgSrc: "/images/spacecraft1.jpg", caption: "insert caption related to photo" },
+  { imgSrc: "/images/spacecraft1.jpg", caption: "TESTINGTESTINGTESTINGTESTING" },
   { imgSrc: "/images/spacecraft2.jpg", caption: "insert caption related to photo" },
   { imgSrc: "/images/spacecraft3.jpg", caption: "insert caption related to photo" },
   { imgSrc: "/images/spacecraft4.jpg", caption: "insert caption related to photo" },
@@ -12,34 +14,29 @@ const spacecraftData = [
 ];
 
 const ImageCarousel: React.FC = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const handlePrev = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? spacecraftData.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleNext = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === spacecraftData.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
   return (
-    <div className="image-carousel">
-      <button onClick={handlePrev} className="carousel-button">{"<"}</button>
-      
-      <div className="image-carousel-container">
-        <img
-          src={spacecraftData[currentImageIndex].imgSrc}
-          alt={spacecraftData[currentImageIndex].caption}
-          className="image-carousel"
-        />
-        <p className="image-carousel-caption">{spacecraftData[currentImageIndex].caption}</p>
-      </div>
-
-      <button onClick={handleNext} className="carousel-button">{">"}</button>
+    <div className="image-carousel" style={{ width: "100%", maxWidth: "1400px", margin: "0 auto" }}>
+      <Carousel fade interval={null} indicators={true} controls={true}>
+        {spacecraftData.map((spacecraft, index) => (
+          <Carousel.Item key={index}>
+            <img
+              className="d-block w-100"
+              src={spacecraft.imgSrc}
+              alt={spacecraft.caption}
+              style={{
+                height: "500px",
+                objectFit: "cover",
+                borderRadius: "20px",
+                boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
+              }}
+            />
+            {/* Caption placed below the image */}
+            <div className="image-caption">
+              <h5>{spacecraft.caption}</h5>
+            </div>
+          </Carousel.Item>
+        ))}
+      </Carousel>
     </div>
   );
 };

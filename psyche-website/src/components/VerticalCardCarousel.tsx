@@ -34,6 +34,8 @@ const VerticalCardCarousel: React.FC<VerticalCardCarouselProps> = ({ currentInde
   }, [currentIndex]);
 
   return (
+  <div className="vertical-carousel-section">
+    <h1 className="section-title">Mission Timeline</h1>
     <div className="vertical-carousel-wrapper">
       <div className="carousel-and-slider">
         {/* Carousel */}
@@ -68,6 +70,7 @@ const VerticalCardCarousel: React.FC<VerticalCardCarouselProps> = ({ currentInde
           onChange={handleSliderChange}
           className="vertical-slider"
         />
+        </div>
       </div>
     </div>
   );

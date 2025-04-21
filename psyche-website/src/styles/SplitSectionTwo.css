@@ -1,55 +1,68 @@
-/* Wave overlay goes behind the content of the split section w/ temperatures */
 
+.tempwave-overlay, .tempwave-overlay2, .tempwave-overlay3 {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 20px; /* Adjust height for the wave */
+  z-index: 1; /* Ensure waves are above flipped waves */
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Customize the wave heights or positions */
 .tempwave-overlay {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 300px;
-    transform: translateY(200%);
-    z-index: 0;
-    pointer-events: none;
-    overflow: visible;
-  }
-  
-  .tempwave-overlay .rotated {
-    transform: translateY(-0.5) rotate(180deg); 
-  }
-  
-  .tempwave-overlay2 {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 600px;
-    transform: translateY(90%);
-    z-index: 0;
-    pointer-events: none;
-    overflow: visible;
-  }
-  
-  .tempwave-overlay2 .rotated {
-    transform: translateY(-220) rotate(180deg);
-  }
-  
-  .tempwave-overlay3 {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: -2px;
-    transform: translateY(50%);
-    z-index: 0;
-    pointer-events: none;
-    overflow: visible;
-  }
-  
-  .tempwave-overlay3 .rotated {
-    transform: translateY(-85) rotate(180deg); 
-  }
-  
-  .tempwave-overlay svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
+  top: 25%; /* Position the first wave near the top */
+}
+
+.tempwave-overlay2 {
+  top: 22%; /* Position the second wave to overlap with the first */
+}
+
+.tempwave-overlay3 {
+  top: 20%; /* Position the third wave to overlap further */
+}
+
+/* New flipped waves */
+.tempwave-overlay-flipped{
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  z-index: 0; /* Ensure flipped waves are behind the originals */
+  pointer-events: none;
+  overflow: visible;
+  top: 74%; /* Adjust position to place the flipped waves below the originals */
+  transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
+}
+
+.tempwave-overlay2-flipped{
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  z-index: 0; /* Ensure flipped waves are behind the originals */
+  pointer-events: none;
+  overflow: visible;
+  top: 72%; /* Adjust position to place the flipped waves below the originals */
+  transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
+}
+
+.tempwave-overlay3-flipped{
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  z-index: 0; /* Ensure flipped waves are behind the originals */
+  pointer-events: none;
+  overflow: visible;
+  top: 70%; /* Adjust position to place the flipped waves below the originals */
+  transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
+}
+
+/* Optional: Add a transformation to rotate the second and third waves */
+.tempwave-overlay .rotated, .tempwave-overlay2 .rotated, .tempwave-overlay3 .rotated {
+  transform: rotate(180deg);
+}
   
 /* Metal content box */
 .metal-row-container {

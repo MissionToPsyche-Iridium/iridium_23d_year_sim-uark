@@ -2,7 +2,8 @@
   position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
+  align-items: flex-start; /* Align content vertically */
   width: calc(100% - 20px);
   align-items: flex-start; /* or center, depending on if you want perfect vertical centering */
   padding: 5rem;
@@ -14,62 +15,73 @@
   margin-bottom: 500px;
 }
 
-
-/* Wave overlay goes behind the content of the split section */
-.wave-overlay {
+.wave-overlay, .wave-overlay2, .wave-overlay3 {
   position: absolute;
   left: 0;
   width: 100%;
-  height: 300px;
-  transform: translateY(20%);
-  z-index: 0;
+  height: 20px; /* Adjust height for the wave */
+  z-index: 1; /* Ensure waves are above flipped waves */
   pointer-events: none;
   overflow: visible;
 }
 
-.wave-overlay .rotated {
-  transform: translateY(-0.5) rotate(180deg); 
+/* Customize the wave heights or positions */
+.wave-overlay {
+  top: 0%; /* Position the first wave near the top */
 }
 
 .wave-overlay2 {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 40px;
-  transform: translateY(-85%);
-  z-index: 0;
-  pointer-events: none;
-  overflow: visible;
-}
-
-.wave-overlay2 .rotated {
-  transform: translateY(-220) rotate(180deg);
+  top: -5%; /* Position the second wave to overlap with the first */
 }
 
 .wave-overlay3 {
+  top: -9%; /* Position the third wave to overlap further */
+}
+
+/* New flipped waves */
+.wave-overlay-flipped{
   position: absolute;
   left: 0;
   width: 100%;
-  height: 150px;
-  transform: translateY(-65%);
-  z-index: 0;
+  height: 20px;
+  z-index: 0; /* Ensure flipped waves are behind the originals */
   pointer-events: none;
   overflow: visible;
+  top: 90%; /* Adjust position to place the flipped waves below the originals */
+  transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
 }
 
-.wave-overlay3 .rotated {
-  transform: translateY(-85) rotate(180deg); 
-}
-
-.wave-overlay svg {
+.wave-overlay2-flipped{
+  position: absolute;
+  left: 0;
   width: 100%;
-  height: 100%;
-  display: block;
+  height: 20px;
+  z-index: 0; /* Ensure flipped waves are behind the originals */
+  pointer-events: none;
+  overflow: visible;
+  top: 85%; /* Adjust position to place the flipped waves below the originals */
+  transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
+}
+
+.wave-overlay3-flipped{
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  z-index: 0; /* Ensure flipped waves are behind the originals */
+  pointer-events: none;
+  overflow: visible;
+  top: 80%; /* Adjust position to place the flipped waves below the originals */
+  transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
+}
+
+/* Optional: Add a transformation to rotate the second and third waves */
+.wave-overlay .rotated, .wave-overlay2 .rotated, .wave-overlay3 .rotated {
+  transform: rotate(180deg);
 }
 
 .left-section, .right-section {
   flex: 1;
-  border-radius: 8px;
   position: relative; /* Ensure they stack above the wave overlay */
   z-index: 2;
 }

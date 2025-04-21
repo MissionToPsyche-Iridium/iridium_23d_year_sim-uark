@@ -1,5 +1,4 @@
-// DescriptionCardDeck.tsx
-
+// cards to the right of the mission timeline
 "use client";
 
 import React from "react";

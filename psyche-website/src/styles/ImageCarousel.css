@@ -1,52 +1,76 @@
-.image-carousel-section {
-    width: 100%;
-    text-align: center;
-    margin-top: 4rem;
-    margin-bottom: 4rem;
-  }
-  
-  .image-carousel-title {
-    font-size: 2rem;
-    color: #fff;
-    margin-bottom: 1rem;
-  }
-  
-  .image-carousel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-  }
-  
-  .image-carousel-container {
-    max-width: 500px;
-  }
-  
-  .image-carousel {
-    width: 100%;
-    height: auto;
-    border-radius: 12px;
-    /* border: 2px solid #ccc; */
-  }
-  
-  .image-carousel-caption {
-    margin-top: 0.5rem;
-    font-size: 1.2rem;
-    color: #ddd;
-  }
-  
-  .carousel-button {
-    background-color: #292b45;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    padding: 0.5rem 1rem;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .carousel-button:hover {
-    background-color: #44476c;
-  }
-  
+.image-carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+  width: 100%;
+  max-width: 2000px;
+}
+
+.image-carousel-container {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.image-carousel-images {
+  display: flex;
+}
+
+.image-item {
+  margin: 0 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-carousel-image {
+  width: 500px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.carousel-caption {
+  margin-top: 20px; /* Adjust the distance to move the caption down */
+  font-size: 1.2rem;
+  color: #000000; /* Set your preferred color */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  position: absolute;
+  bottom: 10px; /* Ensures caption stays at the bottom of the image */
+  left: 50%;
+  transform: translateX(-50%); /* Center the caption horizontally */
+  width: 100%;
+  text-align: center;
+  z-index: 2; /* Ensure it stays above the image */
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #292b45;
+  border: none;
+  color: #7a7aff;
+  font-size: 2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+  z-index: 10;
+}
+
+.carousel-button.left {
+  left: -60px;
+}
+
+.carousel-button.right {
+  right: -60px;
+}
+
+.carousel-button:hover {
+  background-color: #44476c;
+}

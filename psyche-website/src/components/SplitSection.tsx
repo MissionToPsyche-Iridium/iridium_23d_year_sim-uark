@@ -9,7 +9,7 @@ import AgeContentParagraph from "./Paragraphs/AgeContentParagraph";
 import MetallicInfoParagraph from "./Paragraphs/MetallicInfoParagraph";
 
 const SplitSection: React.FC = () => {
-  const [width, setWidth] = useState<number>(0);
+  const [width, setWidth] = useState<number | null>(null); // Defaulting to null until mounted on the client
   const [birthdate, setBirthdate] = useState<string>("");
   const [age, setAge] = useState<{ years: number; days: number } | null>(null);
   const [showStars, setShowStars] = useState(false);
@@ -18,12 +18,12 @@ const SplitSection: React.FC = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setWidth(window.innerWidth);
+      setWidth(window.innerWidth); // Set width only on the client
       const handleResize = () => setWidth(window.innerWidth);
       window.addEventListener("resize", handleResize);
       return () => window.removeEventListener("resize", handleResize);
     }
-  }, []);
+  }, []); // Empty dependency array means this effect only runs once on mount
 
   const psycheYear = 1825.95;
   const psycheDay = 4.2 / 24;
@@ -59,48 +59,65 @@ const SplitSection: React.FC = () => {
 
   return (
     <div className="split-section">
-       {/* <div className="wave-overlay3">
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-          <path
-            fill="#0f0827"
-            d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
-          />
-        </svg>
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" className="rotated">
-          <path
-            fill="#0f0827"
-            d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
-          />
-        </svg>
-      </div>
-      <div className="wave-overlay2">
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-          <path
-            fill="#0f0c47"
-            d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
-          />
-        </svg>
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" className="rotated">
-          <path
-            fill="#0f0c47"
-            d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
-          />
-        </svg>
-      </div>
-      <div className="wave-overlay">
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-          <path
-            fill="#0c2159"
-            d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
-          />
-        </svg>
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" className="rotated">
-          <path
-            fill="#0c2159"
-            d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
-          />
-        </svg>
-      </div> */}
+      {/* Conditionally render wave overlays based on width */}
+      {width && (
+        <>
+          <div className="wave-overlay3">
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+              <path
+                fill="#0f0827"
+                d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+              />
+            </svg>
+          </div>
+
+          <div className="wave-overlay2">
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+              <path
+                fill="#0f0c47"
+                d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+              />
+            </svg>
+          </div>
+
+          <div className="wave-overlay">
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+              <path
+                fill="#0c2159"
+                d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+              />
+            </svg>
+          </div>
+
+          {/* Flipped waves */}
+          <div className="wave-overlay-flipped">
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+              <path
+                fill="#0f0827"
+                d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+              />
+            </svg>
+          </div>
+
+          <div className="wave-overlay2-flipped">
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+              <path
+                fill="#0f0c47"
+                d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+              />
+            </svg>
+          </div>
+
+          <div className="wave-overlay3-flipped">
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+              <path
+                fill="#0c2159"
+                d="M0,192L60,176C120,160,240,128,360,122.7C480,117,600,139,720,170.7C840,203,960,245,1080,256C1200,267,1320,245,1380,234.7L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+              />
+            </svg>
+          </div>
+        </>
+      )}
 
       {/* Left Section */}
       <div className="left-section">
@@ -110,7 +127,6 @@ const SplitSection: React.FC = () => {
       </div>
 
       {/* Right Section */}
-
       <div className="right-section">
         {/* age calculator */}
         <div className="birthday-input">
@@ -151,10 +167,10 @@ const SplitSection: React.FC = () => {
           </div>
         )}
 
-          <StarAnimation show={showStars} />
+        <StarAnimation show={showStars} />
       </div>
     </div>
   );
 };
-    
+
 export default SplitSection;
