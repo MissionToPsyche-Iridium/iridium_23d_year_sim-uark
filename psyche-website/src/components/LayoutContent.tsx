@@ -7,7 +7,6 @@ import SplitSection from "./SplitSection";
 import FeatureSection from "./FeatureSection";
 import SplitSectionTwo from "./SplitSectionTwo";
 import InteractiveStar from "./InteractiveStar";
-import CustomCursor from "./CustomCursor";
 import { CircleStar, DiamondStar } from "./Star";
 
 export default function LayoutContent({ children }: { children: React.ReactNode }) {
@@ -80,7 +79,6 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       <SplitSection />
       <SplitSectionTwo />
       <FeatureSection />
-      <CustomCursor />
     </>
   );
 }

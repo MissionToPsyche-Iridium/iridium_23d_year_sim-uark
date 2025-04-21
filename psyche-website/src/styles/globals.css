@@ -1,14 +1,13 @@
 body {
-    background: black;
-    color: white;
-    margin: 0;
-    padding: 0;
-  }
+  background: black;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
 
-  .compare-layout {
-    margin: 0;
-    background: black;
-    color: white;
-    min-height: 100vh;
-  }
-  
+.compare-layout {
+  margin: 0;
+  background: black;
+  color: white;
+  min-height: 100vh;
+}
