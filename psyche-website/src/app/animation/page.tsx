@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import LaunchScene from '@/components/LaunchScene';
-import { use } from "react";
 
-export default function AnimationPage() {
+export default function Page() {
   return (
     <div style={{ width: '100%', height: '100vh', background: 'black' }}>
       <main style={{ padding: "40px" }}>
@@ -13,7 +12,7 @@ export default function AnimationPage() {
       </Link>
 
       <h1 style={{ color: "white", fontSize: "2rem", marginBottom: "20px" }}>
-        🪐 Psyche vs Earth: Rotation Comparison
+        Psyche Mission Flight Path Animation
       </h1>
 
       <LaunchScene />
