@@ -7,9 +7,7 @@ import SplitSection from "./SplitSection";
 import FeatureSection from "./FeatureSection";
 import SplitSectionTwo from "./SplitSectionTwo";
 import InteractiveStar from "./InteractiveStar";
-import CustomCursor from "./CustomCursor";
 import { CircleStar, DiamondStar } from "./Star";
-import InfoContentParagraph from "./Paragraphs/InfoContentParagraph";
 
 export default function LayoutContent({ children }: { children: React.ReactNode }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -78,11 +76,9 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       {/* Main Sections */}
       <InteractiveSection isPopupOpen={isPopupOpen} />
       {children}
-      <InfoContentParagraph />
       <SplitSection />
       <SplitSectionTwo />
       <FeatureSection />
-      <CustomCursor />
     </>
   );
 }
