@@ -2,9 +2,8 @@
   position: relative;
   display: flex;
   justify-content: center;
-  /* align-items: center; */
   align-items: flex-start; /* Align content vertically */
-  width: calc(100% - 20px);
+  width:100%;
   align-items: flex-start; /* or center, depending on if you want perfect vertical centering */
   padding: 5rem;
   gap: 3rem; /* space between left and right */
@@ -27,15 +26,15 @@
 
 /* Customize the wave heights or positions */
 .wave-overlay {
-  top: 0%; /* Position the first wave near the top */
+  top: -2vh; /* Position the first wave near the top */
 }
 
 .wave-overlay2 {
-  top: -5%; /* Position the second wave to overlap with the first */
+  top: -5vh; /* Position the second wave to overlap with the first */
 }
 
 .wave-overlay3 {
-  top: -9%; /* Position the third wave to overlap further */
+  top: -9vh; /* Position the third wave to overlap further */
 }
 
 /* New flipped waves */
@@ -47,7 +46,7 @@
   z-index: 0; /* Ensure flipped waves are behind the originals */
   pointer-events: none;
   overflow: visible;
-  top: 90%; /* Adjust position to place the flipped waves below the originals */
+  top: 78vh; /* Adjust position to place the flipped waves below the originals */
   transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
 }
 
@@ -59,7 +58,7 @@
   z-index: 0; /* Ensure flipped waves are behind the originals */
   pointer-events: none;
   overflow: visible;
-  top: 85%; /* Adjust position to place the flipped waves below the originals */
+  top: 75vh; /* Adjust position to place the flipped waves below the originals */
   transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
 }
 
@@ -71,7 +70,7 @@
   z-index: 0; /* Ensure flipped waves are behind the originals */
   pointer-events: none;
   overflow: visible;
-  top: 80%; /* Adjust position to place the flipped waves below the originals */
+  top: 70vh; /* Adjust position to place the flipped waves below the originals */
   transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
 }
 

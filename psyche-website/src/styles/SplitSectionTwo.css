@@ -3,7 +3,7 @@
   position: absolute;
   left: 0;
   width: 100%;
-  height: 20px; /* Adjust height for the wave */
+  height: 5vh; /* Adjust height for the wave */
   z-index: 1; /* Ensure waves are above flipped waves */
   pointer-events: none;
   overflow: visible;
@@ -11,15 +11,15 @@
 
 /* Customize the wave heights or positions */
 .tempwave-overlay {
-  top: 25%; /* Position the first wave near the top */
+  top: 40vh; /* Position the first wave near the top */
 }
 
 .tempwave-overlay2 {
-  top: 22%; /* Position the second wave to overlap with the first */
+  top: 38vh; /* Position the second wave to overlap with the first */
 }
 
 .tempwave-overlay3 {
-  top: 20%; /* Position the third wave to overlap further */
+  top: 35vh; /* Position the third wave to overlap further */
 }
 
 /* New flipped waves */
@@ -31,7 +31,7 @@
   z-index: 0; /* Ensure flipped waves are behind the originals */
   pointer-events: none;
   overflow: visible;
-  top: 74%; /* Adjust position to place the flipped waves below the originals */
+  top: 128vh; /* Adjust position to place the flipped waves below the originals */
   transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
 }
 
@@ -43,7 +43,7 @@
   z-index: 0; /* Ensure flipped waves are behind the originals */
   pointer-events: none;
   overflow: visible;
-  top: 72%; /* Adjust position to place the flipped waves below the originals */
+  top: 123vh; /* Adjust position to place the flipped waves below the originals */
   transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
 }
 
@@ -55,7 +55,7 @@
   z-index: 0; /* Ensure flipped waves are behind the originals */
   pointer-events: none;
   overflow: visible;
-  top: 70%; /* Adjust position to place the flipped waves below the originals */
+  top: 120vh; /* Adjust position to place the flipped waves below the originals */
   transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
 }
 
