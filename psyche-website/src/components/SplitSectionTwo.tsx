@@ -1,5 +1,6 @@
 
-// Code relating to content section next to Temp Slider and temp paragraph and magnet and metallic paragraph
+// Code relating to content section next to Temp Slider and temp paragraph, magnet and metallic paragraph
+// includes mission timeline cards and image carousel
 
 "use client";
 
@@ -10,6 +11,7 @@ import TempContentParagraph from "./Paragraphs/TempContentParagraph";
 import MetallicInfoParagraph from "./Paragraphs/MetallicInfoParagraph";
 import VerticalCardCarousel from "./VerticalCardCarousel"
 import DescriptionCardDeck from "./DescriptionCardDeck";
+import ImageCarousel from "./ImageCarousel";
 
 
 const newDescriptions = [
@@ -24,7 +26,7 @@ const newDescriptions = [
 const SplitSectionTwo: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   return (
-
+    <div>
     <div className="split-section">
        {/* <div className="tempwave-overlay3">
         <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
@@ -99,10 +101,16 @@ const SplitSectionTwo: React.FC = () => {
 
         {/* New Card Deck (Description) */}
         <DescriptionCardDeck currentIndex={currentIndex} descriptions={newDescriptions} />
-
       </div>
     </div>
 
+    <div className="image-carousel-section" style={{ marginTop: "3rem", textAlign: "center" }}>
+    <h2 className="image-carousel-title">Psyche Spacecraft Gallery</h2>
+    <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+      <ImageCarousel />
+    </div>
+  </div>
+  </div>
   );
 };
 
