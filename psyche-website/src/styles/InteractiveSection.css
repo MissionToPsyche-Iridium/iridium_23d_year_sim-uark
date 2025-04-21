@@ -2,7 +2,6 @@
 
 .interactive-section {
   position: relative;
-  cursor: none !important;
   width: 100%;
   min-height: 400px;
   height: 80vh;

@@ -241,26 +241,6 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
         />
         <div className="compass-heading">{heading}° {direction}</div>
       </div>
-
-      {/* 🛡️ Only render after mount */}
-      {hasMounted && (
-        <img
-          src={isClicking ? "/explosion.png" : "/spaceship.png"}
-          alt="Cursor"
-          style={{
-            position: "fixed",
-            top: cursorPosition.y,
-            left: cursorPosition.x,
-            width: "28px",
-            height: "28px",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            zIndex: 9999,
-            transition: "filter 0.2s ease",
-            filter: isClicking ? "drop-shadow(0 0 8px orange)" : "none",
-          }}
-        />
-      )}
     </section>
   );
 }
