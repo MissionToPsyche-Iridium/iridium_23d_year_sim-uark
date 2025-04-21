@@ -14,6 +14,16 @@ const CELESTIAL_BODIES = {
   "Ceres": { radiusKm: 473, textureUrl: "../textures/ceres.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_ceres.jpg" },
 };
 
+const PSYCHE_DESCRIPTION = `Its surface area is 64,000 square miles (165,800 square kilometers). Psyche has an irregular, potato-like shape. If it were sliced in half horizontally at the equator – picture a squished oval – it would measure 173 miles (280 kilometers) across at its widest point and 144 miles (232 kilometers) long.`;
+
+const BODY_DESCRIPTIONS: Record<string, string> = {
+  Earth: "With an equatorial diameter of 7926 miles (12,760 kilometers), Earth is the biggest of the terrestrial planets and the fifth largest planet in our solar system.",
+  Mars: "With a radius of 2,106 miles (3,390 kilometers), Mars is about half the size of Earth. If Earth were the size of a nickel, Mars would be about as big as a raspberry. From an average distance of 142 million miles (228 million kilometers), Mars is 1.5 astronomical units away from the Sun. One astronomical unit (abbreviated as AU), is the distance from the Sun to Earth. From this distance, it takes sunlight 13 minutes to travel from the Sun to Mars.",
+  Moon: "With a diameter of 2,159 miles (3,475 kilometers), the Moon is just 1/4 the size of Earth. Distance from Earth: The Moon's average distance from Earth is 238,000 miles (383,500 km). Orbit around Earth: It takes the Moon 27.3 Earth days to revolve around our planet one time.",
+  Ceres: "With a radius of 296 miles (476 kilometers), Ceres is 1/13 the radius of Earth. If Earth were the size of a nickel, Ceres would be about as big as a poppy seed. From an average distance of 257 million miles (413 million kilometers), Ceres is 2.8 astronomical units away from the Sun.",
+};
+
+
 const PSYCHE_RADIUS_KM = 112;
 
 const PsycheModel = ({ position }: { position: [number, number, number] }) => {
@@ -118,6 +128,29 @@ const CompareScene = () => {
           ))}
         </select>
       </div>
+      
+      {/*textbox captions*/}
+      <div style={{
+        position: "absolute",
+        top: 60,
+        left: 20,
+        right: 20,
+        zIndex: 10,
+        backgroundColor: "rgba(22, 8, 39, 0.85)",
+        color: "white",
+        padding: "15px 20px",
+        borderRadius: "10px",
+        fontFamily: "'Orbitron', sans-serif",
+        fontSize: "1.1rem",
+        maxWidth: "300px",
+      }}>
+        <p style={{ marginBottom: "10px" }}>
+          <strong>Psyche:</strong> {PSYCHE_DESCRIPTION}
+        </p>
+        <p>
+          <strong>{selectedBody}:</strong> {BODY_DESCRIPTIONS[selectedBody]}
+        </p>
+      </div>
 
       {/* 3D Scene */}
       <Canvas camera={{ position: [0, 0, cameraZ], fov }}>
@@ -141,6 +174,5 @@ const CompareScene = () => {
     </div>
   );
 };
-
 
 export default CompareScene;
