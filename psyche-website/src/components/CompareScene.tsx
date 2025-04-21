@@ -129,29 +129,6 @@ const CompareScene = () => {
         </select>
       </div>
       
-      {/*textbox captions*/}
-      <div style={{
-        position: "absolute",
-        top: 60,
-        left: 20,
-        right: 20,
-        zIndex: 10,
-        backgroundColor: "rgba(22, 8, 39, 0.85)",
-        color: "white",
-        padding: "15px 20px",
-        borderRadius: "10px",
-        fontFamily: "'Orbitron', sans-serif",
-        fontSize: "1.1rem",
-        maxWidth: "300px",
-      }}>
-        <p style={{ marginBottom: "10px" }}>
-          <strong>Psyche:</strong> {PSYCHE_DESCRIPTION}
-        </p>
-        <p>
-          <strong>{selectedBody}:</strong> {BODY_DESCRIPTIONS[selectedBody]}
-        </p>
-      </div>
-
       {/* 3D Scene */}
       <Canvas camera={{ position: [0, 0, cameraZ], fov }}>
         <ambientLight intensity={0.5} />
@@ -171,6 +148,28 @@ const CompareScene = () => {
           </Suspense>
         </group>
       </Canvas>
+      
+      {/*textbox caption*/}
+      <div style={{
+        top: 60,
+        left: 20,
+        right: 20,
+        zIndex: 10,
+        backgroundColor: "rgba(22, 8, 39, 0.85)",
+        color: "white",
+        padding: "15px 20px",
+        borderRadius: "10px",
+        fontFamily: "'Orbitron', sans-serif",
+        fontSize: "1.1rem",
+        maxWidth: "100%",
+      }}>
+        <p style={{ marginBottom: "10px" }}>
+          <strong>Psyche:</strong> {PSYCHE_DESCRIPTION}
+        </p>
+        <p>
+          <strong>{selectedBody}:</strong> {BODY_DESCRIPTIONS[selectedBody]}
+        </p>
+      </div>
     </div>
   );
 };
