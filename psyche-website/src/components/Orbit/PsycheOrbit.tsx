@@ -2,19 +2,51 @@
 
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { OrbitControls, Line, Text } from '@react-three/drei';
-import { TextureLoader } from 'three';
+import { TextureLoader, Texture, Euler } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { useMemo, useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import * as THREE from 'three';
 
-const ORBITS = [
-  { name: 'A', color: 'blue', radiusX: 2, radiusZ: 2.5, rotation: [0.2, 0, 0] as [number, number, number] },
-  { name: 'B', color: 'green', radiusX: 3, radiusZ: 3, rotation: [0, 0, 0] as [number, number, number] },
-  { name: 'C', color: 'red', radiusX: 4, radiusZ: 2, rotation: [0.4, 0, 0] as [number, number, number] },
-  { name: 'D', color: 'purple', radiusX: 5, radiusZ: 4, rotation: [0.1, 0.3, 0] as [number, number, number] },
+interface Orbit {
+  name: string;
+  color: string;
+  radiusX: number;
+  radiusZ: number;
+  rotation: [number, number, number];
+}
+
+interface Planet {
+  name: string;
+  textureUrl: string;
+  radius: number;
+  distance: number;
+}
+
+interface SceneProps {
+  showOrbits: boolean;
+  setShowOrbits: (value: boolean) => void;
+  focusPsyche: boolean;
+  setFocusPsyche: (value: boolean) => void;
+  selectedOrbit: string | null;
+  setSelectedOrbit: (value: string | null) => void;
+}
+
+interface PlanetTextureProps {
+  textureUrl: string;
+}
+
+interface InfoPanelProps {
+  orbitName: string;
+}
+
+const ORBITS: Orbit[] = [
+  { name: 'A', color: 'blue', radiusX: 2, radiusZ: 2.5, rotation: [0.2, 0, 0] },
+  { name: 'B', color: 'green', radiusX: 3, radiusZ: 3, rotation: [0, 0, 0] },
+  { name: 'C', color: 'red', radiusX: 4, radiusZ: 2, rotation: [0.4, 0, 0] },
+  { name: 'D', color: 'purple', radiusX: 5, radiusZ: 4, rotation: [0.1, 0.3, 0] },
 ];
 
-const PLANETS = [
+const PLANETS: Planet[] = [
   { name: 'Mercury', textureUrl: '../textures/mercury.jpg', radius: 0.3, distance: 5 },
   { name: 'Venus', textureUrl: '../textures/venus-atmosphere.jpg', radius: 0.4, distance: 8 },
   { name: 'Earth', textureUrl: '../textures/earth.jpg', radius: 0.5, distance: 11 },
@@ -23,8 +55,8 @@ const PLANETS = [
 
 export default function PsycheOrbit() {
   const [selectedOrbit, setSelectedOrbit] = useState<string | null>(null);
-  const [showOrbits, setShowOrbits] = useState(false);
-  const [focusPsyche, setFocusPsyche] = useState(false);
+  const [showOrbits, setShowOrbits] = useState<boolean>(false);
+  const [focusPsyche, setFocusPsyche] = useState<boolean>(false);
 
   const handleOrbitButtonClick = (orbitName: string) => {
     setSelectedOrbit(selectedOrbit === orbitName ? null : orbitName);
@@ -33,28 +65,11 @@ export default function PsycheOrbit() {
   return (
     <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
       {showOrbits && (
-        <div style={{
-          position: 'absolute',
-          top: 20,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 10,
-          display: 'flex',
-          gap: '10px',
-          pointerEvents: 'none',
-        }}>
-          {ORBITS.map((orbit) => (
+        <div style={{ position: 'absolute', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 10, display: 'flex', gap: '10px', pointerEvents: 'none' }}>
+          {ORBITS.map((orbit: Orbit) => (
             <button
               key={orbit.name}
-              style={{
-                pointerEvents: 'auto',
-                padding: '8px 12px',
-                borderRadius: '8px',
-                border: 'none',
-                background: selectedOrbit === orbit.name ? orbit.color : '#333',
-                color: 'white',
-                cursor: 'pointer',
-              }}
+              style={{ pointerEvents: 'auto', padding: '8px 12px', borderRadius: '8px', border: 'none', background: selectedOrbit === orbit.name ? orbit.color : '#333', color: 'white', cursor: 'pointer' }}
               onClick={() => handleOrbitButtonClick(orbit.name)}
             >
               Orbit {orbit.name}
@@ -79,39 +94,57 @@ export default function PsycheOrbit() {
   );
 }
 
-function Scene({ showOrbits, setShowOrbits, focusPsyche, setFocusPsyche, selectedOrbit, setSelectedOrbit }: any) {
+function Scene({ showOrbits, setShowOrbits, focusPsyche, setFocusPsyche, selectedOrbit, setSelectedOrbit }: SceneProps) {
   const { camera } = useThree();
-  const psycheModelRef = useRef<THREE.Group>(null);
+  const [psycheModel, setPsycheModel] = useState<THREE.Group | null>(null);
   const psycheGltf = useLoader(GLTFLoader, 'https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb');
-  const sunTexture = useLoader(TextureLoader, '../textures/sun.jpg');
+  const sunTexture = useLoader(TextureLoader, '../textures/sun.jpg') as Texture;
 
   useEffect(() => {
-    if (psycheGltf && psycheModelRef.current) {
+    if (psycheGltf) {
       const model = psycheGltf.scene.clone();
+  
+      // 1. Create a new box and find the center
       const box = new THREE.Box3().setFromObject(model);
       const center = new THREE.Vector3();
       box.getCenter(center);
+  
+      // 2. Shift the entire model so the center is at (0,0,0)
       model.position.sub(center);
-
+  
+      // 3. Now recenter all children geometries manually
+      model.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          mesh.geometry.computeBoundingBox();
+          const geometryCenter = new THREE.Vector3();
+          mesh.geometry.boundingBox?.getCenter(geometryCenter);
+          mesh.geometry.center();
+        }
+      });
+  
+      // 4. Scale model cleanly
       const size = new THREE.Vector3();
       box.getSize(size);
       const scaleFactor = 1.5 / Math.max(size.x, size.y, size.z);
       model.scale.setScalar(scaleFactor);
-
-      psycheModelRef.current.clear();
-      psycheModelRef.current.add(model);
+  
+      setPsycheModel(model);
     }
   }, [psycheGltf]);
+  
 
   useFrame(() => {
+    if (psycheModel) {
+      psycheModel.rotation.y += 0.0025;
+    }
+
     if (focusPsyche) {
       camera.position.lerp(new THREE.Vector3(0, 5, 10), 0.05);
-      camera.lookAt(0, 0, 0);
-      if (psycheModelRef.current) psycheModelRef.current.rotation.y += 0.0025;
     } else {
       camera.position.lerp(new THREE.Vector3(0, 8, 30), 0.05);
-      camera.lookAt(0, 0, 0);
     }
+    camera.lookAt(0, 0, 0);
   });
 
   return (
@@ -126,7 +159,7 @@ function Scene({ showOrbits, setShowOrbits, focusPsyche, setFocusPsyche, selecte
             <meshStandardMaterial map={sunTexture} />
           </mesh>
 
-          {PLANETS.map((planet) => (
+          {PLANETS.map((planet: Planet) => (
             <Line
               key={planet.name + '-orbit'}
               points={new THREE.EllipseCurve(0, 0, planet.distance, planet.distance, 0, 2 * Math.PI, false, 0)
@@ -138,7 +171,7 @@ function Scene({ showOrbits, setShowOrbits, focusPsyche, setFocusPsyche, selecte
             />
           ))}
 
-          {PLANETS.map((planet) => (
+          {PLANETS.map((planet: Planet) => (
             <group key={planet.name} position={[planet.distance, 0, 0]}>
               <mesh>
                 <sphereGeometry args={[planet.radius, 32, 32]} />
@@ -156,17 +189,18 @@ function Scene({ showOrbits, setShowOrbits, focusPsyche, setFocusPsyche, selecte
             </group>
           ))}
 
-          {/* Psyche placeholder */}
           <group position={[18, 0, 0]}>
-            <group
-              ref={psycheModelRef}
+            <mesh
               scale={[0.5, 0.5, 0.5]}
               position={[0.5, 0, 0]}
               onClick={() => {
                 setShowOrbits(true);
                 setFocusPsyche(true);
               }}
-            />
+            >
+              <sphereGeometry args={[0.5, 32, 32]} />
+              <meshStandardMaterial color="white" />
+            </mesh>
             <Text
               position={[0, 1, 0]}
               fontSize={0.3}
@@ -180,10 +214,10 @@ function Scene({ showOrbits, setShowOrbits, focusPsyche, setFocusPsyche, selecte
         </>
       )}
 
-      {focusPsyche && (
+      {showOrbits && psycheModel && (
         <>
-          <group
-            ref={psycheModelRef}
+          <primitive
+            object={psycheModel}
             position={[0, 0, 0]}
             onClick={() => {
               setShowOrbits(false);
@@ -192,8 +226,8 @@ function Scene({ showOrbits, setShowOrbits, focusPsyche, setFocusPsyche, selecte
             }}
           />
 
-          {showOrbits && ORBITS.map((orbit) => (
-            <group key={orbit.name} rotation={orbit.rotation as [number, number, number]}>
+          {ORBITS.map((orbit: Orbit) => (
+            <group key={orbit.name} rotation={new Euler(orbit.rotation[0], orbit.rotation[1], orbit.rotation[2])}>
               <Line
                 points={new THREE.EllipseCurve(0, 0, orbit.radiusX, orbit.radiusZ, 0, 2 * Math.PI, false, 0)
                   .getPoints(100)
@@ -216,13 +250,13 @@ function Scene({ showOrbits, setShowOrbits, focusPsyche, setFocusPsyche, selecte
   );
 }
 
-function PlanetTexture({ textureUrl }: { textureUrl: string }) {
-  const texture = useLoader(TextureLoader, textureUrl);
+function PlanetTexture({ textureUrl }: PlanetTextureProps) {
+  const texture = useLoader(TextureLoader, textureUrl) as Texture;
   return <meshStandardMaterial map={texture} />;
 }
 
-function InfoPanel({ orbitName }: { orbitName: string }) {
-  const info = {
+function InfoPanel({ orbitName }: InfoPanelProps) {
+  const info: Record<string, string> = {
     A: 'Orbit A: 709 km alt, 32.6 hr period, 56 days = 41 orbits.',
     B: 'Orbit B: 303 km alt, 11.6 hr period, 92-100 days.',
     C: 'Orbit C: 190 km alt, 7.2 hr period, 100 days = 333 orbits.',
@@ -230,19 +264,9 @@ function InfoPanel({ orbitName }: { orbitName: string }) {
   };
 
   return (
-    <div
-      style={{
-        position: 'absolute',
-        top: 80,
-        left: 20,
-        padding: '10px 20px',
-        backgroundColor: 'rgba(0,0,0,0.7)',
-        color: 'white',
-        borderRadius: '10px',
-      }}
-    >
+    <div style={{ position: 'absolute', top: 80, left: 20, padding: '10px 20px', backgroundColor: 'rgba(0,0,0,0.7)', color: 'white', borderRadius: '10px' }}>
       <h2>Selected Orbit {orbitName}</h2>
-      <p>{info[orbitName as keyof typeof info]}</p>
+      <p>{info[orbitName]}</p>
     </div>
   );
 }
