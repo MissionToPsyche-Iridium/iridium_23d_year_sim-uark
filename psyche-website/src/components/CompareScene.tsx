@@ -96,8 +96,9 @@ const CelestialBody = ({ position, radius, textureUrl, fallbackUrl }: {
 const CompareScene = () => {
   const [selectedBody, setSelectedBody] = useState<keyof typeof CELESTIAL_BODIES>("Earth");
 
-  
- 
+  const [isExpanded, setIsExpanded] = useState(false);
+  const togglePopup = () => setIsExpanded((prev) => !prev);
+
   const selectedData = CELESTIAL_BODIES[selectedBody];
   const psycheNormalizedDiameter = 1.5;
   const scaleMultiplier = selectedData.radiusKm / PSYCHE_RADIUS_KM;
@@ -167,29 +168,42 @@ const CompareScene = () => {
       </Canvas>
 
       {/*textbox caption*/}
-      <div style={{
-        top: 60,
-        left: 20,
-        right: 20,
-        zIndex: 10,
-        backgroundColor: "rgba(22, 8, 39, 0.85)",
-        color: "white",
-        padding: "15px 20px",
-        borderRadius: "10px",
-        fontFamily: "'Orbitron', sans-serif",
-        fontSize: "1.1rem",
-        maxWidth: "100%",
-      }}>
-        <p style={{ marginBottom: "10px" }}>
-          <strong>Psyche:</strong> {PSYCHE_DESCRIPTION}
+      <div
+        onClick={togglePopup}
+        style={{
+          position: "absolute",
+          top: 50,
+          left: 20,
+          right: 20,
+          zIndex: 20,
+          backgroundColor: "rgba(22, 8, 39, 0.85)",
+          color: "white",
+          padding: "15px 20px",
+          borderRadius: "10px",
+          fontFamily: "'Orbitron', sans-serif",
+          fontSize: "1.1rem",
+          cursor: "pointer",
+          maxHeight: isExpanded ? "500px" : "40px",
+          overflow: "hidden",
+          transition: "max-height 0.4s ease-in-out",
+        }}
+      >
+        <p style={{ margin: 0, fontWeight: "bold" }}>
+          {isExpanded ? "Click to collapse ↑" : "Click to expand ↓"}
         </p>
-        <p>
-          <strong>{selectedBody}:</strong> {BODY_DESCRIPTIONS[selectedBody]}
-        </p>
+        {isExpanded && (
+          <>
+            <p style={{ marginBottom: "10px" }}>
+              <strong>Psyche:</strong> {PSYCHE_DESCRIPTION}
+            </p>
+            <p>
+              <strong>{selectedBody}:</strong> {BODY_DESCRIPTIONS[selectedBody]}
+            </p>
+          </>
+        )}
       </div>
     </div>
   );
 };
-
 
 export default CompareScene;
