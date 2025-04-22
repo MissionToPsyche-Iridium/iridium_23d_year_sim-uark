@@ -1,8 +1,11 @@
+// Similar code to SplitSection.tsx without any code relating to the age calculator
+// Code relating to Fun Facts section next to Temp Sliders
+
 "use client";
 
 import React, { useState, useEffect } from "react";
 import "../styles/SplitSection.css";
-import StarAnimation from "./StarAnimation";
+import TemperatureSlider from "./TemperatureSlider";
 
 // Card Deck Component
 const CardDeck: React.FC = () => {
@@ -11,12 +14,10 @@ const CardDeck: React.FC = () => {
 
   // Facts for the card deck
   const cards = [
-    { id: 1, fact: "Scientists infer the presence of metallic cores, but these lie unreachably far below the planets' rocky mantles and crusts. Because we cannot see or measure Earth's core directly, Psyche offers a unique window into the violent history of collisions and accretion that created terrestrial planets." },
-    { id: 2, fact: "It’s estimated that it will take the spacecraft about 2.2 billion miles (3.6 billion kilometers) to travel to Psyche." },
-    { id: 3, fact: "Psyche is likely a mixture of rock and metal, with metal making up between 30% to 60% of its volume. It has been speculated that it is mainly composed of iron, nickel, and silicate." },
-    { id: 4, fact: "The asteroid Psyche orbits the Sun in the outer part of the main asteroid belt between Mars and Jupiter, and it is approximately three times farther from the Sun than Earth is!" },
-    { id: 5, fact: "Psyche has an irregular potato shape. If the asteroid were sliced in half horizontally at the equator – picture a squished oval – it would measure 173 miles (280 kilometers) across at its widest point and 144 miles (232 kilometers) long. It is estimated to have a surface area of about 64,000 square miles (165,800 square kilometers). " },
-  ];
+    { id: 1, fact: "A year on Psyche lasts about five Earth years (about 1,828 Earth days)."},
+    { id: 2, fact: "A day on Psyche is about 4 hours and 12 minutes. This is the sidereal rotation period, or the “amount of time it takes for a [body] to completely spin around and make one full rotation. You could live through just under six “days” on Psyche in the same time as one day on Earth!" },
+    { id: 3, fact: "The asteroid was named for the goddess of the soul in ancient Greek mythology, often depicted as a butterfly-winged female figure." },
+ ];
 
   // Auto slide cards every 10 seconds
   useEffect(() => {
@@ -65,56 +66,7 @@ const CardDeck: React.FC = () => {
   );
 };
 
-const SplitSection: React.FC = () => {
-  const [width, setWidth] = useState<number>(0);
-  const [birthdate, setBirthdate] = useState<string>("");
-  const [age, setAge] = useState<{ years: number; days: number } | null>(null);
-  const [showStars, setShowStars] = useState(false);
-  const [showTitle, setShowTitle] = useState(true);
-  const [psycheAge, setPsycheAge] = useState<{ years: number; days: number }>({ years: 0, days: 0 });
-  const [timelinePosition, setTimelinePosition] = useState<number>(0);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setWidth(window.innerWidth);
-      const handleResize = () => setWidth(window.innerWidth);
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, []);
-
-  const psycheYear = 1825.95;
-  const psycheDay = 4.2 / 24;
-
-  const calculateAge = () => {
-    if (birthdate) {
-      const birthDate = new Date(birthdate);
-      const today = new Date();
-      const ageInDays = Math.floor(
-        (today.getTime() - birthDate.getTime()) / (1000 * 3600 * 24)
-      );
-      const psycheYears = Math.floor(ageInDays / psycheYear);
-      const remainingEarthDays = ageInDays % psycheYear;
-      const psycheDays = Math.floor(remainingEarthDays / psycheDay);
-
-      // Brief delay to simulate asynchronous update if needed
-      setAge(null);
-      setTimeout(() => {
-        setAge({ years: psycheYears, days: psycheDays });
-        setShowStars(true); 
-        setShowTitle(false);
-      }, 100);
-    }
-  };
-
-  // reset button
-  const resetCalculator = () => {
-    setBirthdate("");
-    setAge(null);
-    setShowStars(false);
-    setShowTitle(true);
-  };
-
+const SplitSectionTwo: React.FC = () => {
   return (
     <div className="split-section">
       {/* Wave Overlay: Positioned absolutely inside the split-section */}
@@ -163,53 +115,15 @@ const SplitSection: React.FC = () => {
 
       {/* Left Section */}
       <div className="left-section">
-        <CardDeck />
+        <TemperatureSlider />
       </div>
 
       {/* Right Section */}
-
       <div className="right-section">
-        <div className="birthday-input">
-          {/* Conditionally render the title */}
-          {age === null && (
-            <h2 className="futuristic-title">When Were You Born on Earth?</h2>
-          )}
-
-          <div className="input-container">
-            <input
-              type="date"
-              id="birthdate"
-              value={birthdate}
-              onChange={(e) => setBirthdate(e.target.value)}
-              className="date-input"
-            />
-
-            {age === null ? (
-              <button className="calculate-button" onClick={calculateAge}>
-                Calculate My Psyche Age
-              </button>
-            ) : (
-              <button className="calculate-button" onClick={resetCalculator}>
-                Reset
-              </button>
-            )}
-          </div>
-        </div>
-
-        {age !== null && (
-          <div className="psyche-result">
-            <h3 className="psyche-birthday">
-              {age !== null ? `You are ${age.years} Years & ${age.days} Psyche Days old!` : 'Your Psyche Birthday:'}
-            </h3>
-            <p className="fun-fact">
-              Fun Fact: Psyche takes about 5 Earth years to orbit the Sun with each day being 4.2 hours long, making one Pysche year 10,428 Psyche days long!
-            </p>
-          </div>
-        )}
-          <StarAnimation show={showStars} />
+        <CardDeck />
       </div>
     </div>
   );
 };
-    
-export default SplitSection;
+
+export default SplitSectionTwo;
