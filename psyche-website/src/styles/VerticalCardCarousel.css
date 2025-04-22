@@ -1,12 +1,4 @@
-.vertical-carousel-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 3rem; /* Added space between carousel, slider, and new card deck */
-    margin: 15rem auto;
-    position: relative;
-  }
-  
+ 
   .carousel-and-slider {
     display: flex;
     flex-direction: column;

@@ -93,17 +93,14 @@
     text-shadow: 0px 0px 5px #7a7aff;
 }
 
+.button-container a {
+  margin: 5px;
+}
 
-/* Mission Timeline Cards */
 .vertical-carousel-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 4rem;
-    margin-top: 6rem;
-    position: relative;
-  }
-  
+  margin-top: 32rem;
+}
+
   .vertical-carousel {
     display: flex;
     flex-direction: column;

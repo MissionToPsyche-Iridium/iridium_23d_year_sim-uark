@@ -3,7 +3,7 @@
   padding: 20px;
   width: 100%;
   max-width: 800px;
-  margin: 20rem auto 0; /* Adjust margin-top for spacing */
+  margin: 7rem auto 0; /* Adjust margin-top for spacing */
   text-align: left;
   background: radial-gradient(circle, #1a1a2e, #162447);
   border-radius: 8px;
@@ -33,7 +33,7 @@
   padding: 20px;
   width: 100%;
   max-width: 800px;
-  margin: 55rem auto 0; /* moves content box up or down */
+  margin: 42rem auto 0; /* moves content box up or down */
   text-align: left;
   background: radial-gradient(circle, #1a1a2e, #162447);
   border-radius: 8px;

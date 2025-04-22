@@ -120,14 +120,14 @@ const SplitSection: React.FC = () => {
       )}
 
       {/* Left Section */}
-      <div className="left-section">
+      <div className="left-section left-section-1">
         <div className="paragraph-wrapper">
           <AgeContentParagraph />
         </div>
       </div>
 
       {/* Right Section */}
-      <div className="right-section">
+      <div className="right-section right-section-1">
         {/* age calculator */}
         <div className="birthday-input">
           {/* Conditionally render the title */}
