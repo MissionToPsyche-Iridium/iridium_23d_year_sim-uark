@@ -145,7 +145,7 @@ export default function LaunchScene() {
             gsap.to(overlayText, { opacity: 1, duration: 1 });
 
             gsap.delayedCall(1, () => {
-              showMissionText('Using Mars gravity to slingshot toward Psyche.', 4);
+              showMissionText('The spacecraft uses Mars gravity to slingshot toward Psyche.', 4);
             });
 
             gsap.delayedCall(2, () => {
@@ -208,7 +208,7 @@ export default function LaunchScene() {
 
                       // ✨ Show deep space cruise text
                       deepSpaceTimeline.call(() => {
-                        showMissionText('Psyche ventures into uncharted deep space.', 5);
+                        showMissionText('The spacecraft spends 6 years venturing into uncharted deep space.', 5);
                       }, [], "+=2"); // <-- add a 2 second delay during cruise
 
                       // ✨ Then load asteroid after a while
@@ -255,7 +255,7 @@ export default function LaunchScene() {
                               ease: "power2.inOut",
                             });
 
-                            showMissionText('Target acquired: 16 Psyche — a metal world.', 6);
+                            showMissionText('Arrival (projected late July 2029): 16 Psyche — a metal world.', 6);
                           },
                           undefined,
                           (error) => console.error('Failed to load Psyche model:', error)
@@ -283,7 +283,7 @@ export default function LaunchScene() {
     launchTimeline.to(titleDiv, { opacity: 0, duration: 2, delay: 3 });
 
     launchTimeline.call(() => {
-      showMissionText('Liftoff! Psyche begins its journey to a metal world.', 4);
+      showMissionText('Liftoff! Psyche mission launched on a SpaceX Falcon Heavy rocket from Launch Complex 39A, Kennedy Space Center in Florida, at 10:19 a.m. EDT on Friday, Oct. 13, 2023.',);
     }, [], "launch");
 
     launchTimeline.to(rocket.position, { y: "+=200", duration: 3, ease: "power2.in" }, "launch");
