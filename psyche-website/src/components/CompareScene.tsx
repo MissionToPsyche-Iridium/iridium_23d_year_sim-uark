@@ -96,27 +96,44 @@ const CelestialBody = ({ position, radius, textureUrl, fallbackUrl }: {
 const CompareScene = () => {
   const [selectedBody, setSelectedBody] = useState<keyof typeof CELESTIAL_BODIES>("Earth");
 
+  
+ 
   const selectedData = CELESTIAL_BODIES[selectedBody];
   const psycheNormalizedDiameter = 1.5;
   const scaleMultiplier = selectedData.radiusKm / PSYCHE_RADIUS_KM;
   const bodyDiameterUnits = psycheNormalizedDiameter * scaleMultiplier;
   const bodyRadiusUnits = bodyDiameterUnits / 2;
 
+  const SPACING_BY_BODY: Record<keyof typeof CELESTIAL_BODIES, number> = {
+    Earth: 60,
+    Mars: 50,
+    Moon: 40,
+    Ceres: 40,
+  };
+
+  const separation = SPACING_BY_BODY[selectedBody];
+
+
   // Dynamic camera calculation inside useMemo
   const { cameraZ, fov } = useMemo(() => {
     const fov = 50;
-    const aspect = window.innerWidth / window.innerHeight;
+    const aspect =
+      typeof window !== "undefined"
+        ? window.innerWidth / window.innerHeight
+        : 1; // Fallback for SSR
+  
     const marginMultiplier = 1.2;
-
+  
     const maxObjectRadius = bodyRadiusUnits;
     const visibleHeight = maxObjectRadius * 2 * marginMultiplier;
     const visibleWidth = visibleHeight * aspect;
     const requiredView = Math.max(visibleHeight, visibleWidth);
     const fovInRadians = (fov * Math.PI) / 180;
     const cameraZ = requiredView / (2 * Math.tan(fovInRadians / 2));
-
+  
     return { cameraZ, fov };
   }, [bodyRadiusUnits]);
+  
 
   return (
     <div style={{ height: "100vh", width: "100%", position: "relative" }}>
@@ -137,10 +154,10 @@ const CompareScene = () => {
         <OrbitControls enableZoom={true} />
 
         <group>
-          <PsycheModel position={[-bodyRadiusUnits * 1.5, 0, 0]} />
+          <PsycheModel position={[-separation, 0, 0]} />
           <Suspense fallback={null}>
             <CelestialBody
-              position={[bodyRadiusUnits * 1.5, 0, 0]}
+              position={[separation, 0, 0]}
               radius={bodyRadiusUnits}
               textureUrl={selectedData.textureUrl}
               fallbackUrl={selectedData.fallbackUrl}
@@ -148,7 +165,7 @@ const CompareScene = () => {
           </Suspense>
         </group>
       </Canvas>
-      
+
       {/*textbox caption*/}
       <div style={{
         top: 60,
@@ -173,5 +190,6 @@ const CompareScene = () => {
     </div>
   );
 };
+
 
 export default CompareScene;
