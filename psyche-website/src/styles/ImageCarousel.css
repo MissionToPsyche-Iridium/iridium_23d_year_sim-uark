@@ -6,6 +6,7 @@
   position: relative;
   width: 100%;
   max-width: 2000px;
+  padding-bottom: 50px;
 }
 
 .image-carousel-container {
@@ -35,17 +36,17 @@
 }
 
 .carousel-caption {
-  margin-top: 20px; /* Adjust the distance to move the caption down */
+  margin-top: 80px; /* Adjust the distance to move the caption down */
   font-size: 1.2rem;
-  color: #000000; /* Set your preferred color */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  color: #b41b1b; /* Set your preferred color */
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
   position: absolute;
-  bottom: 10px; /* Ensures caption stays at the bottom of the image */
   left: 50%;
   transform: translateX(-50%); /* Center the caption horizontally */
   width: 100%;
   text-align: center;
   z-index: 2; /* Ensure it stays above the image */
+  display: block; 
 }
 
 .carousel-button {

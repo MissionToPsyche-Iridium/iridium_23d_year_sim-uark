@@ -6,12 +6,12 @@ import React, { useState, useEffect } from "react";
 import "../styles/VerticalCardCarousel.css";
 
 const cards = [
-  { title: "Testing 1 (Mission Milestone)", content: "This is a description of Testing 1" },
-  { title: "Testing 2 (Mission Milestone)", content: "This is a description of Testing 2" },
-  { title: "Testing 3 (Mission Milestone)", content: "This is a description of Testing 3" },
-  { title: "Testing 4 (Mission Milestone)", content: "This is a description of Testing 4" },
-  { title: "Testing 5 (Mission Milestone)", content: "This is a description of Testing 5" },
-  { title: "Testing 6 (Mission Milestone)", content: "This is a description of Testing 6" },
+  { title: "Phase A", content: "Sept 2015 - Dec 2016" },
+  { title: "Phase B", content: "Jan 2017 - May 2019" },
+  { title: "Phase C", content: "May 2019 - Jan 2021" },
+  { title: "Phase D", content: "Jan 2021" },
+  { title: "Phase E", content: "WE ARE HERE" },
+  { title: "Phase F", content: "Mission Closeout" },
 ];
 
 interface VerticalCardCarouselProps {
@@ -36,7 +36,7 @@ const VerticalCardCarousel: React.FC<VerticalCardCarouselProps> = ({ currentInde
   return (
   <div className="vertical-carousel-section">
     <div className="vertical-carousel-wrapper">
-      <h1 className="section-title">Mission Timeline</h1>
+      <h1 className="section-title">The Psyche Mission consists of six phases, labeled A-F.  These phases span from initial studies and selection of the mission by NASA for its Discovery Program, through building and testing of instruments and the spacecraft, to launch, cruise, and arrival at the asteroid and finally to orbit and the closeout of the mission.  Scroll below to follow the journey of Psyche through the phases of the mission. </h1>
       <div className="carousel-and-slider">
         {/* Carousel */}
         <div className="vertical-carousel">
