@@ -15,7 +15,7 @@ import { CircleStar, DiamondStar } from "./Star";
 
 export default function LayoutContent({ children }: { children: React.ReactNode }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(4); // 👈 Default to "Phase E"
+  const [currentIndex, setCurrentIndex] = useState(4);
   const pathname = usePathname();
 
   if (!pathname.startsWith("/") || !pathname.startsWith("/home")) {
@@ -85,7 +85,9 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       <SplitSection />
       <MetallicInfoParagraph />
       <VerticalCardCarousel currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
-      <ImageCarousel />
+      <div style={{ marginTop: "80px" }}>
+        <ImageCarousel />
+      </div>
       {/* <SplitSectionTwo /> */}
       <FeatureSection />
     </>
