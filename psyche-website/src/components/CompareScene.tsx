@@ -138,15 +138,107 @@ const CompareScene = () => {
 
   return (
     <div style={{ height: "100vh", width: "100%", position: "relative" }}>
-      {/* Dropdown */}
-      <div style={{ position: "absolute", top: 20, left: 20, zIndex: 10 }}>
-        <select value={selectedBody} onChange={(e) => setSelectedBody(e.target.value as keyof typeof CELESTIAL_BODIES)}>
+      {/* Top Controls Container */}
+      <div
+        style={{
+          position: "absolute",
+          top: 20,
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          zIndex: 20,
+          gap: "15px",
+          width: "90%",
+          maxWidth: "700px",
+        }}
+      >
+        {/* Dropdown Menu */}
+        <div style={{ position: "relative", width: "100%" }}>
+        <select
+          value={selectedBody}
+          onChange={(e) => setSelectedBody(e.target.value as keyof typeof CELESTIAL_BODIES)}
+          style={{
+            backgroundColor: "rgba(22, 8, 39, 0.85)",
+            color: "white",
+            padding: "10px 40px 10px 15px", // 👈 add right padding for arrow space
+            borderRadius: "10px",
+            border: "1px solid #fff",
+            fontFamily: "'Orbitron', sans-serif",
+            fontSize: "1rem",
+            outline: "none",
+            cursor: "pointer",
+            width: "100%",
+            textAlign:"center",
+            appearance: "none",
+            WebkitAppearance: "none",
+            MozAppearance: "none",
+          }}
+        >
           {Object.keys(CELESTIAL_BODIES).map((body) => (
-            <option key={body} value={body}>{body}</option>
+            <option
+              key={body}
+              value={body}
+              style={{
+                backgroundColor: "#160827",
+                color: "white",
+              }}
+            >
+              {body}
+            </option>
           ))}
         </select>
+        {/* ▼ Arrow */}
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "15px",
+            transform: "translateY(-50%)",
+            pointerEvents: "none",
+            fontSize: "1rem",
+            color: "white",
+          }}
+        >
+          ▼
+        </div>
       </div>
-      
+
+
+        {/* Expandable Textbox */}
+        <div
+          onClick={togglePopup}
+          style={{
+            backgroundColor: "rgba(22, 8, 39, 0.85)",
+            color: "white",
+            padding: "15px 20px",
+            borderRadius: "10px",
+            fontFamily: "'Orbitron', sans-serif",
+            fontSize: "1.1rem",
+            cursor: "pointer",
+            maxHeight: isExpanded ? "500px" : "40px",
+            overflow: "hidden",
+            transition: "max-height 0.4s ease-in-out",
+            width: "100%",
+          }}
+        >
+          <p style={{ margin: 0, fontWeight: "bold", textAlign: "center" }}>
+            {isExpanded ? "Click to collapse ↑" : "Click to expand ↓"}
+          </p>
+          {isExpanded && (
+            <>
+              <p style={{ marginBottom: "10px" }}>
+                <strong>Psyche:</strong> {PSYCHE_DESCRIPTION}
+              </p>
+              <p>
+                <strong>{selectedBody}:</strong> {BODY_DESCRIPTIONS[selectedBody]}
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+
       {/* 3D Scene */}
       <Canvas camera={{ position: [0, 0, cameraZ], fov }}>
         <ambientLight intensity={0.5} />
@@ -165,44 +257,9 @@ const CompareScene = () => {
             />
           </Suspense>
         </group>
-      </Canvas>
-
-      {/*textbox caption*/}
-      <div
-        onClick={togglePopup}
-        style={{
-          position: "absolute",
-          top: 50,
-          left: 20,
-          right: 20,
-          zIndex: 20,
-          backgroundColor: "rgba(22, 8, 39, 0.85)",
-          color: "white",
-          padding: "15px 20px",
-          borderRadius: "10px",
-          fontFamily: "'Orbitron', sans-serif",
-          fontSize: "1.1rem",
-          cursor: "pointer",
-          maxHeight: isExpanded ? "500px" : "40px",
-          overflow: "hidden",
-          transition: "max-height 0.4s ease-in-out",
-        }}
-      >
-        <p style={{ margin: 0, fontWeight: "bold" }}>
-          {isExpanded ? "Click to collapse ↑" : "Click to expand ↓"}
-        </p>
-        {isExpanded && (
-          <>
-            <p style={{ marginBottom: "10px" }}>
-              <strong>Psyche:</strong> {PSYCHE_DESCRIPTION}
-            </p>
-            <p>
-              <strong>{selectedBody}:</strong> {BODY_DESCRIPTIONS[selectedBody]}
-            </p>
-          </>
-        )}
+      </Canvas> 
       </div>
-    </div>
+    
   );
 };
 
