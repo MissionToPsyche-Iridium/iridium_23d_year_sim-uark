@@ -1,5 +1,3 @@
-// VerticalCardCarousel.tsx
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -26,7 +24,6 @@ const VerticalCardCarousel: React.FC<VerticalCardCarouselProps> = ({ currentInde
   };
 
   useEffect(() => {
-    // Ensure slider starts from the middle
     const slider = document.getElementById("vertical-slider") as HTMLInputElement;
     if (slider) {
       slider.value = currentIndex.toString();
@@ -34,11 +31,15 @@ const VerticalCardCarousel: React.FC<VerticalCardCarouselProps> = ({ currentInde
   }, [currentIndex]);
 
   return (
-  <div className="vertical-carousel-section">
-    <div className="vertical-carousel-wrapper">
-      <h1 className="section-title">The Psyche Mission consists of six phases, labeled A-F.  These phases span from initial studies and selection of the mission by NASA for its Discovery Program, through building and testing of instruments and the spacecraft, to launch, cruise, and arrival at the asteroid and finally to orbit and the closeout of the mission.  Scroll below to follow the journey of Psyche through the phases of the mission. </h1>
-      <div className="carousel-and-slider">
-        {/* Carousel */}
+    <div className="vertical-carousel-section">
+      <h1 className="section-title">
+        The Psyche Mission consists of six phases, labeled A–F. These phases span from initial studies and selection of the mission by NASA for its Discovery Program, through building and testing of instruments and the spacecraft, to launch, cruise, and arrival at the asteroid and finally to orbit and the closeout of the mission.
+        <br />
+        Scroll below to follow the journey of Psyche through the phases of the mission.
+      </h1>
+
+      <div className="carousel-wrapper-horizontal">
+        {/* Card Deck */}
         <div className="vertical-carousel">
           {cards.map((card, index) => {
             const offset = index - currentIndex;
@@ -68,9 +69,8 @@ const VerticalCardCarousel: React.FC<VerticalCardCarouselProps> = ({ currentInde
           max={cards.length - 1}
           value={currentIndex}
           onChange={handleSliderChange}
-          className="vertical-slider"
+          className="vertical-slider-horizontal"
         />
-        </div>
       </div>
     </div>
   );
