@@ -20,6 +20,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  gap: 10px;
 }
 
 /* Purple box */
@@ -100,6 +101,10 @@ body {
   max-width: 600px;
 }
 
+.button-container {
+  text-align: center; /* Center align the buttons */
+}
+
 /* Disclaimer under header */
 .disclaimer-section {
   margin-top: 10px;
@@ -145,4 +150,31 @@ body {
   transform: scale(0.95);
   background: linear-gradient(135deg, #43105f 0%, #1e0b36 100%);
   box-shadow: none;
+}
+
+.credit-item {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #2b0046 0%, #160827 100%);
+  color: #ffffff;
+  border: 2px solid #732e8c;
+  cursor: pointer;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  text-align: center;
+  text-decoration: none;
+}
+
+.credit-item:hover {
+  color: #ffeeff;
+  border-color: #bb45cd;
+  box-shadow:
+    0 0 10px rgba(187, 69, 205, 0.8),
+    0 0 20px rgba(187, 69, 205, 0.6),
+    0 0 30px rgba(187, 69, 205, 0.4);
+  transform: scale(1.05);
 }

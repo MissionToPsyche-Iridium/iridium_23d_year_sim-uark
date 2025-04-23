@@ -22,6 +22,14 @@ export default function Home() {
           </button>
         </Link>
       </div>
+      <div className="widget welcome-widget">
+        <h2 className="widget-title">🌌 Click to view the orbital model.</h2>
+        <Link href="/orbit">
+          <button className="launch-button">
+            🛰️ Psyche Spacecraft Orbital Model
+          </button>
+        </Link>
+      </div>
     </section>
   );
 }
