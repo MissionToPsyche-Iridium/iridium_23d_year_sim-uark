@@ -1,62 +1,26 @@
 import "../styles/FeatureSection.css";
 
+import Link from "next/link";
+
 export default function FeatureSection() {
   return (
     <section className="feature-section">
       <div>
-        <h1 className="header-title">Citations</h1>
         <div className="button-container">
-          <a
-            href="https://psyche.asu.edu/mission/the-asteroid/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="button-link"
-          >
-            The Asteroid
-          </a>
-          <a
-            href="https://psyche.asu.edu/mission/the-spacecraft/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="button-link"
-          >
-            The Spacecraft
-          </a>
-          <a
-            href="https://psyche.asu.edu/mission/launch/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="button-link"
-          >
-            The Launch
-          </a>
-          <a
-            href="https://psyche.asu.edu/mission/faq/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="button-link"
-          >
-            Psyche FAQ
-          </a>
-          <a
-            href="https://www.jpl.nasa.gov/press-kits/psyche/quick-facts/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="button-link"
-          >
-            Quick Facts
-          </a>
+          <Link href="/other-resources" className="button-link header-title">
+            <h1>Resources</h1>
+          </Link>
         </div>
         <div>
-        <h1 className="header-title">Development Team</h1>
-        <div className="button-container">
-          <a className="credit-item">Vishal Jeyam</a>
-          <a className="credit-item">Amber Morton</a>
-          <a className="credit-item">Magaret Pedro Milne</a>
-          <a className="credit-item">Jacob Round</a>
-          <a className="credit-item">Cassie Smith</a>
-          <a className="credit-item">Lei Taylor</a>
-        </div>
+          <h1 className="header-title">Development Team</h1>
+          <div className="button-container">
+            <a className="credit-item">Vishal Jeyam</a>
+            <a className="credit-item">Amber Morton</a>
+            <a className="credit-item">Magaret Pedro Milne</a>
+            <a className="credit-item">Jacob Round</a>
+            <a className="credit-item">Cassie Smith</a>
+            <a className="credit-item">Lei Taylor</a>
+          </div>
         </div>
       </div>
       {/* Disclaimer Section */}

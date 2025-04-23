@@ -13,7 +13,20 @@ body {
 /* Feature Section wrapper */
 .feature-section {
   width: 100%;
-  /* min-height: 100vh; */
+  min-height: 100vh;
+  padding: 60px 0;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Resources Section wrapper */
+.other-resources-section {
+  width: 100%;
+  min-height: 100vh;
   padding: 60px 0;
   background-color: black;
   display: flex;
@@ -102,7 +115,8 @@ body {
 }
 
 .button-container {
-  text-align: center; /* Center align the buttons */
+  text-align: center;
+  margin-bottom: 100 px;
 }
 
 /* Disclaimer under header */
