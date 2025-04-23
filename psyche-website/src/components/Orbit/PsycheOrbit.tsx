@@ -85,6 +85,35 @@ export default function PsycheOrbit() {
           ))}
         </div>
       )}
+
+      {/* description of intial planetary orbit view */}
+      {!focusPsyche && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 20,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 15,
+            backgroundColor: 'rgba(22, 8, 39, 0.85)',
+            color: 'white',
+            padding: '15px 20px',
+            borderRadius: '10px',
+            fontFamily: "'Orbitron', sans-serif",
+            fontSize: '1rem',
+            maxWidth: '90%',
+            textAlign: 'center',
+          }}
+        >
+          <strong>Solar System Overview:</strong> Psyche orbits the Sun between Mars and Jupiter at a distance ranging from 235 million to 309 million miles (378 million to 497 million kilometers) from the Sun. Explore how Psyche's trajectory compares to the orbits of the inner planets.
+          <br />
+          <span style={{ display: 'inline-block', marginLeft: '1.5rem' }}>
+            Click on the asteroid to dive into the mission phases!
+          </span>
+        </div>
+      )}
+
+
       <Canvas camera={{ position: [0, 8, 30], fov: 50 }} style={{ background: '#111' }}>
         <Scene
           showOrbits={showOrbits}
@@ -119,7 +148,7 @@ export default function PsycheOrbit() {
             transition: 'max-height 0.4s ease-in-out',
           }}
         >
-          <p style={{ margin: 0, fontWeight: 'bold' }}>
+          <p style={{ margin: 0, fontWeight: 'bold', textAlign:'center' }}>
             {isInfoExpanded ? 'Click to collapse ↑' : 'Click to expand ↓'}
           </p>
           {isInfoExpanded && (
