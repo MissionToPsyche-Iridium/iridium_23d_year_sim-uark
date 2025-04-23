@@ -283,7 +283,7 @@ export default function LaunchScene() {
     launchTimeline.to(titleDiv, { opacity: 0, duration: 2, delay: 3 });
 
     launchTimeline.call(() => {
-      showMissionText('Liftoff! Psyche mission launched on a SpaceX Falcon Heavy rocket from Launch Complex 39A, Kennedy Space Center in Florida, at 10:19 a.m. EDT on Friday, Oct. 13, 2023.',);
+      showMissionText('Liftoff! \nPsyche mission launched on a SpaceX Falcon Heavy rocket \nfrom Launch Complex 39A, Kennedy Space Center in Florida, \nat 10:19 a.m. EDT on Friday, Oct. 13, 2023.',);
     }, [], "launch");
 
     launchTimeline.to(rocket.position, { y: "+=200", duration: 3, ease: "power2.in" }, "launch");
