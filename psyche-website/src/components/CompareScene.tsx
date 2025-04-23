@@ -162,7 +162,7 @@ const CompareScene = () => {
           style={{
             backgroundColor: "rgba(22, 8, 39, 0.85)",
             color: "white",
-            padding: "10px 40px 10px 15px", // 👈 add right padding for arrow space
+            padding: "10px 40px 10px 15px", 
             borderRadius: "10px",
             border: "1px solid #fff",
             fontFamily: "'Orbitron', sans-serif",
