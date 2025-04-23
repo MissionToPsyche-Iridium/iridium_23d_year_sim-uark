@@ -9,10 +9,12 @@ import SplitSectionTwo from "./SplitSectionTwo";
 import InteractiveStar from "./InteractiveStar";
 import InfoContentParagraph from "./InfoContentParagraph";
 import MetallicInfoParagraph from "./MetallicInfoParagraph";
+import VerticalCardCarousel from "./VerticalCardCarousel";
 import { CircleStar, DiamondStar } from "./Star";
 
 export default function LayoutContent({ children }: { children: React.ReactNode }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(4); // 👈 Default to "Phase E"
   const pathname = usePathname();
 
   if (!pathname.startsWith("/") || !pathname.startsWith("/home")) {
@@ -81,6 +83,7 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       <InfoContentParagraph />
       <SplitSection />
       <MetallicInfoParagraph />
+      <VerticalCardCarousel currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
       {/* <SplitSectionTwo /> */}
       <FeatureSection />
     </>
