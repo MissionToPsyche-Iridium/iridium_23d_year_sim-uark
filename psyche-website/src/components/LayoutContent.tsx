@@ -8,6 +8,7 @@ import FeatureSection from "./FeatureSection";
 import SplitSectionTwo from "./SplitSectionTwo";
 import InteractiveStar from "./InteractiveStar";
 import InfoContentParagraph from "./InfoContentParagraph";
+import MetallicInfoParagraph from "./MetallicInfoParagraph";
 import { CircleStar, DiamondStar } from "./Star";
 
 export default function LayoutContent({ children }: { children: React.ReactNode }) {
@@ -79,7 +80,8 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       {children}
       <InfoContentParagraph />
       <SplitSection />
-      <SplitSectionTwo />
+      <MetallicInfoParagraph />
+      {/* <SplitSectionTwo /> */}
       <FeatureSection />
     </>
   );
