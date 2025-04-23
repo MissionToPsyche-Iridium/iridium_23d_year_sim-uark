@@ -40,11 +40,18 @@ interface InfoPanelProps {
 }
 
 const ORBITS: Orbit[] = [
+  { name: 'Initial', color: 'purple', radiusX: 5, radiusZ: 4, rotation: [0.1, 0.3, 0] },
+  { name: 'Second', color:'red', radiusX: 4, radiusZ: 2, rotation: [0.4, 0, 0]  },
+  { name: 'Third', color: 'green', radiusX: 3, radiusZ: 3, rotation: [0, 0, 0] },
+  { name: 'Final', color: 'blue', radiusX: 2, radiusZ: 2.5, rotation: [0.2, 0, 0] },
+];
+
+{/*const ORBITS: Orbit[] = [
   { name: 'A', color: 'blue', radiusX: 2, radiusZ: 2.5, rotation: [0.2, 0, 0] },
   { name: 'B', color: 'green', radiusX: 3, radiusZ: 3, rotation: [0, 0, 0] },
   { name: 'C', color: 'red', radiusX: 4, radiusZ: 2, rotation: [0.4, 0, 0] },
   { name: 'D', color: 'purple', radiusX: 5, radiusZ: 4, rotation: [0.1, 0.3, 0] },
-];
+];*/}
 
 const PLANETS: Planet[] = [
   { name: 'Mercury', textureUrl: '../textures/mercury.jpg', radius: 0.3, distance: 5 },
@@ -57,6 +64,7 @@ export default function PsycheOrbit() {
   const [selectedOrbit, setSelectedOrbit] = useState<string | null>(null);
   const [showOrbits, setShowOrbits] = useState<boolean>(false);
   const [focusPsyche, setFocusPsyche] = useState<boolean>(false);
+  const [isInfoExpanded, setIsInfoExpanded] = useState(false);
 
   const handleOrbitButtonClick = (orbitName: string) => {
     setSelectedOrbit(selectedOrbit === orbitName ? null : orbitName);
@@ -72,7 +80,7 @@ export default function PsycheOrbit() {
               style={{ pointerEvents: 'auto', padding: '8px 12px', borderRadius: '8px', border: 'none', background: selectedOrbit === orbit.name ? orbit.color : '#333', color: 'white', cursor: 'pointer' }}
               onClick={() => handleOrbitButtonClick(orbit.name)}
             >
-              Orbit {orbit.name}
+              {orbit.name} Orbit 
             </button>
           ))}
         </div>
@@ -88,6 +96,49 @@ export default function PsycheOrbit() {
         />
         <OrbitControls enableZoom enablePan={false} />
       </Canvas>
+
+      {/*dropdown text desc.*/}
+      {focusPsyche && (
+        <div
+          onClick={() => setIsInfoExpanded(!isInfoExpanded)}
+          style={{
+            position: 'absolute',
+            top: 100,
+            left: 20,
+            right: 20,
+            zIndex: 15,
+            backgroundColor: 'rgba(22, 8, 39, 0.85)',
+            color: 'white',
+            padding: '15px 20px',
+            borderRadius: '10px',
+            fontFamily: "'Orbitron', sans-serif",
+            fontSize: '1rem',
+            cursor: 'pointer',
+            maxHeight: isInfoExpanded ? '400px' : '40px',
+            overflow: 'hidden',
+            transition: 'max-height 0.4s ease-in-out',
+          }}
+        >
+          <p style={{ margin: 0, fontWeight: 'bold' }}>
+            {isInfoExpanded ? 'Click to collapse ↑' : 'Click to expand ↓'}
+          </p>
+          {isInfoExpanded && (
+            <>
+              <p style={{ marginTop: '10px' }}>
+                <strong>Orbit Overview:</strong> This model shows how NASA's Psyche spacecraft will explore the asteroid Psyche.
+              </p>
+              <p>
+              The spacecraft will begin with Orbit A when it arrives at the asteroid in 2029. 
+              The initial orbit is designed to be at a high altitude – about 435 miles (700 kilometers) above the asteroid's surface. 
+              Over the following 20 months, the spacecraft will use its electric propulsion system to dip into lower and lower orbits 
+              as it conducts its science investigation. Eventually, the spacecraft will establish a final orbit 
+              (Orbit D) about 53 miles (85 kilometers) above the surface.
+              </p>
+            </>
+          )}
+        </div>
+      )}
+
 
       {selectedOrbit && <InfoPanel orbitName={selectedOrbit} />}
     </div>
@@ -257,15 +308,27 @@ function PlanetTexture({ textureUrl }: PlanetTextureProps) {
 
 function InfoPanel({ orbitName }: InfoPanelProps) {
   const info: Record<string, string> = {
-    A: 'Orbit A: 709 km alt, 32.6 hr period, 56 days = 41 orbits.',
-    B: 'Orbit B: 303 km alt, 11.6 hr period, 92-100 days.',
-    C: 'Orbit C: 190 km alt, 7.2 hr period, 100 days = 333 orbits.',
-    D: 'Orbit D: 75 km alt, 3.6 hr period, 100 days = 666 orbits.',
+    Initial: 'Orbit A: 709 km alt, 32.6 hr period, 56 days = 41 orbits.',
+    Second: 'Orbit B: 303 km alt, 11.6 hr period, 92-100 days.',
+    Third: 'Orbit C: 190 km alt, 7.2 hr period, 100 days = 333 orbits.',
+    Final: 'Orbit D: 75 km alt, 3.6 hr period, 100 days = 666 orbits.',
   };
 
   return (
-    <div style={{ position: 'absolute', top: 80, left: 20, padding: '10px 20px', backgroundColor: 'rgba(0,0,0,0.7)', color: 'white', borderRadius: '10px' }}>
-      <h2>Selected Orbit {orbitName}</h2>
+    <div style={{
+      position: 'absolute',
+      bottom: 20,          
+      left: '50%', 
+      transform: 'translateX(-50%)',
+      padding: '15px 25px',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      color: 'white',
+      borderRadius: '10px',
+      fontFamily: "'Orbitron', sans-serif",
+      fontSize: '1rem',
+      zIndex: 15,
+    }}>
+      <h2>Selected: {orbitName} Orbit </h2>
       <p>{info[orbitName]}</p>
     </div>
   );
