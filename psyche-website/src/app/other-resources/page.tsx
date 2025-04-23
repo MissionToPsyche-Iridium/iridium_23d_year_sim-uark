@@ -1,5 +1,7 @@
 import "../../styles/FeatureSection.css";
 
+import Link from "next/link";
+
 export default function OtherResources() {
   return (
     <section className="other-resources-section">
@@ -63,6 +65,11 @@ export default function OtherResources() {
         >
           JPL Open Repository: Spacecraft
         </a>
+      </div>
+      <div>
+        <Link href="/home" className="button-link">
+          Back to Home
+        </Link>
       </div>
     </section>
   );
