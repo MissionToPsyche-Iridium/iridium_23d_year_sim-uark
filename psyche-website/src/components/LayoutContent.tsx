@@ -10,6 +10,7 @@ import InteractiveStar from "./InteractiveStar";
 import InfoContentParagraph from "./InfoContentParagraph";
 import MetallicInfoParagraph from "./MetallicInfoParagraph";
 import VerticalCardCarousel from "./VerticalCardCarousel";
+import ImageCarousel from "./ImageCarousel";
 import { CircleStar, DiamondStar } from "./Star";
 
 export default function LayoutContent({ children }: { children: React.ReactNode }) {
@@ -84,6 +85,7 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       <SplitSection />
       <MetallicInfoParagraph />
       <VerticalCardCarousel currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
+      <ImageCarousel />
       {/* <SplitSectionTwo /> */}
       <FeatureSection />
     </>
