@@ -1,145 +1,92 @@
 .split-section {
   position: relative;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: calc(100% - 20px);
-  padding: 0 10px;
-  margin: 200px auto;
-  gap: 10px;
+  justify-content: center;
+  align-items: flex-start; /* Align content vertically */
+  width:100%;
+  align-items: flex-start; /* or center, depending on if you want perfect vertical centering */
+  padding: 5rem;
+  gap: 3rem; /* space between left and right */
+  z-index: 1;
 }
 
-/* Wave overlay goes behind the content of the split section */
-.wave-overlay {
+.paragraph-wrapper {
+  margin-bottom: 500px;
+}
+
+.wave-overlay, .wave-overlay2, .wave-overlay3 {
   position: absolute;
   left: 0;
   width: 100%;
-  height: 300px;
-  transform: translateY(-50%);
-  z-index: 0;
+  height: 20px; /* Adjust height for the wave */
+  z-index: 1; /* Ensure waves are above flipped waves */
   pointer-events: none;
   overflow: visible;
 }
 
-.wave-overlay .rotated {
-  transform: translateY(-0.5) rotate(180deg); /* Moves the second wave below and rotates it */
+/* Customize the wave heights or positions */
+.wave-overlay {
+  top: -2vh; /* Position the first wave near the top */
 }
 
 .wave-overlay2 {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 300px;
-  transform: translateY(-65%);
-  z-index: 0;
-  pointer-events: none;
-  overflow: visible;
-}
-
-.wave-overlay2 .rotated {
-  transform: translateY(15) rotate(180deg); /* Moves the second wave below and rotates it */
+  top: -5vh; /* Position the second wave to overlap with the first */
 }
 
 .wave-overlay3 {
+  top: -9vh; /* Position the third wave to overlap further */
+}
+
+/* New flipped waves */
+.wave-overlay-flipped{
   position: absolute;
   left: 0;
   width: 100%;
-  height: 300px;
-  transform: translateY(-75%);
-  z-index: 0;
+  height: 20px;
+  z-index: 0; /* Ensure flipped waves are behind the originals */
   pointer-events: none;
   overflow: visible;
+  top: 78vh; /* Adjust position to place the flipped waves below the originals */
+  transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
 }
 
-.wave-overlay3 .rotated {
-  transform: translateY(75) rotate(180deg); /* Moves the second wave below and rotates it */
-}
-
-.wave-overlay svg {
+.wave-overlay2-flipped{
+  position: absolute;
+  left: 0;
   width: 100%;
-  height: 100%;
-  display: block;
+  height: 20px;
+  z-index: 0; /* Ensure flipped waves are behind the originals */
+  pointer-events: none;
+  overflow: visible;
+  top: 75vh; /* Adjust position to place the flipped waves below the originals */
+  transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
+}
+
+.wave-overlay3-flipped{
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  z-index: 0; /* Ensure flipped waves are behind the originals */
+  pointer-events: none;
+  overflow: visible;
+  top: 70vh; /* Adjust position to place the flipped waves below the originals */
+  transform: scaleX(-1) scaleY(-1); /* Flip over X axis and mirror over Y axis */
+}
+
+/* Optional: Add a transformation to rotate the second and third waves */
+.wave-overlay .rotated, .wave-overlay2 .rotated, .wave-overlay3 .rotated {
+  transform: rotate(180deg);
 }
 
 .left-section, .right-section {
   flex: 1;
-  border-radius: 8px;
   position: relative; /* Ensure they stack above the wave overlay */
-  z-index: 1;
-  transform: translateY(-50px);
+  z-index: 2;
 }
 
 .right-section {
   text-align: center;
-  padding: 20px;
-  transform: translateY(50px);
-}
-
-/* Card Deck Styles */
-.card-deck {
-  text-align: center;
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
-}
-
-.card-container {
-  position: relative;
-  height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 50px;
-}
-
-.card {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.5s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card-text {
-  font-size: 20px;
-  margin: 0;
-  color: white;
-  padding: 0 60px;
-  z-index: 5;
-}
-
-.card-button {
-  position: absolute;
-  top: 50%;
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  font-weight: bold;
-  color: white;
-  cursor: pointer;
-  z-index: 10;
-  transform: translateY(-50%);
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.card-button.left {
-  left: 10px;
-}
-
-.card-button.right {
-  right: 10px;
-}
-
-.label {
-  font-size: 20px;
-  color: white;
-  margin: 0;
-  text-align: center;
-  padding: 10px;
-  width: 100%;
 }
 
 .hamburger-menu {
@@ -208,18 +155,22 @@
   text-align: center;
   padding: 20px;
   border-radius: 10px;
+  margin-top: 11rem; /* matches alignment with content box */
+  z-index: 3;
+
 }
 
 .input-container {
   position: relative;
   background: radial-gradient(circle, #1a1a2e, #162447);
   display: inline-block;
-  padding: 15px;
+  padding: 25px;
   border-radius: 10px;
   box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.6), 0px 0px 25px rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
-  margin-top: 20px;
+  margin-top: 10px;
+  z-index: 3;
 }
 
 .input-container input {
@@ -284,6 +235,7 @@ button:hover {
   border-radius: 10px;
   margin-top: 10px;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  z-index: 3;
 }
 
 .psyche-birthday {
@@ -298,4 +250,8 @@ button:hover {
   font-size: 1rem;
   color: #cccccc;
   margin-top: 10px;
+}
+
+.calculate-button {
+  margin-left: 10px;
 }
