@@ -7,6 +7,7 @@ import SplitSection from "./SplitSection";
 import FeatureSection from "./FeatureSection";
 import SplitSectionTwo from "./SplitSectionTwo";
 import InteractiveStar from "./InteractiveStar";
+import InfoContentParagraph from "./InfoContentParagraph";
 import { CircleStar, DiamondStar } from "./Star";
 
 export default function LayoutContent({ children }: { children: React.ReactNode }) {
@@ -76,6 +77,7 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       {/* Main Sections */}
       <InteractiveSection isPopupOpen={isPopupOpen} />
       {children}
+      <InfoContentParagraph />
       <SplitSection />
       <SplitSectionTwo />
       <FeatureSection />

@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/InfoContentParagraph.css";
+import "../styles/InfoContentParagraph.css";
 
 const InfoContentParagraph: React.FC = () => {
   return (
