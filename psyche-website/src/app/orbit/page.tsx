@@ -10,7 +10,14 @@ export default function Page() {
         ← Back to Home
       </Link>
 
-      <h1 style={{ color: "white", fontSize: "2rem", marginBottom: "20px" }}>
+      <h1
+      style={{
+        color: "white",
+        fontSize: "2rem",
+        marginBottom: "20px",
+        textAlign: "center",
+      }}
+      >
         🪐 Psyche vs Earth: Rotation Comparison
       </h1>
 
