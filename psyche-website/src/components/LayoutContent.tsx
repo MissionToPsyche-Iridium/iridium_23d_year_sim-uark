@@ -85,11 +85,13 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       <SplitSection />
       <MetallicInfoParagraph />
       <VerticalCardCarousel currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
-      <div style={{ marginTop: "80px" }}>
+      <div style={{ marginTop: "80px", marginBottom: "-140px" }}>
         <ImageCarousel />
       </div>
       {/* <SplitSectionTwo /> */}
-      <FeatureSection />
+      <div style={{ marginTop: "140px" }}>
+        <FeatureSection />
+      </div>
     </>
   );
 }
