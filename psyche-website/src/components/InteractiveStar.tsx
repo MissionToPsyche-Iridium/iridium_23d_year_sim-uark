@@ -221,6 +221,14 @@ const InteractiveStar: React.FC<InteractiveStarProps> = ({ onPopupOpen, onPopupC
             >
               ✖
             </button>
+            <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center", 
+              justifyContent: "center",
+            }}
+          >
             <img
               src="/PsycheSpacecraft.png"
               alt="Psyche"
@@ -231,6 +239,21 @@ const InteractiveStar: React.FC<InteractiveStarProps> = ({ onPopupOpen, onPopupC
                 borderRadius: "6px",
               }}
             />
+
+            <p
+              style={{
+                color: "white",
+                marginTop: "10px",
+                textAlign: "center",
+                fontFamily: "'Orbitron', sans-serif",
+                fontSize: "1rem",
+                maxWidth: "800px",
+              }}
+            >
+              Visual of NASA's Psyche spacecraft: equipped with a multispectral imager, gamma ray and neutron spectrometer,
+              magnetometer, and X-band gravity science investigation in order to study the asteroid from orbit.
+            </p>
+          </div>
           </div>
         </div>
       )}
