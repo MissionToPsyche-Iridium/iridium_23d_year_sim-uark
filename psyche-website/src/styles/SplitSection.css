@@ -10,8 +10,22 @@
   z-index: 1;
 }
 
+.split-section-two {
+  margin-top: 200px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align content vertically */
+  width:100%;
+  align-items: flex-start; /* or center, depending on if you want perfect vertical centering */
+  padding: 5rem;
+  gap: 3rem; /* space between left and right */
+  z-index: 1;
+}
+
 .paragraph-wrapper {
   margin-bottom: 500px;
+  z-index: 10;
 }
 
 .wave-overlay, .wave-overlay2, .wave-overlay3 {
@@ -86,6 +100,17 @@
 }
 
 .right-section {
+  text-align: center;
+}
+
+.left-section-two, .right-section-two {
+  flex: 1;
+  margin-top: 75px;
+  position: relative; /* Ensure they stack above the wave overlay */
+  z-index: 2;
+}
+
+.right-section-two {
   text-align: center;
 }
 

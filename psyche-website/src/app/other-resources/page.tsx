@@ -39,6 +39,14 @@ export default function OtherResources() {
         >
           The Launch
         </a>
+        <a
+          href="https://iopscience.iop.org/article/10.3847/PSJ/ac83a7#psjac83a7app5"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="button-link"
+        >
+          The Geological Impact of 16 Psyche's Surface Temperatures
+        </a>
       </div>
       <div className="button-container">
       <a
