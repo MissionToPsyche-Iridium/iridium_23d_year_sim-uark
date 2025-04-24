@@ -74,7 +74,7 @@ const InteractiveStar: React.FC<InteractiveStarProps> = ({ onPopupOpen, onPopupC
       id: "youtube",
       cx: 700,
       cy: 210,
-      onClick: () => window.open("https://www.youtube.com", "_blank"),
+      onClick: () => window.open("https://www.youtube.com/nasa", "_blank"),
     },
     {
       id: "image",
