@@ -88,8 +88,10 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
       <div style={{ marginTop: "80px", marginBottom: "-140px" }}>
         <ImageCarousel />
       </div>
-      <SplitSectionTwo />
-      <div style={{ marginTop: "140px" }}>
+      <div style={{ marginBottom: "-500px" }}>
+        <SplitSectionTwo />
+      </div>
+      <div style={{ marginBottom: "-150px" }}>
         <FeatureSection />
       </div>
     </>
