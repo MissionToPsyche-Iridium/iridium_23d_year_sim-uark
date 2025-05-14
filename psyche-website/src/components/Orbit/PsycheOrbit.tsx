@@ -54,10 +54,10 @@ const ORBITS: Orbit[] = [
 ];*/}
 
 const PLANETS: Planet[] = [
-  { name: 'Mercury', textureUrl: '../textures/mercury.jpg', radius: 0.3, distance: 5 },
-  { name: 'Venus', textureUrl: '../textures/venus-atmosphere.jpg', radius: 0.4, distance: 8 },
-  { name: 'Earth', textureUrl: '../textures/earth.jpg', radius: 0.5, distance: 11 },
-  { name: 'Mars', textureUrl: '../textures/mars.jpg', radius: 0.45, distance: 14 },
+  { name: 'Mercury', textureUrl: '/iridium_23d_year_sim-uark/textures/mercury.jpg', radius: 0.3, distance: 5 },
+  { name: 'Venus', textureUrl: '/iridium_23d_year_sim-uark/textures/venus-atmosphere.jpg', radius: 0.4, distance: 8 },
+  { name: 'Earth', textureUrl: '/iridium_23d_year_sim-uark/textures/earth.jpg', radius: 0.5, distance: 11 },
+  { name: 'Mars', textureUrl: '/iridium_23d_year_sim-uark/textures/mars.jpg', radius: 0.45, distance: 14 },
 ];
 
 export default function PsycheOrbit() {
@@ -178,7 +178,7 @@ function Scene({ showOrbits, setShowOrbits, focusPsyche, setFocusPsyche, selecte
   const { camera } = useThree();
   const [psycheModel, setPsycheModel] = useState<THREE.Group | null>(null);
   const psycheGltf = useLoader(GLTFLoader, 'https://3dmodels.blob.core.windows.net/3d-models/Asteroid.glb');
-  const sunTexture = useLoader(TextureLoader, '../textures/sun.jpg') as Texture;
+  const sunTexture = useLoader(TextureLoader, '/iridium_23d_year_sim-uark/textures/sun.jpg') as Texture;
 
   useEffect(() => {
     if (psycheGltf) {
