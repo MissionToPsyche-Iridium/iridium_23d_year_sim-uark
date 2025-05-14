@@ -1,8 +1,12 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
+
+const isExport = process.env.EXPORT === 'true';
 
 const nextConfig: NextConfig = {
   /* config options here */
-  output: 'export',
+  ...(isExport && {
+    output: 'export',
+  }),
   basePath: '/iridium_23d_year_sim-uark',
   eslint: {
     ignoreDuringBuilds: true,
