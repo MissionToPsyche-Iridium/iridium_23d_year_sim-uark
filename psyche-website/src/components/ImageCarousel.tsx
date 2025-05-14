@@ -17,7 +17,7 @@ const spacecraftData = [
     credit: "Maxar Technologies",
   },
   {
-    imgSrc: "/images/spacecraft2.jpg",
+    imgSrc: "/iridium_23d_year_sim-uark/images/spacecraft2.jpg",
     title: "Psyche Spacecraft Prepares for Transport",
     description:
       "The Maxar team prepares the Psyche Solar Electric Propulsion (SEP) Chassis for shipment to NASA’s JPL.",
@@ -25,7 +25,7 @@ const spacecraftData = [
     credit: "Maxar Technologies",
   },
   {
-    imgSrc: "/images/spacecraft3.jpg",
+    imgSrc: "/iridium_23d_year_sim-uark/images/spacecraft3.jpg",
     title: "Psyche Spacecraft",
     description:
       "The Solar Electric Propulsion (SEP) Chassis of NASA’s Psyche spacecraft is mounted onto a rotation fixture in High Bay 1 of the Spacecraft Assembly Facility at NASA’s Jet Propulsion Laboratory in Southern California. This photo was taken March 28, 2021, just after the chassis – a major component of the Psyche spacecraft – was delivered to JPL by Maxar Technologies.",
@@ -33,7 +33,7 @@ const spacecraftData = [
     credit: "Maxar Technologies",
   },
   {
-    imgSrc: "/images/spacecraft4.jpg",
+    imgSrc: "/iridium_23d_year_sim-uark/images/spacecraft4.jpg",
     title: "Psyche Spacecraft: Main Body",
     description:
       "Psyche’s SEP chassis is currently in main body integration in Maxar’s Palo Alto, Calif. manufacturing facility. The equipment panels have been mated to Psyche’s propulsion module and technicians will soon begin installing attitude control components.",
@@ -41,7 +41,7 @@ const spacecraftData = [
     credit: "Maxar Technologies",
   },
   {
-    imgSrc: "/images/spacecraft5.jpg",
+    imgSrc: "/iridium_23d_year_sim-uark/images/spacecraft5.jpg",
     title: "Testing the Psyche Spacecraft",
     description:
       "Psyche’s spacecraft body being tested at Maxar’s Palo Alto, California manufacturing facility.",
@@ -49,7 +49,7 @@ const spacecraftData = [
     credit: "Maxar Technologies",
   },
   {
-    imgSrc: "/images/spacecraft6.jpg",
+    imgSrc: "/iridium_23d_year_sim-uark/images/spacecraft6.jpg",
     title: "Preparing Psyche’s Thruster Installation",
     description:
       "Engineers at NASA’s Jet Propulsion Laboratory in Southern California prepare to integrate four Hall thrusters (beneath red protective covers) into the agency’s Psyche spacecraft in July 2021.",
@@ -57,7 +57,7 @@ const spacecraftData = [
     credit: "NASA/JPL-Caltech",
   },
   {
-    imgSrc: "/images/spacecraft7.jpg",
+    imgSrc: "/iridium_23d_year_sim-uark/images/spacecraft7.jpg",
     title: "Psyche Gamma-Ray Spectrometer",
     description:
       "The Psyche gamma-ray spectrometer uses a high-purified germanium crystal to capture gamma rays emitted by asteroid Psyche. These gamma rays can reveal what elements the surface is made of.",
@@ -65,7 +65,7 @@ const spacecraftData = [
     credit: "Johns Hopkins APL/Ed Whitman"
   },
   {
-    imgSrc: "/images/spacecraft8.jpg",
+    imgSrc: "/iridium_23d_year_sim-uark/images/spacecraft8.jpg",
     title: "Psyche Spacecraft: High Gain Antenna",
     description:
       "Psyche’s high gain antenna has completed fabrication and is undergoing standard testing in Maxar’s Near Field Range to verify that it will work as intended once launched.",
@@ -73,7 +73,7 @@ const spacecraftData = [
     credit: "Maxar Technologies"
   },
   {
-    imgSrc: "/images/spacecraft9.jpg",
+    imgSrc: "/iridium_23d_year_sim-uark/images/spacecraft9.jpg",
     title: "Integration of Part of Psyche’s Electric Propulsion Subsystem",
     description:
       "A Maxar technician prepares to integrate part of Psyche’s electric propulsion subsystem.",

@@ -9,9 +9,9 @@ import { TextureLoader } from "three";
 
 const CELESTIAL_BODIES = {
   "Earth": { radiusKm: 6371, textureUrl: "/iridium_23d_year_sim-uark/textures/earth.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg" },
-  "Mars": { radiusKm: 3390, textureUrl: "../textures/mars.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_mars.jpg" },
-  "Moon": { radiusKm: 1737, textureUrl: "../textures/moon.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_moon.jpg" },
-  "Ceres": { radiusKm: 473, textureUrl: "../textures/ceres.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_ceres.jpg" },
+  "Mars": { radiusKm: 3390, textureUrl: "/iridium_23d_year_sim-uark/textures/mars.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_mars.jpg" },
+  "Moon": { radiusKm: 1737, textureUrl: "/iridium_23d_year_sim-uark/textures/moon.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_moon.jpg" },
+  "Ceres": { radiusKm: 473, textureUrl: "/iridium_23d_year_sim-uark/textures/ceres.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_ceres.jpg" },
 };
 
 const PSYCHE_DESCRIPTION = `Its surface area is 64,000 square miles (165,800 square kilometers). Psyche has an irregular, potato-like shape. If it were sliced in half horizontally at the equator – picture a squished oval – it would measure 173 miles (280 kilometers) across at its widest point and 144 miles (232 kilometers) long.`;

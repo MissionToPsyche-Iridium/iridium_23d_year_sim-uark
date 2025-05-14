@@ -230,7 +230,7 @@ const InteractiveStar: React.FC<InteractiveStarProps> = ({ onPopupOpen, onPopupC
             }}
           >
             <img
-              src="/PsycheSpacecraft.png"
+              src="/iridium_23d_year_sim-uark/PsycheSpacecraft.png"
               alt="Psyche"
               style={{
                 display: "block",
