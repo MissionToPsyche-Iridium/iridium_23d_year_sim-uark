@@ -234,7 +234,7 @@ export default function InteractiveSection({ isPopupOpen = false }: InteractiveS
 
       <div className="compass-container">
         <img
-          src="/compass-needle.png"
+          src="/iridium_23d_year_sim-uark/compass-needle.png"
           alt="Compass"
           className="compass-needle"
           style={{ transform: `rotate(${-currentRotation}rad)` }}

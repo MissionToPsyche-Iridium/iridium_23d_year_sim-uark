@@ -8,7 +8,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { TextureLoader } from "three";
 
 const CELESTIAL_BODIES = {
-  "Earth": { radiusKm: 6371, textureUrl: "../textures/earth.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg" },
+  "Earth": { radiusKm: 6371, textureUrl: "/iridium_23d_year_sim-uark/textures/earth.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg" },
   "Mars": { radiusKm: 3390, textureUrl: "../textures/mars.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_mars.jpg" },
   "Moon": { radiusKm: 1737, textureUrl: "../textures/moon.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_moon.jpg" },
   "Ceres": { radiusKm: 473, textureUrl: "../textures/ceres.jpg", fallbackUrl: "https://www.solarsystemscope.com/textures/download/2k_ceres.jpg" },

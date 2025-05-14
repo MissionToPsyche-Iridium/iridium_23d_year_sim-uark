@@ -9,7 +9,7 @@ import "../styles/ImageCarousel.css";
 
 const spacecraftData = [
   {
-    imgSrc: "/images/spacecraft1.jpg",
+    imgSrc: "/iridium_23d_year_sim-uark/images/spacecraft1.jpg",
     title: "Psyche Spacecraft",
     description:
       "After Maxar Technologies successfully installed Psyche’s High Gain Antenna, their team moved the Psyche Solar Electric Propulsion (SEP) Chassis to the alignment stand at their factory in Palo Alto, CA.",
